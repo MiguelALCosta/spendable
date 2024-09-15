@@ -3,7 +3,6 @@ package com.app.spendable.presentation.main
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,8 +34,8 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)*/
-
-        navView.setupWithNavController(navController)
+        supportActionBar?.hide()
+        actionBar?.hide()
         presenter.doStuff()
     }
 }
