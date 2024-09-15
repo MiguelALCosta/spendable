@@ -1,4 +1,4 @@
-package com.app.spendable.ui.dashboard
+package com.app.spendable.presentation.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater

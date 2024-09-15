@@ -1,4 +1,4 @@
-package com.app.spendable
+package com.app.spendable.presentation.main
 
 interface IMainPresenter {
 

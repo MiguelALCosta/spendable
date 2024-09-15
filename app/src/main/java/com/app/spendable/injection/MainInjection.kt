@@ -1,5 +1,7 @@
-package com.app.spendable
+package com.app.spendable.injection
 
+import com.app.spendable.presentation.main.IMainPresenter
+import com.app.spendable.presentation.main.MainPresenter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

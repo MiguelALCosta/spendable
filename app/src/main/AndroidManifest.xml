@@ -14,7 +14,7 @@
         android:name=".SpendableApplication"
         tools:targetApi="34">
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>

@@ -1,4 +1,4 @@
-package com.app.spendable.ui.notifications
+package com.app.spendable.presentation.notifications
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
