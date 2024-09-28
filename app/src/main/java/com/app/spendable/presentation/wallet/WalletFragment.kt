@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.databinding.FragmentWalletBinding
+import java.math.BigDecimal
 
 class WalletFragment : Fragment() {
 
@@ -22,6 +25,19 @@ class WalletFragment : Fragment() {
     ): View {
         _binding = FragmentWalletBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            adapter = WalletAdapter(
+                context,
+                listOf(WalletCardModel(BigDecimal("100.50"), BigDecimal("100.50")))
+            )
+        }
     }
 
     override fun onDestroyView() {

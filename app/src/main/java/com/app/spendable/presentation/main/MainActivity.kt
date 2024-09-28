@@ -37,5 +37,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         actionBar?.hide()
         presenter.doStuff()
+
     }
 }
