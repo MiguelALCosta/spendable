@@ -3,7 +3,7 @@ package com.app.spendable.presentation.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.FrameLayout
 import com.app.spendable.databinding.ComponentWalletCardBinding
 import com.app.spendable.presentation.wallet.WalletCardModel
 import com.app.spendable.utils.toFormatedPrice
@@ -11,7 +11,7 @@ import com.app.spendable.utils.toFormatedPrice
 class WalletCardComponent(
     context: Context,
     attrs: AttributeSet? = null
-) : ConstraintLayout(context, attrs) {
+) : FrameLayout(context, attrs) {
 
     private var binding: ComponentWalletCardBinding
 

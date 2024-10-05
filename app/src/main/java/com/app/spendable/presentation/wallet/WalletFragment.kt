@@ -27,16 +27,35 @@ class WalletFragment : Fragment() {
         return binding.root
     }
 
+    private fun dummyModels() = listOf(
+        WalletCardModel(BigDecimal("100.50"), BigDecimal("100.50")),
+        HeaderModel("October 2024"),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "Galp", cost = BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "Galp", cost = BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "Galp", cost = BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        HeaderModel("November 2024"),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "Galp", cost = BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "Galp", cost = BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "Galp", cost = BigDecimal("100.50")),
+        TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
+    )
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = WalletAdapter(
-                context,
-                listOf(WalletCardModel(BigDecimal("100.50"), BigDecimal("100.50")))
-            )
+            adapter = WalletAdapter(context, dummyModels())
         }
     }
 
