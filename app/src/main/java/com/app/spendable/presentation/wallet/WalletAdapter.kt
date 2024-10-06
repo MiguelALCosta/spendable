@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.presentation.components.HeaderComponent
+import com.app.spendable.presentation.components.SubscriptionsListComponent
 import com.app.spendable.presentation.components.TransactionItemComponent
 import com.app.spendable.presentation.components.WalletCardComponent
 import com.app.spendable.utils.setRecyclerViewLayoutParams
@@ -12,7 +13,7 @@ class WalletAdapter(val context: Context, val models: List<WalletAdapterModel>) 
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private enum class ModelType {
-        WALLET_CARD, HEADER, TRANSACTION_ITEM
+        WALLET_CARD, HEADER, TRANSACTION_ITEM, SUBSCRIPTION_LIST
     }
 
     override fun getItemCount(): Int {
@@ -24,6 +25,7 @@ class WalletAdapter(val context: Context, val models: List<WalletAdapterModel>) 
             is WalletCardModel -> ModelType.WALLET_CARD.ordinal
             is HeaderModel -> ModelType.HEADER.ordinal
             is TransactionItemModel -> ModelType.TRANSACTION_ITEM.ordinal
+            is SubscriptionsListModel -> ModelType.SUBSCRIPTION_LIST.ordinal
         }
     }
 
@@ -44,6 +46,12 @@ class WalletAdapter(val context: Context, val models: List<WalletAdapterModel>) 
                     TransactionItemComponent(parent.context).setRecyclerViewLayoutParams()
                 TransactionItemComponentViewHolder(component)
             }
+
+            ModelType.SUBSCRIPTION_LIST -> {
+                val component =
+                    SubscriptionsListComponent(parent.context).setRecyclerViewLayoutParams()
+                SubscriptionsListComponentViewHolder(component)
+            }
         }
     }
 
@@ -52,8 +60,12 @@ class WalletAdapter(val context: Context, val models: List<WalletAdapterModel>) 
             is WalletCardModel -> (holder as CardComponentViewHolder).render(model)
             is HeaderModel -> (holder as HeaderComponentViewHolder).render(model)
             is TransactionItemModel -> (holder as TransactionItemComponentViewHolder).render(model)
+            is SubscriptionsListModel ->
+                (holder as SubscriptionsListComponentViewHolder).render(model)
         }
     }
+
+    /** View Holder **/
 
     private class CardComponentViewHolder(val component: WalletCardComponent) :
         RecyclerView.ViewHolder(component) {
@@ -73,6 +85,13 @@ class WalletAdapter(val context: Context, val models: List<WalletAdapterModel>) 
         RecyclerView.ViewHolder(component) {
         fun render(model: TransactionItemModel) {
             component.setup(model)
+        }
+    }
+
+    private class SubscriptionsListComponentViewHolder(val component: SubscriptionsListComponent) :
+        RecyclerView.ViewHolder(component) {
+        fun render(model: SubscriptionsListModel) {
+            component.setup(model.items)
         }
     }
 

@@ -18,3 +18,20 @@ data class TransactionItemModel(
     val subtitle: String? = null,
     val cost: BigDecimal
 ) : WalletAdapterModel
+
+enum class SubscriptionIcon {
+    DUMMY
+}
+
+enum class SubscriptionRecurrency {
+    MONTHLY, BIWEEKLY, WEEKLY, DAILY
+}
+
+data class SubscriptionItemModel(
+    val iconType: SubscriptionIcon,
+    val title: String,
+    val cost: BigDecimal,
+    val recurrency: SubscriptionRecurrency
+)
+
+data class SubscriptionsListModel(val items: List<SubscriptionItemModel>) : WalletAdapterModel

@@ -4,10 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import com.app.spendable.R
 import com.app.spendable.databinding.ComponentTransactionItemBinding
+import com.app.spendable.presentation.toIcon
 import com.app.spendable.presentation.wallet.TransactionItemModel
-import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.utils.toFormatedPrice
 
 class TransactionItemComponent(
@@ -20,12 +19,6 @@ class TransactionItemComponent(
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = ComponentTransactionItemBinding.inflate(inflater, this, true)
-    }
-
-    fun TransactionType.toIcon(): Int {
-        return when (this) {
-            TransactionType.DUMMY -> R.drawable.ic_wallet
-        }
     }
 
 

@@ -29,6 +29,47 @@ class WalletFragment : Fragment() {
 
     private fun dummyModels() = listOf(
         WalletCardModel(BigDecimal("100.50"), BigDecimal("100.50")),
+        HeaderModel("Subscriptions"),
+        SubscriptionsListModel(
+            listOf(
+                SubscriptionItemModel(
+                    SubscriptionIcon.DUMMY,
+                    "Netflix",
+                    BigDecimal("49.99"),
+                    SubscriptionRecurrency.MONTHLY
+                ),
+                SubscriptionItemModel(
+                    SubscriptionIcon.DUMMY,
+                    "Spotify",
+                    BigDecimal("49.99"),
+                    SubscriptionRecurrency.MONTHLY
+                ),
+                SubscriptionItemModel(
+                    SubscriptionIcon.DUMMY,
+                    "Spotify",
+                    BigDecimal("49.99"),
+                    SubscriptionRecurrency.WEEKLY
+                ),
+                SubscriptionItemModel(
+                    SubscriptionIcon.DUMMY,
+                    "Spotify",
+                    BigDecimal("49.99"),
+                    SubscriptionRecurrency.BIWEEKLY
+                ),
+                SubscriptionItemModel(
+                    SubscriptionIcon.DUMMY,
+                    "Spotify",
+                    BigDecimal("49.99"),
+                    SubscriptionRecurrency.DAILY
+                ),
+                SubscriptionItemModel(
+                    SubscriptionIcon.DUMMY,
+                    "Spotify",
+                    BigDecimal("49.99"),
+                    SubscriptionRecurrency.DAILY
+                ),
+            )
+        ),
         HeaderModel("October 2024"),
         TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
         TransactionItemModel(TransactionType.DUMMY, "McD", "Bom", BigDecimal("100.50")),
