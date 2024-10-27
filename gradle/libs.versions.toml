@@ -14,6 +14,7 @@ navigationFragmentKtx = "2.6.0"
 navigationUiKtx = "2.6.0"
 daggerHilt = "2.51.1"
 room = "2.6.1"
+viewpager2 = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dag
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

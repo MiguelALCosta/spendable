@@ -61,6 +61,8 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)
+
+    implementation(libs.androidx.viewpager2)
 }
 
 // Allow references to generated code

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.databinding.FragmentWalletBinding
+import com.app.spendable.presentation.main.IMainView
 import java.math.BigDecimal
 
 class WalletFragment : Fragment() {
@@ -97,6 +98,10 @@ class WalletFragment : Fragment() {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = WalletAdapter(context, dummyModels())
+        }
+
+        binding.addButton.setOnClickListener {
+            (activity as? IMainView)?.navigateToAdd()
         }
     }
 

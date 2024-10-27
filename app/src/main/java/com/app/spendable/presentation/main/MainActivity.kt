@@ -1,5 +1,6 @@
 package com.app.spendable.presentation.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -8,6 +9,7 @@ import com.app.spendable.R
 import com.app.spendable.data.db.AppDatabase
 import com.app.spendable.data.db.Transaction
 import com.app.spendable.databinding.ActivityMainBinding
+import com.app.spendable.presentation.add.AddActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -15,8 +17,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+interface IMainView {
+    fun navigateToAdd()
+}
+
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IMainView {
 
     @Inject
     lateinit var presenter: IMainPresenter
@@ -58,4 +64,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun navigateToAdd() {
+        val intent = Intent(this, AddActivity::class.java)
+        startActivity(intent)
+    }
+
 }

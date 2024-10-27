@@ -3,8 +3,14 @@
     <string name="title_wallet">Wallet</string>
     <string name="title_calendar">Calendar</string>
     <string name="title_stats">Statistics</string>
+    <string name="title_add">New Expense</string>
     <string name="monthly_label">Monthly</string>
     <string name="biweekly_stats">Biweekly</string>
     <string name="weekly_stats">Weekly</string>
     <string name="daily_stats">Daily</string>
+    <string name="transaction">Transaction</string>
+    <string name="subscription">Subscription</string>
+    <string name="title">Title</string>
+    <string name="notes">Notes</string>
+    <string name="date">Date</string>
 </resources>
