@@ -11,6 +11,11 @@
     <string name="transaction">Transaction</string>
     <string name="subscription">Subscription</string>
     <string name="title">Title</string>
+    <string name="category">Category</string>
+    <string name="amount">Amount</string>
     <string name="notes">Notes</string>
     <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_time">Select Time</string>
 </resources>
