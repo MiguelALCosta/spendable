@@ -11,6 +11,9 @@ import com.app.spendable.R
 import com.app.spendable.databinding.FragmentAddTransactionBinding
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.components.SelectableChoiceComponent
+import com.app.spendable.presentation.toIcon
+import com.app.spendable.presentation.toTitleRes
+import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.utils.DateUtils
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -34,14 +37,7 @@ class AddTransactionFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    private val choices = listOf(
-        SelectableChoiceComponent.Choice("1", "1", R.drawable.ic_add),
-        SelectableChoiceComponent.Choice("2", "2", R.drawable.ic_add),
-        SelectableChoiceComponent.Choice("3", "3", R.drawable.ic_add),
-        SelectableChoiceComponent.Choice("4", "4", R.drawable.ic_add),
-        SelectableChoiceComponent.Choice("5", "5", R.drawable.ic_add),
-        SelectableChoiceComponent.Choice("6", "6", R.drawable.ic_add)
-    )
+    private var choices = emptyList<SelectableChoiceComponent.Choice>()
     private var selectedChoiceId: String? = null
 
 
@@ -65,6 +61,10 @@ class AddTransactionFragment : Fragment() {
     }
 
     private fun setupInputs() {
+        choices = TransactionType.entries.mapIndexed { i, it ->
+            SelectableChoiceComponent.Choice(it.name, getString(it.toTitleRes()), it.toIcon())
+        }
+
         binding.dateInput.editText?.setOnClickListener {
             showDatePicker()
         }

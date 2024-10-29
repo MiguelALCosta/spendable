@@ -51,6 +51,8 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_dropdown_arrow"
             android:hint="@string/category">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -128,6 +130,15 @@
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="48dp"
+            android:text="@string/save_button" />
 
     </LinearLayout>
 

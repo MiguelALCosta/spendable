@@ -9,7 +9,8 @@ data class WalletCardModel(val budget: BigDecimal, val spent: BigDecimal) : Wall
 data class HeaderModel(val text: String) : WalletAdapterModel
 
 enum class TransactionType {
-    DUMMY
+    EAT_OUT, MARKET, SHOPPING, TRANSPORTS, ENTERTAINMENT, BILLS, HOLIDAYS, HEALTH, EDUCATION, PET,
+    KIDS, OTHERS
 }
 
 data class TransactionItemModel(
