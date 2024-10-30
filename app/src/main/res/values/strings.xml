@@ -31,4 +31,6 @@
     <string name="kids_label">Kids</string>
     <string name="others_label">Others</string>
     <string name="save_button">Save</string>
+    <string name="required_field_error">Mandatory field</string>
+    <string name="generic_error">An unexpected error occurred</string>
 </resources>

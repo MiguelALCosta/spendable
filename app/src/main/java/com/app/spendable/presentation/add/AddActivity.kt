@@ -7,8 +7,12 @@ import com.app.spendable.databinding.ActivityAddBinding
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
+interface AddView {
+    fun closeAdd()
+}
+
 @AndroidEntryPoint
-class AddActivity : AppCompatActivity() {
+class AddActivity : AppCompatActivity(), AddView {
 
     private lateinit var binding: ActivityAddBinding
 
@@ -20,6 +24,10 @@ class AddActivity : AppCompatActivity() {
 
         setupPager()
         setupTopBar()
+    }
+
+    override fun closeAdd() {
+        finish()
     }
 
     private fun setupPager() {
