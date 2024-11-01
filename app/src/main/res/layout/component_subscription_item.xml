@@ -38,7 +38,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-        app:layout_constraintBottom_toTopOf="@id/recurrency"
+        app:layout_constraintBottom_toTopOf="@id/frequency"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:textStyle="bold"
@@ -48,7 +48,7 @@
         tools:text="50.00€" />
 
     <TextView
-        android:id="@+id/recurrency"
+        android:id="@+id/frequency"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"

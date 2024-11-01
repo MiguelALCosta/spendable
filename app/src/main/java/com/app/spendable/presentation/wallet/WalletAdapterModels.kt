@@ -10,7 +10,7 @@ data class HeaderModel(val text: String) : WalletAdapterModel
 
 enum class TransactionType {
     EAT_OUT, MARKET, SHOPPING, TRANSPORTS, ENTERTAINMENT, BILLS, HOLIDAYS, HEALTH, EDUCATION, PET,
-    KIDS, OTHERS
+    KIDS, OTHER
 }
 
 data class TransactionItemModel(
@@ -21,18 +21,24 @@ data class TransactionItemModel(
 ) : WalletAdapterModel
 
 enum class SubscriptionIcon {
-    DUMMY
+    NETFLIX, HBO_MAX, DISNEY_PLUS, APPLE_TV, CRUNCHYROLL, DAZN, OTHER_STREAMING,
+    APPLE_MUSIC, SPOTIFY, AUDIBLE, OTHER_MUSIC,
+    AMAZON_PRIME, YOUTUBE_PREMIUM, OTHER_MULTI_SERVICE,
+    DISCORD_NITRO, OTHER_GAMING,
+    SPORTS,
+    RENT, PHONE, CABLE, OTHER_UTILITIES,
+    OTHER
 }
 
-enum class SubscriptionRecurrency {
-    MONTHLY, BIWEEKLY, WEEKLY, DAILY
+enum class SubscriptionFrequency {
+    Yearly, MONTHLY, BIWEEKLY, WEEKLY, DAILY
 }
 
 data class SubscriptionItemModel(
     val iconType: SubscriptionIcon,
     val title: String,
     val cost: BigDecimal,
-    val recurrency: SubscriptionRecurrency
+    val frequency: SubscriptionFrequency
 )
 
 data class SubscriptionsListModel(val items: List<SubscriptionItemModel>) : WalletAdapterModel

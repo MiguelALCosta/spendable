@@ -16,7 +16,7 @@ class SelectableChoiceComponent(
     data class Choice(
         val id: String,
         val label: String,
-        @DrawableRes val icon: Int
+        @DrawableRes val icon: Int?
     ) : Serializable
 
     private var binding: ComponentSelectableChoiceBinding
@@ -27,7 +27,12 @@ class SelectableChoiceComponent(
     }
 
     fun setup(choice: Choice) {
-        binding.icon.setImageResource(choice.icon)
+        choice.icon?.let {
+            binding.icon.visibility = VISIBLE
+            binding.icon.setImageResource(it)
+        } ?: run {
+            binding.icon.visibility = GONE
+        }
         binding.label.text = choice.label
     }
 

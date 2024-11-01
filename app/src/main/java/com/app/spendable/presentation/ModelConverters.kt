@@ -3,8 +3,8 @@ package com.app.spendable.presentation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.app.spendable.R
+import com.app.spendable.presentation.wallet.SubscriptionFrequency
 import com.app.spendable.presentation.wallet.SubscriptionIcon
-import com.app.spendable.presentation.wallet.SubscriptionRecurrency
 import com.app.spendable.presentation.wallet.TransactionType
 
 @DrawableRes
@@ -20,7 +20,7 @@ fun TransactionType.toIcon() = when (this) {
     TransactionType.EDUCATION -> R.drawable.ic_education
     TransactionType.PET -> R.drawable.ic_pet
     TransactionType.KIDS -> R.drawable.ic_kids
-    TransactionType.OTHERS -> R.drawable.ic_others
+    TransactionType.OTHER -> R.drawable.ic_other_transaction
 }
 
 @StringRes
@@ -36,18 +36,40 @@ fun TransactionType.toTitleRes() = when (this) {
     TransactionType.EDUCATION -> R.string.education_label
     TransactionType.PET -> R.string.pet_label
     TransactionType.KIDS -> R.string.kids_label
-    TransactionType.OTHERS -> R.string.others_label
+    TransactionType.OTHER -> R.string.other_label
 }
 
 @DrawableRes
 fun SubscriptionIcon.toIconResource() = when (this) {
-    SubscriptionIcon.DUMMY -> R.drawable.ic_wallet
+    SubscriptionIcon.NETFLIX -> R.drawable.ic_netflix
+    SubscriptionIcon.HBO_MAX -> R.drawable.ic_hbo_max
+    SubscriptionIcon.DISNEY_PLUS -> R.drawable.ic_disney_plus
+    SubscriptionIcon.APPLE_TV -> R.drawable.ic_apple_tv
+    SubscriptionIcon.CRUNCHYROLL -> R.drawable.ic_crunchyroll
+    SubscriptionIcon.DAZN -> R.drawable.ic_dazn
+    SubscriptionIcon.OTHER_STREAMING -> R.drawable.ic_streaming
+    SubscriptionIcon.APPLE_MUSIC -> R.drawable.ic_apple_music
+    SubscriptionIcon.SPOTIFY -> R.drawable.ic_spotify
+    SubscriptionIcon.AUDIBLE -> R.drawable.ic_audible
+    SubscriptionIcon.OTHER_MUSIC -> R.drawable.ic_music
+    SubscriptionIcon.AMAZON_PRIME -> R.drawable.ic_amazon
+    SubscriptionIcon.YOUTUBE_PREMIUM -> R.drawable.ic_youtube
+    SubscriptionIcon.OTHER_MULTI_SERVICE -> R.drawable.ic_multi_services
+    SubscriptionIcon.DISCORD_NITRO -> R.drawable.ic_discord
+    SubscriptionIcon.OTHER_GAMING -> R.drawable.ic_gaming
+    SubscriptionIcon.SPORTS -> R.drawable.ic_sports
+    SubscriptionIcon.RENT -> R.drawable.ic_other_subscription
+    SubscriptionIcon.PHONE -> R.drawable.ic_other_subscription
+    SubscriptionIcon.CABLE -> R.drawable.ic_other_subscription
+    SubscriptionIcon.OTHER_UTILITIES -> R.drawable.ic_utilities
+    SubscriptionIcon.OTHER -> R.drawable.ic_other_subscription
 }
 
 @StringRes
-fun SubscriptionRecurrency.toStringResource() = when (this) {
-    SubscriptionRecurrency.MONTHLY -> R.string.monthly_label
-    SubscriptionRecurrency.BIWEEKLY -> R.string.biweekly_stats
-    SubscriptionRecurrency.WEEKLY -> R.string.weekly_stats
-    SubscriptionRecurrency.DAILY -> R.string.daily_stats
+fun SubscriptionFrequency.toStringResource() = when (this) {
+    SubscriptionFrequency.Yearly -> R.string.yearly_label
+    SubscriptionFrequency.MONTHLY -> R.string.monthly_label
+    SubscriptionFrequency.BIWEEKLY -> R.string.biweekly_stats
+    SubscriptionFrequency.WEEKLY -> R.string.weekly_stats
+    SubscriptionFrequency.DAILY -> R.string.daily_stats
 }

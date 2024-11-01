@@ -26,7 +26,7 @@ class SubscriptionItemComponent(
         binding.icon.setImageResource(model.iconType.toIconResource())
         binding.title.text = model.title
         binding.cost.text = model.cost.toFormatedPrice()
-        binding.recurrency.text = context.getString(model.recurrency.toStringResource())
+        binding.frequency.text = context.getString(model.frequency.toStringResource())
     }
 
 }

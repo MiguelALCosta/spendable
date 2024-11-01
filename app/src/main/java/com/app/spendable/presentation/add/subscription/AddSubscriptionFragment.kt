@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.add.transaction
+package com.app.spendable.presentation.add.subscription
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,61 +8,56 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.spendable.R
-import com.app.spendable.databinding.FragmentAddTransactionBinding
+import com.app.spendable.databinding.FragmentAddSubscriptionBinding
 import com.app.spendable.presentation.add.AddView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
+import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.utils.DateUtils
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import javax.inject.Inject
 
-interface AddTransactionView {
-    fun setupView(form: AddTransactionForm)
+interface AddSubscriptionView {
+    fun setupView(form: AddSubscriptionForm)
     fun closeAdd()
     fun setAmountErrorState(hasError: Boolean)
     fun setTitleErrorState(hasError: Boolean)
     fun setCategoryErrorState(hasError: Boolean)
+    fun setSubCategoryErrorState(hasError: Boolean)
     fun showGenericError()
 }
 
 @SuppressLint("SetTextI18n")
 @AndroidEntryPoint
-class AddTransactionFragment : Fragment(), AddTransactionView {
+class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
 
     companion object {
         private const val DATE_PICKER_TAG = "DATE_PICKER_TAG"
-        private const val TIME_PICKER_TAG = "TIME_PICKER_TAG"
     }
 
-    private var _binding: FragmentAddTransactionBinding? = null
+    private var _binding: FragmentAddSubscriptionBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var presenter: IAddTransactionPresenter
+    lateinit var presenter: IAddSubscriptionPresenter
 
-
-    private var form: AddTransactionForm? = null
-
+    private var form: AddSubscriptionForm? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding = FragmentAddTransactionBinding.inflate(inflater, container, false)
+        _binding = FragmentAddSubscriptionBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         presenter.bind(this)
@@ -77,7 +72,7 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
         presenter.unbind()
     }
 
-    override fun setupView(form: AddTransactionForm) {
+    override fun setupView(form: AddSubscriptionForm) {
         this.form = form
         setupInputs()
         setupButton()
@@ -99,7 +94,14 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
         setFieldError(binding.categoryInput, hasError)
     }
 
+    override fun setSubCategoryErrorState(hasError: Boolean) {
+        setFieldError(binding.subcategoryInput, hasError)
+    }
+
     private fun setFieldError(field: TextInputLayout, hasError: Boolean) {
+        if (field.visibility != View.VISIBLE) {
+            return
+        }
         if (hasError) {
             field.isErrorEnabled = true
             field.error = getString(R.string.required_field_error)
@@ -128,6 +130,32 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
             errorIconDrawable = null
         }
 
+        binding.categoryInput.apply {
+            form?.selectedCategory?.let { setSelectedCategory(it) }
+            editText?.setOnClickListener {
+                showChoiceBottomSheet(
+                    form?.categories ?: emptyList(),
+                    form?.selectedCategory,
+                    onSelection = ::setSelectedCategory
+                )
+            }
+            errorIconDrawable = null
+        }
+
+        binding.subcategoryInput.apply {
+            form?.selectedSubcategory?.let { setSelectedSubCategory(it) }
+            editText?.setOnClickListener {
+                val choices =
+                    form?.selectedCategory?.let { form?.subcategories?.getOrDefault(it, null) }
+                showChoiceBottomSheet(
+                    choices ?: emptyList(),
+                    form?.selectedCategory,
+                    onSelection = ::setSelectedSubCategory
+                )
+            }
+            errorIconDrawable = null
+        }
+
         binding.titleInput.apply {
             form?.title?.let { editText?.setText(it) }
             editText?.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -136,10 +164,14 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
             errorIconDrawable = null
         }
 
-        binding.categoryInput.apply {
-            form?.selectedCategory?.let { setSelectedCategory(it) }
+        binding.frequencyInput.apply {
+            form?.selectedFrequency?.let { setSelectedFrequency(it) }
             editText?.setOnClickListener {
-                showCategoryChoiceBottomSheet()
+                showChoiceBottomSheet(
+                    form?.frequencies ?: emptyList(),
+                    form?.selectedFrequency,
+                    onSelection = ::setSelectedFrequency
+                )
             }
             errorIconDrawable = null
         }
@@ -151,23 +183,12 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
             }
         }
 
-        binding.timeInput.editText?.apply {
-            form?.time?.let { setSelectedTime(it) }
-            setOnClickListener {
-                showTimePicker()
-            }
-        }
-
-        binding.notesInput.editText?.apply {
-            form?.notes?.let { setText(it) }
-            addTextChangedListener(onTextChanged = { text, _, _, _ ->
-                form?.notes = text?.toString()
-            })
-        }
+        updateSubcategoryVisibility()
+        updateTitleVisibility()
     }
 
     private fun setupButton() {
-        binding.saveButton.setOnClickListener { presenter.saveTransaction(form) }
+        binding.saveButton.setOnClickListener { presenter.saveSubscription(form) }
     }
 
     private fun blockPriceDecimals(text: String?) {
@@ -219,35 +240,15 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
         binding.dateInput.editText?.setText(DateUtils.Format.toDate(date))
     }
 
-    private fun showTimePicker() {
-        val timePicker =
-            MaterialTimePicker.Builder()
-                .setTitleText(getString(R.string.select_time))
-                .setTimeFormat(TimeFormat.CLOCK_24H)
-                .also { builder ->
-                    form?.time?.hour?.let { builder.setHour(it) }
-                    form?.time?.minute?.let { builder.setMinute(it) }
-                }
-                .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
-                .build()
-
-        timePicker.addOnPositiveButtonClickListener {
-            val time = LocalTime.of(timePicker.hour, timePicker.minute)
-            setSelectedTime(time)
-        }
-        activity?.let { timePicker.show(it.supportFragmentManager, TIME_PICKER_TAG) }
-    }
-
-    private fun setSelectedTime(time: LocalTime) {
-        form?.time = time
-        binding.timeInput.editText?.setText(DateUtils.Format.toTime(time))
-    }
-
-    private fun showCategoryChoiceBottomSheet() {
+    private fun showChoiceBottomSheet(
+        choices: List<SelectableChoiceComponent.Choice>,
+        selectedChoice: String?,
+        onSelection: (String) -> Unit
+    ) {
         val modalBottomSheet = ChoiceBottomSheet.build(
-            form?.categories ?: emptyList(),
-            form?.selectedCategory,
-            onSelection = { setSelectedCategory(it.id) }
+            choices,
+            selectedChoice,
+            onSelection = { onSelection(it.id) }
         )
         activity?.let {
             modalBottomSheet.show(
@@ -263,6 +264,45 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
             ?.let { choice ->
                 form?.selectedCategory = choice.id
                 binding.categoryInput.editText?.setText(choice.label)
+                updateSubcategoryVisibility()
+                updateTitleVisibility()
+            }
+    }
+
+    private fun updateSubcategoryVisibility() {
+        form?.selectedCategory
+            ?.let { form?.subcategories?.getOrDefault(it, null) }
+            ?.let { binding.subcategoryInput.visibility = View.VISIBLE }
+            ?: run { binding.subcategoryInput.visibility = View.GONE }
+    }
+
+    private fun updateTitleVisibility() {
+        if (form?.needsTitle() == true) {
+            binding.titleInput.visibility = View.VISIBLE
+        } else {
+            binding.titleInput.visibility = View.GONE
+        }
+    }
+
+    private fun setSelectedSubCategory(choiceId: String) {
+        val subcategories = form?.selectedCategory?.let {
+            form?.subcategories?.getOrDefault(it, null)
+        }
+        subcategories
+            ?.first { it.id == choiceId }
+            ?.let { choice ->
+                form?.selectedSubcategory = choice.id
+                binding.subcategoryInput.editText?.setText(choice.label)
+                updateTitleVisibility()
+            }
+    }
+
+    private fun setSelectedFrequency(choiceId: String) {
+        form?.frequencies
+            ?.first { it.id == choiceId }
+            ?.let { choice ->
+                form?.selectedFrequency = choice.id
+                binding.frequencyInput.editText?.setText(choice.label)
             }
     }
 }

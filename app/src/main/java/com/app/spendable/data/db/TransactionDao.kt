@@ -8,11 +8,11 @@ import androidx.room.Query
 @Dao
 interface TransactionDao {
     @Query("SELECT * FROM `transaction`")
-    fun getAll(): List<Transaction>
+    suspend fun getAll(): List<Transaction>
 
     @Insert
-    fun insert(transaction: Transaction)
+    suspend fun insert(transaction: Transaction)
 
     @Delete
-    fun delete(transaction: Transaction)
+    suspend fun delete(transaction: Transaction)
 }

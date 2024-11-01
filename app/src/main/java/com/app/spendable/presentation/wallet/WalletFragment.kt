@@ -34,40 +34,40 @@ class WalletFragment : Fragment() {
         SubscriptionsListModel(
             listOf(
                 SubscriptionItemModel(
-                    SubscriptionIcon.DUMMY,
+                    SubscriptionIcon.NETFLIX,
                     "Netflix",
                     BigDecimal("49.99"),
-                    SubscriptionRecurrency.MONTHLY
+                    SubscriptionFrequency.MONTHLY
                 ),
                 SubscriptionItemModel(
-                    SubscriptionIcon.DUMMY,
+                    SubscriptionIcon.NETFLIX,
                     "Spotify",
                     BigDecimal("49.99"),
-                    SubscriptionRecurrency.MONTHLY
+                    SubscriptionFrequency.MONTHLY
                 ),
                 SubscriptionItemModel(
-                    SubscriptionIcon.DUMMY,
+                    SubscriptionIcon.NETFLIX,
                     "Spotify",
                     BigDecimal("49.99"),
-                    SubscriptionRecurrency.WEEKLY
+                    SubscriptionFrequency.WEEKLY
                 ),
                 SubscriptionItemModel(
-                    SubscriptionIcon.DUMMY,
+                    SubscriptionIcon.NETFLIX,
                     "Spotify",
                     BigDecimal("49.99"),
-                    SubscriptionRecurrency.BIWEEKLY
+                    SubscriptionFrequency.BIWEEKLY
                 ),
                 SubscriptionItemModel(
-                    SubscriptionIcon.DUMMY,
+                    SubscriptionIcon.NETFLIX,
                     "Spotify",
                     BigDecimal("49.99"),
-                    SubscriptionRecurrency.DAILY
+                    SubscriptionFrequency.DAILY
                 ),
                 SubscriptionItemModel(
-                    SubscriptionIcon.DUMMY,
+                    SubscriptionIcon.NETFLIX,
                     "Spotify",
                     BigDecimal("49.99"),
-                    SubscriptionRecurrency.DAILY
+                    SubscriptionFrequency.DAILY
                 ),
             )
         ),

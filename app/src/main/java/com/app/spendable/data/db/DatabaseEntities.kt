@@ -13,3 +13,13 @@ data class Transaction(
     @ColumnInfo(name = "cost") val cost: String,
     @ColumnInfo(name = "date") val date: String
 )
+
+@Entity
+data class Subscription(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "iconType") val iconType: String,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "cost") val cost: String,
+    @ColumnInfo(name = "date") val date: String,
+    @ColumnInfo(name = "frequency") val frequency: String,
+)
