@@ -20,6 +20,11 @@ data class AddSubscriptionForm(
     var selectedFrequency: String
 ) {
 
+    fun getActiveSubcategoryChoices() =
+        selectedCategory?.let {
+            subcategories.getOrDefault(it, null)
+        }
+
     fun needsTitle(): Boolean {
         val category = SubscriptionCategory.entries.firstOrNull { it.name == selectedCategory }
         val subcategory = SubscriptionIcon.entries.firstOrNull { it.name == selectedSubcategory }

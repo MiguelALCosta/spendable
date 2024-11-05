@@ -131,7 +131,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
 
         binding.categoryInput.apply {
-            form?.selectedCategory?.let { setSelectedCategory(it) }
+            setSelectedCategory(form?.selectedCategory)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
                     form?.categories ?: emptyList(),
@@ -143,7 +143,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
 
         binding.subcategoryInput.apply {
-            form?.selectedSubcategory?.let { setSelectedSubCategory(it) }
+            setSelectedSubCategory(form?.selectedSubcategory)
             editText?.setOnClickListener {
                 val choices =
                     form?.selectedCategory?.let { form?.subcategories?.getOrDefault(it, null) }
@@ -182,13 +182,13 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
                 showDatePicker()
             }
         }
-
-        updateSubcategoryVisibility()
-        updateTitleVisibility()
     }
 
     private fun setupButton() {
-        binding.saveButton.setOnClickListener { presenter.saveSubscription(form) }
+        binding.saveButton.setOnClickListener {
+            onPriceInputLoseFocus()
+            presenter.saveSubscription(form)
+        }
     }
 
     private fun blockPriceDecimals(text: String?) {
@@ -210,7 +210,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         val right = if (segments.getOrNull(1) == null) {
             "00"
         } else {
-            segments.get(1).substring(0..1)
+            segments[1].substring(0..1)
         }
 
         if (!priceText.isNullOrEmpty()) {
@@ -258,25 +258,25 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
     }
 
-    private fun setSelectedCategory(choiceId: String) {
-        form?.categories
-            ?.first { it.id == choiceId }
-            ?.let { choice ->
-                form?.selectedCategory = choice.id
-                binding.categoryInput.editText?.setText(choice.label)
-                updateSubcategoryVisibility()
-                updateTitleVisibility()
-            }
+    private fun setSelectedCategory(choiceId: String?) {
+        val choice = form?.categories?.firstOrNull { it.id == choiceId }
+        form?.selectedCategory = choice?.id
+        binding.categoryInput.editText?.setText(choice?.label ?: "")
+        updateSubcategoryVisibility()
+        setSelectedSubCategory(null)
     }
 
     private fun updateSubcategoryVisibility() {
-        form?.selectedCategory
-            ?.let { form?.subcategories?.getOrDefault(it, null) }
-            ?.let { binding.subcategoryInput.visibility = View.VISIBLE }
-            ?: run { binding.subcategoryInput.visibility = View.GONE }
+        setSubCategoryErrorState(false)
+        if (form?.getActiveSubcategoryChoices() == null) {
+            binding.subcategoryInput.visibility = View.GONE
+        } else {
+            binding.subcategoryInput.visibility = View.VISIBLE
+        }
     }
 
     private fun updateTitleVisibility() {
+        setTitleErrorState(false)
         if (form?.needsTitle() == true) {
             binding.titleInput.visibility = View.VISIBLE
         } else {
@@ -284,22 +284,18 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
     }
 
-    private fun setSelectedSubCategory(choiceId: String) {
-        val subcategories = form?.selectedCategory?.let {
-            form?.subcategories?.getOrDefault(it, null)
-        }
-        subcategories
-            ?.first { it.id == choiceId }
-            ?.let { choice ->
-                form?.selectedSubcategory = choice.id
-                binding.subcategoryInput.editText?.setText(choice.label)
-                updateTitleVisibility()
-            }
+    private fun setSelectedSubCategory(choiceId: String?) {
+        val choice = form?.getActiveSubcategoryChoices()?.firstOrNull { it.id == choiceId }
+        form?.selectedSubcategory = choice?.id
+        binding.subcategoryInput.editText?.setText(choice?.label ?: "")
+        form?.title = null
+        binding.titleInput.editText?.setText("")
+        updateTitleVisibility()
     }
 
     private fun setSelectedFrequency(choiceId: String) {
         form?.frequencies
-            ?.first { it.id == choiceId }
+            ?.firstOrNull { it.id == choiceId }
             ?.let { choice ->
                 form?.selectedFrequency = choice.id
                 binding.frequencyInput.editText?.setText(choice.label)

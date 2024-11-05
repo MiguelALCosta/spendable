@@ -22,4 +22,5 @@ data class Subscription(
     @ColumnInfo(name = "cost") val cost: String,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "frequency") val frequency: String,
+    @ColumnInfo(name = "endDate") val endDate: String? = null,
 )
