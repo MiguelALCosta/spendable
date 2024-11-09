@@ -11,6 +11,7 @@
     <string name="daily_stats">Daily</string>
     <string name="transaction">Transaction</string>
     <string name="subscription">Subscription</string>
+    <string name="subscriptions">Subscriptions</string>
     <string name="title">Title</string>
     <string name="category">Category</string>
     <string name="subcategory">Subcategory</string>

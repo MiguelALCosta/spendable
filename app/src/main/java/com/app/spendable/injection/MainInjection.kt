@@ -7,12 +7,16 @@ import com.app.spendable.data.SubscriptionsRepository
 import com.app.spendable.data.TransactionsRepository
 import com.app.spendable.data.db.AppDatabase
 import com.app.spendable.data.db.IAppDatabase
+import com.app.spendable.domain.wallet.IWalletInteractor
+import com.app.spendable.domain.wallet.WalletInteractor
 import com.app.spendable.presentation.add.subscription.AddSubscriptionPresenter
 import com.app.spendable.presentation.add.subscription.IAddSubscriptionPresenter
 import com.app.spendable.presentation.add.transaction.AddTransactionPresenter
 import com.app.spendable.presentation.add.transaction.IAddTransactionPresenter
 import com.app.spendable.presentation.main.IMainPresenter
 import com.app.spendable.presentation.main.MainPresenter
+import com.app.spendable.presentation.wallet.IWalletPresenter
+import com.app.spendable.presentation.wallet.WalletPresenter
 import com.app.spendable.utils.IStringsManager
 import com.app.spendable.utils.StringsManager
 import dagger.Module
@@ -64,5 +68,21 @@ object MainModule {
         subscriptionsRepository: ISubscriptionsRepository
     ): IAddSubscriptionPresenter {
         return AddSubscriptionPresenter(stringsManager, subscriptionsRepository)
+    }
+
+    @Provides
+    fun provideWalletPresenter(
+        interactor: IWalletInteractor
+    ): IWalletPresenter {
+        return WalletPresenter(interactor)
+    }
+
+    @Provides
+    fun provideWalletInteractor(
+        stringsManager: IStringsManager,
+        transactionsRepository: ITransactionsRepository,
+        subscriptionsRepository: ISubscriptionsRepository
+    ): IWalletInteractor {
+        return WalletInteractor(stringsManager, transactionsRepository, subscriptionsRepository)
     }
 }

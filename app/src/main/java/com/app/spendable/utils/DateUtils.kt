@@ -12,6 +12,7 @@ object DateUtils {
         const val DATE_FORMAT = "dd/MM/yyyy"
         const val TIME_FORMAT = "HH:mm"
         const val DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm"
+        const val WEEKDAY_DAY_MONTH_NAME = "eee, dd MMMM"
     }
 
     private fun getFormatter(pattern: String) =
@@ -28,6 +29,17 @@ object DateUtils {
         fun toDateTime(dateTime: LocalDateTime) =
             dateTime.format(getFormatter(AvailableFormats.DATE_TIME_FORMAT))
 
+        fun toWeekdayDayMonth(date: LocalDate) =
+            date.format(getFormatter(AvailableFormats.WEEKDAY_DAY_MONTH_NAME))
+
+    }
+
+    object Parse {
+        fun fromDateTime(dateTime: String) =
+            LocalDateTime.parse(dateTime, getFormatter(AvailableFormats.DATE_TIME_FORMAT))
+
+        fun fromDate(dateTime: String) =
+            LocalDate.parse(dateTime, getFormatter(AvailableFormats.DATE_FORMAT))
     }
 
     object Provide {

@@ -9,7 +9,7 @@ import com.app.spendable.presentation.components.TransactionItemComponent
 import com.app.spendable.presentation.components.WalletCardComponent
 import com.app.spendable.utils.setRecyclerViewLayoutParams
 
-class WalletAdapter(val context: Context, val models: List<WalletAdapterModel>) :
+class WalletAdapter(val context: Context, var models: List<WalletAdapterModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private enum class ModelType {
@@ -63,6 +63,11 @@ class WalletAdapter(val context: Context, val models: List<WalletAdapterModel>) 
             is SubscriptionsListModel ->
                 (holder as SubscriptionsListComponentViewHolder).render(model)
         }
+    }
+
+    fun updateModels(models: List<WalletAdapterModel>) {
+        this.models = models
+        notifyDataSetChanged()
     }
 
     /** View Holder **/
