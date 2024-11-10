@@ -4,6 +4,7 @@ import com.app.spendable.R
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
 import com.app.spendable.domain.BaseInteractor
+import com.app.spendable.presentation.components.TransactionDetailModel
 import com.app.spendable.presentation.wallet.HeaderModel
 import com.app.spendable.presentation.wallet.SubscriptionsListModel
 import com.app.spendable.presentation.wallet.WalletAdapterModel
@@ -16,6 +17,8 @@ import java.time.YearMonth
 
 interface IWalletInteractor {
     fun getModels(completion: (List<WalletAdapterModel>) -> Unit)
+    fun getTransactionDetail(id: Int, completion: (TransactionDetailModel) -> Unit)
+    fun deleteTransaction(id: Int, completion: () -> Unit)
 }
 
 class WalletInteractor(
@@ -33,7 +36,17 @@ class WalletInteractor(
     }
 
     private suspend fun getWalletCard(): List<WalletAdapterModel> {
-        return listOf(WalletCardModel(BigDecimal("100.50"), BigDecimal("100.50")))
+        val currentMonth = YearMonth.from(DateUtils.Provide.nowDevice())
+        val transactionsSum = transactionsRepository.getAll()
+            .filter { YearMonth.from(DateUtils.Parse.fromDateTime(it.date)) == currentMonth }
+            .sumOf { BigDecimal(it.cost) }
+        return listOf(
+            WalletCardModel(
+                month = currentMonth,
+                budget = BigDecimal("1000.00"),
+                spent = transactionsSum
+            )
+        )
     }
 
     private suspend fun getCurrentMonthSubscriptions(): List<WalletAdapterModel> {
@@ -48,7 +61,7 @@ class WalletInteractor(
         val header = if (subscriptions.isEmpty()) {
             emptyList()
         } else {
-            listOf(HeaderModel(stringsManager.getString(R.string.subscriptions)))
+            listOf(HeaderModel(stringsManager.getString(R.string.active_subscriptions)))
         }
         return header.plus(SubscriptionsListModel(subscriptions))
     }
@@ -65,6 +78,18 @@ class WalletInteractor(
                 listOf(HeaderModel(DateUtils.Format.toWeekdayDayMonth(it.first)))
                     .plus(it.second.map { it.second.toItemModel() })
             }
+    }
+
+    override fun getTransactionDetail(id: Int, completion: (TransactionDetailModel) -> Unit) {
+        makeRequest(request = {
+            transactionsRepository.getTransaction(id).toDetailModel()
+        }, completion)
+    }
+
+    override fun deleteTransaction(id: Int, completion: () -> Unit) {
+        makeRequest(request = {
+            transactionsRepository.delete(id)
+        }, { completion() })
     }
 
 }

@@ -1,10 +1,15 @@
 package com.app.spendable.presentation.wallet
 
 import java.math.BigDecimal
+import java.time.YearMonth
 
 sealed interface WalletAdapterModel
 
-data class WalletCardModel(val budget: BigDecimal, val spent: BigDecimal) : WalletAdapterModel
+data class WalletCardModel(
+    val month: YearMonth,
+    val budget: BigDecimal,
+    val spent: BigDecimal
+) : WalletAdapterModel
 
 data class HeaderModel(val text: String) : WalletAdapterModel
 
@@ -14,6 +19,7 @@ enum class TransactionType {
 }
 
 data class TransactionItemModel(
+    val id: Int,
     val type: TransactionType,
     val title: String,
     val subtitle: String? = null,

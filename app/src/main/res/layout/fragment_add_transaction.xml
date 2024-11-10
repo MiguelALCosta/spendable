@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
-            android:hint="@string/notes"
+            android:hint="@string/notes_optional"
             app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText

@@ -9,15 +9,64 @@
     android:layout_margin="16dp">
 
     <TextView
+        android:id="@+id/month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        tools:text="November 2024"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/budget_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:text="@string/total_budget"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/budget" />
+
+    <TextView
         android:id="@+id/budget"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:textColor="?attr/colorOnPrimary"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textSize="28sp"
+        tools:text="1000€"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/progress" />
+
+    <TextView
+        android:id="@+id/remaining_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:text="@string/remaining_budget"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/remaining" />
+
+    <TextView
+        android:id="@+id/remaining"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:textColor="?attr/colorOnPrimary"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:textSize="28sp"
         tools:text="1000€"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/progress" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress"
@@ -26,6 +75,7 @@
         android:layout_margin="16dp"
         android:layout_marginBottom="240dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        tools:progress="90"
         app:trackThickness="12dp"
         app:trackColor="@color/white"
         app:trackCornerRadius="360dp" />

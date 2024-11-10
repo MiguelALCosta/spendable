@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.app.spendable.databinding.ComponentWalletCardBinding
 import com.app.spendable.presentation.wallet.WalletCardModel
+import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.toFormatedPrice
+import java.math.BigDecimal
 
 class WalletCardComponent(
     context: Context,
@@ -21,7 +23,13 @@ class WalletCardComponent(
     }
 
     fun setup(model: WalletCardModel) {
+        binding.month.text = DateUtils.Format.toFullMonthYear(model.month)
         binding.budget.text = model.budget.toFormatedPrice()
+        binding.remaining.text = (model.budget - model.spent).toFormatedPrice()
+
+        binding.progress.progress =
+            ((model.budget - model.spent) * BigDecimal("100") / model.budget).toInt()
+
     }
 
 }

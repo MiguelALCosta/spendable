@@ -26,11 +26,11 @@ class TransactionItemComponent(
         binding.icon.setImageResource(model.type.toIcon())
         binding.title.text = model.title
 
-        model.subtitle?.let {
-            binding.subtitle.text = it
-            binding.subtitle.visibility = VISIBLE
-        } ?: run {
+        if (model.subtitle.isNullOrBlank()) {
             binding.subtitle.visibility = GONE
+        } else {
+            binding.subtitle.text = model.subtitle
+            binding.subtitle.visibility = VISIBLE
         }
 
         binding.cost.text = model.cost.toFormatedPrice()

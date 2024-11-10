@@ -8,16 +8,23 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.databinding.FragmentWalletBinding
+import com.app.spendable.presentation.components.TransactionDetailModel
+import com.app.spendable.presentation.components.TransactionDetailsDialog
 import com.app.spendable.presentation.main.IMainView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 interface WalletView {
     fun updateView(models: List<WalletAdapterModel>)
+    fun showTransactionDetail(detailModel: TransactionDetailModel)
 }
 
 @AndroidEntryPoint
 class WalletFragment : Fragment(), WalletView {
+
+    companion object {
+        private const val TRANSACTION_DETAIL_DIALOG_TAG = "TRANSACTION_DETAIL_DIALOG"
+    }
 
     private var _binding: FragmentWalletBinding? = null
 
@@ -40,81 +47,37 @@ class WalletFragment : Fragment(), WalletView {
         return binding.root
     }
 
-    /*private fun dummyModels() = listOf(
-        WalletCardModel(BigDecimal("100.50"), BigDecimal("100.50")),
-        HeaderModel("Subscriptions"),
-        SubscriptionsListModel(
-            listOf(
-                SubscriptionItemModel(
-                    SubscriptionIcon.NETFLIX,
-                    "Netflix",
-                    BigDecimal("49.99"),
-                    SubscriptionFrequency.MONTHLY
-                ),
-                SubscriptionItemModel(
-                    SubscriptionIcon.NETFLIX,
-                    "Spotify",
-                    BigDecimal("49.99"),
-                    SubscriptionFrequency.MONTHLY
-                ),
-                SubscriptionItemModel(
-                    SubscriptionIcon.NETFLIX,
-                    "Spotify",
-                    BigDecimal("49.99"),
-                    SubscriptionFrequency.WEEKLY
-                ),
-                SubscriptionItemModel(
-                    SubscriptionIcon.NETFLIX,
-                    "Spotify",
-                    BigDecimal("49.99"),
-                    SubscriptionFrequency.BIWEEKLY
-                ),
-                SubscriptionItemModel(
-                    SubscriptionIcon.NETFLIX,
-                    "Spotify",
-                    BigDecimal("49.99"),
-                    SubscriptionFrequency.DAILY
-                ),
-                SubscriptionItemModel(
-                    SubscriptionIcon.NETFLIX,
-                    "Spotify",
-                    BigDecimal("49.99"),
-                    SubscriptionFrequency.DAILY
-                ),
-            )
-        ),
-        HeaderModel("October 2024"),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.TRANSPORTS, "Galp", cost = BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.TRANSPORTS, "Galp", cost = BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.TRANSPORTS, "Galp", cost = BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        HeaderModel("November 2024"),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.TRANSPORTS, "Galp", cost = BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.TRANSPORTS, "Galp", cost = BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.TRANSPORTS, "Galp", cost = BigDecimal("100.50")),
-        TransactionItemModel(TransactionType.EAT_OUT, "McD", "Bom", BigDecimal("100.50")),
-    )*/
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            this@WalletFragment.adapter = WalletAdapter(context, emptyList())
+            this@WalletFragment.adapter = WalletAdapter(context, emptyList(), ::onItemClick)
             adapter = this@WalletFragment.adapter
         }
 
         binding.addButton.setOnClickListener {
             (activity as? IMainView)?.navigateToAdd()
+        }
+    }
+
+    private fun onItemClick(model: WalletAdapterModel) {
+        when (model) {
+            is TransactionItemModel -> presenter.getTransactionDetail(model.id)
+            else -> {
+                // do nothing
+            }
+        }
+    }
+
+    override fun showTransactionDetail(detailModel: TransactionDetailModel) {
+        activity?.let {
+            TransactionDetailsDialog.build(detailModel, onClose = { delete ->
+                if (delete) {
+                    presenter.deleteTransaction(detailModel.id)
+                }
+            }).show(it.supportFragmentManager, TRANSACTION_DETAIL_DIALOG_TAG)
         }
     }
 

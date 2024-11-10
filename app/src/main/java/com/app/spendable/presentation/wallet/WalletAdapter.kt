@@ -9,7 +9,11 @@ import com.app.spendable.presentation.components.TransactionItemComponent
 import com.app.spendable.presentation.components.WalletCardComponent
 import com.app.spendable.utils.setRecyclerViewLayoutParams
 
-class WalletAdapter(val context: Context, var models: List<WalletAdapterModel>) :
+class WalletAdapter(
+    val context: Context,
+    var models: List<WalletAdapterModel>,
+    val onClick: (WalletAdapterModel) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private enum class ModelType {
@@ -59,7 +63,9 @@ class WalletAdapter(val context: Context, var models: List<WalletAdapterModel>) 
         when (val model = models[position]) {
             is WalletCardModel -> (holder as CardComponentViewHolder).render(model)
             is HeaderModel -> (holder as HeaderComponentViewHolder).render(model)
-            is TransactionItemModel -> (holder as TransactionItemComponentViewHolder).render(model)
+            is TransactionItemModel ->
+                (holder as TransactionItemComponentViewHolder).render(model, onClick)
+
             is SubscriptionsListModel ->
                 (holder as SubscriptionsListComponentViewHolder).render(model)
         }
@@ -88,8 +94,9 @@ class WalletAdapter(val context: Context, var models: List<WalletAdapterModel>) 
 
     private class TransactionItemComponentViewHolder(val component: TransactionItemComponent) :
         RecyclerView.ViewHolder(component) {
-        fun render(model: TransactionItemModel) {
+        fun render(model: TransactionItemModel, onClick: (WalletAdapterModel) -> Unit) {
             component.setup(model)
+            component.setOnClickListener { onClick(model) }
         }
     }
 

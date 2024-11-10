@@ -3,6 +3,7 @@ package com.app.spendable.utils
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.YearMonth
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
@@ -13,6 +14,9 @@ object DateUtils {
         const val TIME_FORMAT = "HH:mm"
         const val DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm"
         const val WEEKDAY_DAY_MONTH_NAME = "eee, dd MMMM"
+        const val FULL_MONTH_YEAR = "MMMM yyyy"
+        //const val ISO_DATE_TIME = "yyyy-MM-ddZHH:mm"
+        //const val ISO_DATE = "yyyy-MM-dd"
     }
 
     private fun getFormatter(pattern: String) =
@@ -31,6 +35,9 @@ object DateUtils {
 
         fun toWeekdayDayMonth(date: LocalDate) =
             date.format(getFormatter(AvailableFormats.WEEKDAY_DAY_MONTH_NAME))
+
+        fun toFullMonthYear(yearMonth: YearMonth) =
+            yearMonth.format(getFormatter(AvailableFormats.FULL_MONTH_YEAR))
 
     }
 
