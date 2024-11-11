@@ -132,6 +132,7 @@ private fun AddSubscriptionForm.getFinalTitle(): String? {
 
 fun AddSubscriptionForm.toSubscription(): Subscription? {
     return Subscription(
+        category = selectedCategory ?: return null,
         iconType = getIconTypeString() ?: return null,
         title = getFinalTitle()?.ifBlank { null } ?: return null,
         cost = amount?.ifBlank { null } ?: return null,

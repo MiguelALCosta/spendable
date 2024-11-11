@@ -9,7 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.spendable.R
 import com.app.spendable.databinding.FragmentAddTransactionBinding
-import com.app.spendable.presentation.add.AddView
+import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.utils.DateUtils
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -84,7 +84,7 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
     }
 
     override fun closeAdd() {
-        (activity as? AddView)?.closeAdd()
+        (activity as? CloseableView)?.close()
     }
 
     override fun setAmountErrorState(hasError: Boolean) {

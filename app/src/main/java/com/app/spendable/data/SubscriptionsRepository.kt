@@ -5,7 +5,9 @@ import com.app.spendable.data.db.Subscription
 
 interface ISubscriptionsRepository {
     suspend fun getAll(): List<Subscription>
+    suspend fun getById(id: Int): Subscription
     suspend fun insert(subscription: Subscription)
+    suspend fun update(subscription: Subscription)
 }
 
 class SubscriptionsRepository(private val database: IAppDatabase) : ISubscriptionsRepository {
@@ -14,7 +16,15 @@ class SubscriptionsRepository(private val database: IAppDatabase) : ISubscriptio
         return database.subscriptionDao().getAll()
     }
 
+    override suspend fun getById(id: Int): Subscription {
+        return database.subscriptionDao().getById(id)
+    }
+
     override suspend fun insert(subscription: Subscription) {
         database.subscriptionDao().insert(subscription)
+    }
+
+    override suspend fun update(subscription: Subscription) {
+        database.subscriptionDao().update(subscription)
     }
 }

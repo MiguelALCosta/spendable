@@ -41,10 +41,11 @@ enum class SubscriptionFrequency {
 }
 
 data class SubscriptionItemModel(
+    val id: Int,
     val iconType: SubscriptionIcon,
     val title: String,
     val cost: BigDecimal,
     val frequency: SubscriptionFrequency
-)
+) : WalletAdapterModel
 
 data class SubscriptionsListModel(val items: List<SubscriptionItemModel>) : WalletAdapterModel

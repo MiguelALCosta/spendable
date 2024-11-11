@@ -17,6 +17,7 @@ data class Transaction(
 @Entity
 data class Subscription(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "category") val category: String,
     @ColumnInfo(name = "iconType") val iconType: String,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "cost") val cost: String,

@@ -4,15 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityAddBinding
+import com.app.spendable.presentation.common.CloseableView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
-interface AddView {
-    fun closeAdd()
-}
-
 @AndroidEntryPoint
-class AddActivity : AppCompatActivity(), AddView {
+class AddActivity : AppCompatActivity(), CloseableView {
 
     private lateinit var binding: ActivityAddBinding
 
@@ -26,7 +23,7 @@ class AddActivity : AppCompatActivity(), AddView {
         setupTopBar()
     }
 
-    override fun closeAdd() {
+    override fun close() {
         finish()
     }
 

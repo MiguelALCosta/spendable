@@ -8,12 +8,15 @@ import androidx.navigation.ui.setupWithNavController
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityMainBinding
 import com.app.spendable.presentation.add.AddActivity
+import com.app.spendable.presentation.common.ExtraConstants
+import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 interface IMainView {
     fun navigateToAdd()
+    fun showSubscriptionDetail(id: Int)
 }
 
 @AndroidEntryPoint
@@ -48,6 +51,12 @@ class MainActivity : AppCompatActivity(), IMainView {
 
     override fun navigateToAdd() {
         val intent = Intent(this, AddActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun showSubscriptionDetail(id: Int) {
+        val intent = Intent(this, SubscriptionDetailActivity::class.java)
+        intent.putExtra(ExtraConstants.ID, id)
         startActivity(intent)
     }
 

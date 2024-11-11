@@ -30,6 +30,7 @@ class WalletAdapter(
             is HeaderModel -> ModelType.HEADER.ordinal
             is TransactionItemModel -> ModelType.TRANSACTION_ITEM.ordinal
             is SubscriptionsListModel -> ModelType.SUBSCRIPTION_LIST.ordinal
+            else -> -1
         }
     }
 
@@ -67,7 +68,11 @@ class WalletAdapter(
                 (holder as TransactionItemComponentViewHolder).render(model, onClick)
 
             is SubscriptionsListModel ->
-                (holder as SubscriptionsListComponentViewHolder).render(model)
+                (holder as SubscriptionsListComponentViewHolder).render(model, onClick)
+
+            else -> {
+                // do nothing
+            }
         }
     }
 
@@ -102,8 +107,8 @@ class WalletAdapter(
 
     private class SubscriptionsListComponentViewHolder(val component: SubscriptionsListComponent) :
         RecyclerView.ViewHolder(component) {
-        fun render(model: SubscriptionsListModel) {
-            component.setup(model.items)
+        fun render(model: SubscriptionsListModel, onClick: (WalletAdapterModel) -> Unit) {
+            component.setup(model.items, onClick)
         }
     }
 

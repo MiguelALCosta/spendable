@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.add.AddActivity" />
+        <activity android:name=".presentation.subscriptionDetail.SubscriptionDetailActivity" />
     </application>
 
 </manifest>

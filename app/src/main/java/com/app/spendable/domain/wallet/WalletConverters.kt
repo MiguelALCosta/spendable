@@ -22,6 +22,7 @@ fun Transaction.toItemModel() =
 
 fun Subscription.toItemModel() =
     SubscriptionItemModel(
+        id = id,
         iconType = SubscriptionIcon.entries.firstOrNull { it.name == iconType }
             ?: SubscriptionIcon.OTHER,
         title = title,

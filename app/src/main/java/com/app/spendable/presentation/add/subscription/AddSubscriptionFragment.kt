@@ -9,7 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.spendable.R
 import com.app.spendable.databinding.FragmentAddSubscriptionBinding
-import com.app.spendable.presentation.add.AddView
+import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.utils.DateUtils
@@ -25,17 +25,18 @@ import javax.inject.Inject
 
 interface AddSubscriptionView {
     fun setupView(form: AddSubscriptionForm)
-    fun closeAdd()
+    fun close()
     fun setAmountErrorState(hasError: Boolean)
     fun setTitleErrorState(hasError: Boolean)
     fun setCategoryErrorState(hasError: Boolean)
     fun setSubCategoryErrorState(hasError: Boolean)
     fun showGenericError()
+    fun showCancelButton()
 }
 
 @SuppressLint("SetTextI18n")
 @AndroidEntryPoint
-class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
+class AddSubscriptionFragment(val subscriptionId: Int? = null) : Fragment(), AddSubscriptionView {
 
     companion object {
         private const val DATE_PICKER_TAG = "DATE_PICKER_TAG"
@@ -61,7 +62,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         val root: View = binding.root
 
         presenter.bind(this)
-        presenter.loadView()
+        presenter.loadView(subscriptionId)
 
         return root
     }
@@ -73,13 +74,13 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
     }
 
     override fun setupView(form: AddSubscriptionForm) {
-        this.form = form
-        setupInputs()
+        this.form = form.copy()
+        setupInputs(form)
         setupButton()
     }
 
-    override fun closeAdd() {
-        (activity as? AddView)?.closeAdd()
+    override fun close() {
+        (activity as? CloseableView)?.close()
     }
 
     override fun setAmountErrorState(hasError: Boolean) {
@@ -115,9 +116,9 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         Snackbar.make(binding.root, R.string.generic_error, Snackbar.LENGTH_LONG).show()
     }
 
-    private fun setupInputs() {
+    private fun setupInputs(initialForm: AddSubscriptionForm) {
         binding.priceInput.apply {
-            form?.amount?.let { editText?.setText(it) }
+            initialForm.amount?.let { editText?.setText(it) }
             editText?.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 blockPriceDecimals(text?.toString())
                 form?.amount = text?.toString()
@@ -131,7 +132,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
 
         binding.categoryInput.apply {
-            setSelectedCategory(form?.selectedCategory)
+            setSelectedCategory(initialForm.selectedCategory)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
                     form?.categories ?: emptyList(),
@@ -143,7 +144,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
 
         binding.subcategoryInput.apply {
-            setSelectedSubCategory(form?.selectedSubcategory)
+            setSelectedSubCategory(initialForm.selectedSubcategory)
             editText?.setOnClickListener {
                 val choices =
                     form?.selectedCategory?.let { form?.subcategories?.getOrDefault(it, null) }
@@ -157,7 +158,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
 
         binding.titleInput.apply {
-            form?.title?.let { editText?.setText(it) }
+            initialForm.title?.let { editText?.setText(it) }
             editText?.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 form?.title = text?.toString()
             })
@@ -165,7 +166,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
 
         binding.frequencyInput.apply {
-            form?.selectedFrequency?.let { setSelectedFrequency(it) }
+            setSelectedFrequency(initialForm.selectedFrequency)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
                     form?.frequencies ?: emptyList(),
@@ -177,7 +178,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
         }
 
         binding.dateInput.editText?.apply {
-            form?.date?.let { setSelectedDate(it) }
+            setSelectedDate(initialForm.date)
             setOnClickListener {
                 showDatePicker()
             }
@@ -187,7 +188,7 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
     private fun setupButton() {
         binding.saveButton.setOnClickListener {
             onPriceInputLoseFocus()
-            presenter.saveSubscription(form)
+            presenter.saveSubscription(subscriptionId, form)
         }
     }
 
@@ -300,5 +301,10 @@ class AddSubscriptionFragment : Fragment(), AddSubscriptionView {
                 form?.selectedFrequency = choice.id
                 binding.frequencyInput.editText?.setText(choice.label)
             }
+    }
+
+    override fun showCancelButton() {
+        binding.cancelButton.visibility = View.VISIBLE
+        binding.cancelButton.setOnClickListener { presenter.cancelSubscription(subscriptionId) }
     }
 }

@@ -82,7 +82,7 @@ class WalletInteractor(
 
     override fun getTransactionDetail(id: Int, completion: (TransactionDetailModel) -> Unit) {
         makeRequest(request = {
-            transactionsRepository.getTransaction(id).toDetailModel()
+            transactionsRepository.getById(id).toDetailModel()
         }, completion)
     }
 

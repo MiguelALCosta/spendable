@@ -5,7 +5,7 @@ import com.app.spendable.data.db.Transaction
 
 interface ITransactionsRepository {
     suspend fun getAll(): List<Transaction>
-    suspend fun getTransaction(id: Int): Transaction
+    suspend fun getById(id: Int): Transaction
     suspend fun insert(transaction: Transaction)
     suspend fun delete(id: Int)
 }
@@ -16,7 +16,7 @@ class TransactionsRepository(private val database: IAppDatabase) : ITransactions
         return database.transactionDao().getAll()
     }
 
-    override suspend fun getTransaction(id: Int): Transaction {
+    override suspend fun getById(id: Int): Transaction {
         return database.transactionDao().getById(id)
     }
 

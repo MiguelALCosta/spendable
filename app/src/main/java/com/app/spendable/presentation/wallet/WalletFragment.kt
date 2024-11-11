@@ -65,6 +65,7 @@ class WalletFragment : Fragment(), WalletView {
     private fun onItemClick(model: WalletAdapterModel) {
         when (model) {
             is TransactionItemModel -> presenter.getTransactionDetail(model.id)
+            is SubscriptionItemModel -> (activity as? IMainView)?.showSubscriptionDetail(model.id)
             else -> {
                 // do nothing
             }
