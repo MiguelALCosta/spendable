@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.add.subscription
+package com.app.spendable.presentation.subscriptionDetail
 
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.wallet.SubscriptionIcon
@@ -8,7 +8,7 @@ enum class SubscriptionCategory {
     STREAMING, MUSIC, MULTI_SERVICES, GAMING, SPORTS, UTILITIES, OTHER
 }
 
-data class AddSubscriptionForm(
+data class SubscriptionForm(
     var amount: String?,
     val categories: List<SelectableChoiceComponent.Choice>,
     val subcategories: Map<String, List<SelectableChoiceComponent.Choice>?>,

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityCommonWithFragmentBinding
-import com.app.spendable.presentation.add.subscription.AddSubscriptionFragment
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.common.ExtraConstants
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +50,7 @@ class SubscriptionDetailActivity : AppCompatActivity(), CloseableView {
                 setReorderingAllowed(true)
                 add(
                     R.id.fragment_container_view,
-                    AddSubscriptionFragment(id),
+                    SubscriptionDetailFragment(id),
                     SUBSCRIPTION_DETAIL_FRAGMENT_TAG
                 )
             }

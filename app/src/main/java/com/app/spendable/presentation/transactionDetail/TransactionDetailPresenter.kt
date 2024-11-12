@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.add.transaction
+package com.app.spendable.presentation.transactionDetail
 
 import com.app.spendable.data.ITransactionsRepository
 import com.app.spendable.presentation.components.SelectableChoiceComponent
@@ -16,7 +16,7 @@ interface IAddTransactionPresenter {
     fun bind(view: AddTransactionView)
     fun unbind()
     fun loadView(id: Int?)
-    fun saveTransaction(id: Int?, form: AddTransactionForm?)
+    fun saveTransaction(id: Int?, form: TransactionForm?)
     fun deleteTransaction(id: Int?)
 }
 
@@ -44,7 +44,7 @@ class AddTransactionPresenter(
             val selectedDateTime = transaction?.date?.let {
                 DateUtils.Parse.fromDateTime(it)
             } ?: DateUtils.Provide.nowDevice()
-            val form = AddTransactionForm(
+            val form = TransactionForm(
                 amount = transaction?.cost,
                 title = transaction?.title,
                 categories = TransactionType.entries.map {
@@ -67,7 +67,7 @@ class AddTransactionPresenter(
         }
     }
 
-    override fun saveTransaction(id: Int?, form: AddTransactionForm?) {
+    override fun saveTransaction(id: Int?, form: TransactionForm?) {
         if (form == null) {
             view?.showGenericError()
             return

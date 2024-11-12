@@ -1,10 +1,10 @@
-package com.app.spendable.presentation.add.transaction
+package com.app.spendable.presentation.transactionDetail
 
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import java.time.LocalDate
 import java.time.LocalTime
 
-data class AddTransactionForm(
+data class TransactionForm(
     var amount: String?,
     var title: String?,
     val categories: List<SelectableChoiceComponent.Choice>,

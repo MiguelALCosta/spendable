@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityCommonWithFragmentBinding
-import com.app.spendable.presentation.add.transaction.AddTransactionFragment
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.common.ExtraConstants
 import dagger.hilt.android.AndroidEntryPoint

@@ -9,12 +9,12 @@ import com.app.spendable.data.db.AppDatabase
 import com.app.spendable.data.db.IAppDatabase
 import com.app.spendable.domain.wallet.IWalletInteractor
 import com.app.spendable.domain.wallet.WalletInteractor
-import com.app.spendable.presentation.add.subscription.AddSubscriptionPresenter
-import com.app.spendable.presentation.add.subscription.IAddSubscriptionPresenter
-import com.app.spendable.presentation.add.transaction.AddTransactionPresenter
-import com.app.spendable.presentation.add.transaction.IAddTransactionPresenter
 import com.app.spendable.presentation.main.IMainPresenter
 import com.app.spendable.presentation.main.MainPresenter
+import com.app.spendable.presentation.subscriptionDetail.ISubscriptionDetailPresenter
+import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailPresenter
+import com.app.spendable.presentation.transactionDetail.AddTransactionPresenter
+import com.app.spendable.presentation.transactionDetail.IAddTransactionPresenter
 import com.app.spendable.presentation.wallet.IWalletPresenter
 import com.app.spendable.presentation.wallet.WalletPresenter
 import com.app.spendable.utils.IStringsManager
@@ -63,11 +63,11 @@ object MainModule {
     }
 
     @Provides
-    fun provideAddSubscriptionPresenter(
+    fun provideSubscriptionPresenter(
         stringsManager: IStringsManager,
         subscriptionsRepository: ISubscriptionsRepository
-    ): IAddSubscriptionPresenter {
-        return AddSubscriptionPresenter(stringsManager, subscriptionsRepository)
+    ): ISubscriptionDetailPresenter {
+        return SubscriptionDetailPresenter(stringsManager, subscriptionsRepository)
     }
 
     @Provides

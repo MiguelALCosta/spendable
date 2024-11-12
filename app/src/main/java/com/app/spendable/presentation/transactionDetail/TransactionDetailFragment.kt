@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.add.transaction
+package com.app.spendable.presentation.transactionDetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.spendable.R
-import com.app.spendable.databinding.FragmentAddTransactionBinding
+import com.app.spendable.databinding.FragmentTransactionDetailBinding
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.utils.DateUtils
@@ -26,7 +26,7 @@ import java.time.ZoneOffset
 import javax.inject.Inject
 
 interface AddTransactionView {
-    fun setupView(form: AddTransactionForm)
+    fun setupView(form: TransactionForm)
     fun close()
     fun setAmountErrorState(hasError: Boolean)
     fun setTitleErrorState(hasError: Boolean)
@@ -45,7 +45,7 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
         private const val TIME_PICKER_TAG = "TIME_PICKER_TAG"
     }
 
-    private var _binding: FragmentAddTransactionBinding? = null
+    private var _binding: FragmentTransactionDetailBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -55,7 +55,7 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
     lateinit var presenter: IAddTransactionPresenter
 
 
-    private var form: AddTransactionForm? = null
+    private var form: TransactionForm? = null
 
 
     override fun onCreateView(
@@ -64,7 +64,7 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentAddTransactionBinding.inflate(inflater, container, false)
+        _binding = FragmentTransactionDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         presenter.bind(this)
@@ -79,7 +79,7 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
         presenter.unbind()
     }
 
-    override fun setupView(form: AddTransactionForm) {
+    override fun setupView(form: TransactionForm) {
         this.form = form
         setupInputs()
         setupButton()

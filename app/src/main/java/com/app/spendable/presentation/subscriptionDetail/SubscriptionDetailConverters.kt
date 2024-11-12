@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.add.subscription
+package com.app.spendable.presentation.subscriptionDetail
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -109,7 +109,7 @@ fun SubscriptionCategory.getSubCategoryChoices(stringsManager: IStringsManager) 
         )
     }
 
-private fun AddSubscriptionForm.getIconTypeString(): String? {
+private fun SubscriptionForm.getIconTypeString(): String? {
     val category = SubscriptionCategory.entries.firstOrNull { it.name == selectedCategory }
     if (category == SubscriptionCategory.OTHER) {
         return SubscriptionIcon.OTHER.name
@@ -120,7 +120,7 @@ private fun AddSubscriptionForm.getIconTypeString(): String? {
     }
 }
 
-private fun AddSubscriptionForm.getFinalTitle(): String? {
+private fun SubscriptionForm.getFinalTitle(): String? {
     return if (needsTitle()) {
         title
     } else {
@@ -130,7 +130,7 @@ private fun AddSubscriptionForm.getFinalTitle(): String? {
     }
 }
 
-fun AddSubscriptionForm.toSubscription(): Subscription? {
+fun SubscriptionForm.toSubscription(): Subscription? {
     return Subscription(
         category = selectedCategory ?: return null,
         iconType = getIconTypeString() ?: return null,

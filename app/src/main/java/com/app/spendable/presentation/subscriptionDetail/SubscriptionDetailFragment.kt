@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.add.subscription
+package com.app.spendable.presentation.subscriptionDetail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.spendable.R
-import com.app.spendable.databinding.FragmentAddSubscriptionBinding
+import com.app.spendable.databinding.FragmentSubscriptionDetailBinding
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.components.SelectableChoiceComponent
@@ -23,8 +23,8 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import javax.inject.Inject
 
-interface AddSubscriptionView {
-    fun setupView(form: AddSubscriptionForm)
+interface ISubscriptionDetailView {
+    fun setupView(form: SubscriptionForm)
     fun close()
     fun setAmountErrorState(hasError: Boolean)
     fun setTitleErrorState(hasError: Boolean)
@@ -36,30 +36,30 @@ interface AddSubscriptionView {
 
 @SuppressLint("SetTextI18n")
 @AndroidEntryPoint
-class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragment(),
-    AddSubscriptionView {
+class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Fragment(),
+    ISubscriptionDetailView {
 
     companion object {
         private const val DATE_PICKER_TAG = "DATE_PICKER_TAG"
     }
 
-    private var _binding: FragmentAddSubscriptionBinding? = null
+    private var _binding: FragmentSubscriptionDetailBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var presenter: IAddSubscriptionPresenter
+    lateinit var presenter: ISubscriptionDetailPresenter
 
-    private var form: AddSubscriptionForm? = null
+    private var form: SubscriptionForm? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAddSubscriptionBinding.inflate(inflater, container, false)
+        _binding = FragmentSubscriptionDetailBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         presenter.bind(this)
@@ -74,9 +74,9 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
         presenter.unbind()
     }
 
-    override fun setupView(form: AddSubscriptionForm) {
-        this.form = form.copy()
-        setupInputs(form)
+    override fun setupView(form: SubscriptionForm) {
+        this.form = form
+        setupInputs()
         setupButton()
     }
 
@@ -117,9 +117,9 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
         Snackbar.make(binding.root, R.string.generic_error, Snackbar.LENGTH_LONG).show()
     }
 
-    private fun setupInputs(initialForm: AddSubscriptionForm) {
+    private fun setupInputs() {
         binding.priceInput.apply {
-            initialForm.amount?.let { editText?.setText(it) }
+            form?.amount?.let { editText?.setText(it) }
             editText?.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 blockPriceDecimals(text?.toString())
                 form?.amount = text?.toString()
@@ -133,7 +133,7 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
         }
 
         binding.categoryInput.apply {
-            setSelectedCategory(initialForm.selectedCategory)
+            updateCategoryInput(form?.selectedCategory)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
                     form?.categories ?: emptyList(),
@@ -145,21 +145,23 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
         }
 
         binding.subcategoryInput.apply {
-            setSelectedSubCategory(initialForm.selectedSubcategory)
+            updateSubcategoryInput(form?.selectedSubcategory)
+            updateSubcategoryVisibility()
             editText?.setOnClickListener {
                 val choices =
                     form?.selectedCategory?.let { form?.subcategories?.getOrDefault(it, null) }
                 showChoiceBottomSheet(
                     choices ?: emptyList(),
                     form?.selectedCategory,
-                    onSelection = ::setSelectedSubCategory
+                    onSelection = ::setSelectedSubcategory
                 )
             }
             errorIconDrawable = null
         }
 
         binding.titleInput.apply {
-            initialForm.title?.let { editText?.setText(it) }
+            form?.title?.let { editText?.setText(it) }
+            updateTitleVisibility()
             editText?.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 form?.title = text?.toString()
             })
@@ -167,7 +169,7 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
         }
 
         binding.frequencyInput.apply {
-            setSelectedFrequency(initialForm.selectedFrequency)
+            updateFrequencyInput(form?.selectedFrequency)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
                     form?.frequencies ?: emptyList(),
@@ -179,7 +181,7 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
         }
 
         binding.dateInput.editText?.apply {
-            setSelectedDate(initialForm.date)
+            form?.date?.let { setSelectedDate(it) }
             setOnClickListener {
                 showDatePicker()
             }
@@ -261,11 +263,15 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
     }
 
     private fun setSelectedCategory(choiceId: String?) {
-        val choice = form?.categories?.firstOrNull { it.id == choiceId }
-        form?.selectedCategory = choice?.id
-        binding.categoryInput.editText?.setText(choice?.label ?: "")
+        form?.selectedCategory = choiceId
+        updateCategoryInput(choiceId)
         updateSubcategoryVisibility()
-        setSelectedSubCategory(null)
+        setSelectedSubcategory(null)
+    }
+
+    private fun updateCategoryInput(choiceId: String?) {
+        val choice = form?.categories?.firstOrNull { it.id == choiceId }
+        binding.categoryInput.editText?.setText(choice?.label ?: "")
     }
 
     private fun updateSubcategoryVisibility() {
@@ -286,22 +292,27 @@ class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragmen
         }
     }
 
-    private fun setSelectedSubCategory(choiceId: String?) {
-        val choice = form?.getActiveSubcategoryChoices()?.firstOrNull { it.id == choiceId }
-        form?.selectedSubcategory = choice?.id
-        binding.subcategoryInput.editText?.setText(choice?.label ?: "")
+    private fun setSelectedSubcategory(choiceId: String?) {
+        form?.selectedSubcategory = choiceId
+        updateSubcategoryInput(choiceId)
         form?.title = null
         binding.titleInput.editText?.setText("")
         updateTitleVisibility()
     }
 
+    private fun updateSubcategoryInput(choiceId: String?) {
+        val choice = form?.getActiveSubcategoryChoices()?.firstOrNull { it.id == choiceId }
+        binding.subcategoryInput.editText?.setText(choice?.label ?: "")
+    }
+
     private fun setSelectedFrequency(choiceId: String) {
-        form?.frequencies
-            ?.firstOrNull { it.id == choiceId }
-            ?.let { choice ->
-                form?.selectedFrequency = choice.id
-                binding.frequencyInput.editText?.setText(choice.label)
-            }
+        form?.selectedFrequency = choiceId
+        updateFrequencyInput(choiceId)
+    }
+
+    private fun updateFrequencyInput(choiceId: String?) {
+        val choice = form?.frequencies?.firstOrNull { it.id == choiceId }
+        binding.frequencyInput.editText?.setText(choice?.label ?: "")
     }
 
     override fun showCancelButton() {

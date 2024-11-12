@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.add.subscription
+package com.app.spendable.presentation.subscriptionDetail
 
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.presentation.components.SelectableChoiceComponent
@@ -11,22 +11,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-interface IAddSubscriptionPresenter {
-    fun bind(view: AddSubscriptionView)
+interface ISubscriptionDetailPresenter {
+    fun bind(view: ISubscriptionDetailView)
     fun unbind()
     fun loadView(id: Int?)
-    fun saveSubscription(id: Int?, form: AddSubscriptionForm?)
+    fun saveSubscription(id: Int?, form: SubscriptionForm?)
     fun cancelSubscription(id: Int?)
 }
 
-class AddSubscriptionPresenter(
+class SubscriptionDetailPresenter(
     private val stringsManager: IStringsManager,
     private val subscriptionsRepository: ISubscriptionsRepository
-) : IAddSubscriptionPresenter {
+) : ISubscriptionDetailPresenter {
 
-    private var view: AddSubscriptionView? = null
+    private var view: ISubscriptionDetailView? = null
 
-    override fun bind(view: AddSubscriptionView) {
+    override fun bind(view: ISubscriptionDetailView) {
         this.view = view
     }
 
@@ -41,7 +41,7 @@ class AddSubscriptionPresenter(
             }
 
             val now = DateUtils.Provide.nowDevice()
-            val form = AddSubscriptionForm(
+            val form = SubscriptionForm(
                 amount = subscription?.cost,
                 categories = SubscriptionCategory.entries.map {
                     SelectableChoiceComponent.Choice(
@@ -75,7 +75,7 @@ class AddSubscriptionPresenter(
         }
     }
 
-    override fun saveSubscription(id: Int?, form: AddSubscriptionForm?) {
+    override fun saveSubscription(id: Int?, form: SubscriptionForm?) {
         if (form == null) {
             view?.showGenericError()
             return
