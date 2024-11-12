@@ -1,20 +1,20 @@
-package com.app.spendable.presentation.subscriptionDetail
+package com.app.spendable.presentation.transactionDetail
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityCommonWithFragmentBinding
-import com.app.spendable.presentation.add.subscription.AddSubscriptionFragment
+import com.app.spendable.presentation.add.transaction.AddTransactionFragment
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.common.ExtraConstants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SubscriptionDetailActivity : AppCompatActivity(), CloseableView {
+class TransactionDetailActivity : AppCompatActivity(), CloseableView {
 
     companion object {
-        const val SUBSCRIPTION_DETAIL_FRAGMENT_TAG = "SUBSCRIPTION_DETAIL_FRAGMENT_TAG"
+        const val TRANSACTION_DETAIL_FRAGMENT_TAG = "TRANSACTION_DETAIL_FRAGMENT_TAG"
     }
 
     private lateinit var binding: ActivityCommonWithFragmentBinding
@@ -37,7 +37,7 @@ class SubscriptionDetailActivity : AppCompatActivity(), CloseableView {
         binding.topBar.icon.setOnClickListener {
             finish()
         }
-        binding.topBar.title.text = getString(R.string.subscription)
+        binding.topBar.title.text = getString(R.string.transaction)
     }
 
     private fun setupSubscriptionFragment(savedInstanceState: Bundle?) {
@@ -51,8 +51,8 @@ class SubscriptionDetailActivity : AppCompatActivity(), CloseableView {
                 setReorderingAllowed(true)
                 add(
                     R.id.fragment_container_view,
-                    AddSubscriptionFragment(id),
-                    SUBSCRIPTION_DETAIL_FRAGMENT_TAG
+                    AddTransactionFragment(id),
+                    TRANSACTION_DETAIL_FRAGMENT_TAG
                 )
             }
         }

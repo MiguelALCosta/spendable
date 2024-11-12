@@ -10,12 +10,14 @@ import com.app.spendable.databinding.ActivityMainBinding
 import com.app.spendable.presentation.add.AddActivity
 import com.app.spendable.presentation.common.ExtraConstants
 import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailActivity
+import com.app.spendable.presentation.transactionDetail.TransactionDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 interface IMainView {
     fun navigateToAdd()
+    fun showTransactionDetail(id: Int)
     fun showSubscriptionDetail(id: Int)
 }
 
@@ -51,6 +53,12 @@ class MainActivity : AppCompatActivity(), IMainView {
 
     override fun navigateToAdd() {
         val intent = Intent(this, AddActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun showTransactionDetail(id: Int) {
+        val intent = Intent(this, TransactionDetailActivity::class.java)
+        intent.putExtra(ExtraConstants.ID, id)
         startActivity(intent)
     }
 

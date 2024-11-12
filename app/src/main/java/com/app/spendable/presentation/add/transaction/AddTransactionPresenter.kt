@@ -15,8 +15,9 @@ import kotlinx.coroutines.withContext
 interface IAddTransactionPresenter {
     fun bind(view: AddTransactionView)
     fun unbind()
-    fun loadView()
-    fun saveTransaction(form: AddTransactionForm?)
+    fun loadView(id: Int?)
+    fun saveTransaction(id: Int?, form: AddTransactionForm?)
+    fun deleteTransaction(id: Int?)
 }
 
 class AddTransactionPresenter(
@@ -34,27 +35,39 @@ class AddTransactionPresenter(
         this.view = null
     }
 
-    override fun loadView() {
-        val now = DateUtils.Provide.nowDevice()
-        val form = AddTransactionForm(
-            amount = null,
-            title = null,
-            categories = TransactionType.entries.map {
-                SelectableChoiceComponent.Choice(
-                    it.name,
-                    stringsManager.getString(it.toTitleRes()),
-                    it.toIcon()
-                )
-            },
-            selectedCategory = null,
-            date = now.toLocalDate(),
-            time = now.toLocalTime(),
-            notes = null,
-        )
-        view?.setupView(form)
+    override fun loadView(id: Int?) {
+        CoroutineScope(Dispatchers.Main).launch {
+            val transaction = withContext(Dispatchers.IO) {
+                id?.let { transactionsRepository.getById(it) }
+            }
+
+            val selectedDateTime = transaction?.date?.let {
+                DateUtils.Parse.fromDateTime(it)
+            } ?: DateUtils.Provide.nowDevice()
+            val form = AddTransactionForm(
+                amount = transaction?.cost,
+                title = transaction?.title,
+                categories = TransactionType.entries.map {
+                    SelectableChoiceComponent.Choice(
+                        it.name,
+                        stringsManager.getString(it.toTitleRes()),
+                        it.toIcon()
+                    )
+                },
+                selectedCategory = transaction?.type,
+                date = selectedDateTime.toLocalDate(),
+                time = selectedDateTime.toLocalTime(),
+                notes = transaction?.description,
+            )
+            view?.setupView(form)
+
+            if (id != null) {
+                view?.showDeleteButton()
+            }
+        }
     }
 
-    override fun saveTransaction(form: AddTransactionForm?) {
+    override fun saveTransaction(id: Int?, form: AddTransactionForm?) {
         if (form == null) {
             view?.showGenericError()
             return
@@ -68,9 +81,29 @@ class AddTransactionPresenter(
         } else {
             CoroutineScope(Dispatchers.Main).launch {
                 withContext(Dispatchers.IO) {
-                    transactionsRepository.insert(transaction)
+                    if (id == null) {
+                        transactionsRepository.insert(transaction)
+                    } else {
+                        transactionsRepository.update(transaction.copy(id = id))
+                    }
                 }
-                view?.closeAdd()
+                view?.close()
+            }
+        }
+    }
+
+    override fun deleteTransaction(id: Int?) {
+        if (id == null) {
+            view?.showGenericError()
+        } else {
+            CoroutineScope(Dispatchers.Main).launch {
+                val result = withContext(Dispatchers.IO) {
+                    transactionsRepository.delete(id)
+                    true
+                }
+                if (result) {
+                    view?.close()
+                }
             }
         }
     }

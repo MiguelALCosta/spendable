@@ -7,6 +7,7 @@ interface ITransactionsRepository {
     suspend fun getAll(): List<Transaction>
     suspend fun getById(id: Int): Transaction
     suspend fun insert(transaction: Transaction)
+    suspend fun update(transaction: Transaction)
     suspend fun delete(id: Int)
 }
 
@@ -22,6 +23,10 @@ class TransactionsRepository(private val database: IAppDatabase) : ITransactions
 
     override suspend fun insert(transaction: Transaction) {
         database.transactionDao().insert(transaction)
+    }
+
+    override suspend fun update(transaction: Transaction) {
+        database.transactionDao().update(transaction)
     }
 
     override suspend fun delete(id: Int) {

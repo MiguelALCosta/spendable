@@ -27,16 +27,18 @@ import javax.inject.Inject
 
 interface AddTransactionView {
     fun setupView(form: AddTransactionForm)
-    fun closeAdd()
+    fun close()
     fun setAmountErrorState(hasError: Boolean)
     fun setTitleErrorState(hasError: Boolean)
     fun setCategoryErrorState(hasError: Boolean)
     fun showGenericError()
+    fun showDeleteButton()
 }
 
 @SuppressLint("SetTextI18n")
 @AndroidEntryPoint
-class AddTransactionFragment : Fragment(), AddTransactionView {
+class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(),
+    AddTransactionView {
 
     companion object {
         private const val DATE_PICKER_TAG = "DATE_PICKER_TAG"
@@ -66,7 +68,7 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
         val root: View = binding.root
 
         presenter.bind(this)
-        presenter.loadView()
+        presenter.loadView(transactionId)
 
         return root
     }
@@ -83,7 +85,7 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
         setupButton()
     }
 
-    override fun closeAdd() {
+    override fun close() {
         (activity as? CloseableView)?.close()
     }
 
@@ -167,7 +169,7 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
     }
 
     private fun setupButton() {
-        binding.saveButton.setOnClickListener { presenter.saveTransaction(form) }
+        binding.saveButton.setOnClickListener { presenter.saveTransaction(transactionId, form) }
     }
 
     private fun blockPriceDecimals(text: String?) {
@@ -264,5 +266,10 @@ class AddTransactionFragment : Fragment(), AddTransactionView {
                 form?.selectedCategory = choice.id
                 binding.categoryInput.editText?.setText(choice.label)
             }
+    }
+
+    override fun showDeleteButton() {
+        binding.deleteButton.visibility = View.VISIBLE
+        binding.deleteButton.setOnClickListener { presenter.deleteTransaction(transactionId) }
     }
 }

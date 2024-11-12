@@ -3,6 +3,7 @@ package com.app.spendable.data.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface TransactionDao {
@@ -14,6 +15,9 @@ interface TransactionDao {
 
     @Insert
     suspend fun insert(transaction: Transaction)
+
+    @Update
+    suspend fun update(transaction: Transaction)
 
     @Query("DELETE FROM `transaction` WHERE id=:id")
     suspend fun delete(id: Int)

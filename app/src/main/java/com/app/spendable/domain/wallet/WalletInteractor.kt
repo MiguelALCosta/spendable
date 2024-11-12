@@ -4,7 +4,6 @@ import com.app.spendable.R
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
 import com.app.spendable.domain.BaseInteractor
-import com.app.spendable.presentation.components.TransactionDetailModel
 import com.app.spendable.presentation.wallet.HeaderModel
 import com.app.spendable.presentation.wallet.SubscriptionsListModel
 import com.app.spendable.presentation.wallet.WalletAdapterModel
@@ -17,7 +16,6 @@ import java.time.YearMonth
 
 interface IWalletInteractor {
     fun getModels(completion: (List<WalletAdapterModel>) -> Unit)
-    fun getTransactionDetail(id: Int, completion: (TransactionDetailModel) -> Unit)
     fun deleteTransaction(id: Int, completion: () -> Unit)
 }
 
@@ -78,12 +76,6 @@ class WalletInteractor(
                 listOf(HeaderModel(DateUtils.Format.toWeekdayDayMonth(it.first)))
                     .plus(it.second.map { it.second.toItemModel() })
             }
-    }
-
-    override fun getTransactionDetail(id: Int, completion: (TransactionDetailModel) -> Unit) {
-        makeRequest(request = {
-            transactionsRepository.getById(id).toDetailModel()
-        }, completion)
     }
 
     override fun deleteTransaction(id: Int, completion: () -> Unit) {

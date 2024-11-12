@@ -6,7 +6,6 @@ interface IWalletPresenter {
     fun bind(view: WalletView)
     fun unbind()
     fun refreshWalletInfo()
-    fun getTransactionDetail(id: Int)
     fun deleteTransaction(id: Int)
 }
 
@@ -27,12 +26,6 @@ class WalletPresenter(
     override fun refreshWalletInfo() {
         interactor.getModels {
             view?.updateView(it)
-        }
-    }
-
-    override fun getTransactionDetail(id: Int) {
-        interactor.getTransactionDetail(id) {
-            view?.showTransactionDetail(it)
         }
     }
 

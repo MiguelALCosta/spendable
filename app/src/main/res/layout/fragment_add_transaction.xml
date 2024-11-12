@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true">
 
     <LinearLayout
@@ -129,14 +130,36 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/save_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:layout_gravity="center_horizontal"
             android:layout_marginHorizontal="48dp"
-            android:text="@string/save_button" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/delete_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:text="@string/delete"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:icon="@drawable/ic_delete" />
+
+            <Button
+                android:id="@+id/save_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/save_button" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

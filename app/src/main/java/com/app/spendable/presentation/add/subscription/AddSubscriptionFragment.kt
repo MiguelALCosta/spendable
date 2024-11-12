@@ -36,7 +36,8 @@ interface AddSubscriptionView {
 
 @SuppressLint("SetTextI18n")
 @AndroidEntryPoint
-class AddSubscriptionFragment(val subscriptionId: Int? = null) : Fragment(), AddSubscriptionView {
+class AddSubscriptionFragment(private val subscriptionId: Int? = null) : Fragment(),
+    AddSubscriptionView {
 
     companion object {
         private const val DATE_PICKER_TAG = "DATE_PICKER_TAG"

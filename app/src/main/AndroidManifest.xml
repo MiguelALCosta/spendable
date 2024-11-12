@@ -25,6 +25,7 @@
         </activity>
         <activity android:name=".presentation.add.AddActivity" />
         <activity android:name=".presentation.subscriptionDetail.SubscriptionDetailActivity" />
+        <activity android:name=".presentation.transactionDetail.TransactionDetailActivity" />
     </application>
 
 </manifest>
