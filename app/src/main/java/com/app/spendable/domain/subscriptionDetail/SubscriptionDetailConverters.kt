@@ -5,8 +5,6 @@ import androidx.annotation.StringRes
 import com.app.spendable.R
 import com.app.spendable.data.db.Subscription
 import com.app.spendable.presentation.components.SelectableChoiceComponent
-import com.app.spendable.presentation.subscriptionDetail.SubscriptionCategory
-import com.app.spendable.presentation.subscriptionDetail.SubscriptionForm
 import com.app.spendable.presentation.toIconResource
 import com.app.spendable.presentation.toStringResource
 import com.app.spendable.presentation.wallet.SubscriptionFrequency

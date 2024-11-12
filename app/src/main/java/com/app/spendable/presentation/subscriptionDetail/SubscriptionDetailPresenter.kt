@@ -1,6 +1,7 @@
 package com.app.spendable.presentation.subscriptionDetail
 
 import com.app.spendable.domain.subscriptionDetail.ISubscriptionDetailInteractor
+import com.app.spendable.domain.subscriptionDetail.SubscriptionForm
 
 interface ISubscriptionDetailPresenter {
     fun bind(view: ISubscriptionDetailView)

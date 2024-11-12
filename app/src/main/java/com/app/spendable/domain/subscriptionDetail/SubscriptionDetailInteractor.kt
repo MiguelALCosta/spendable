@@ -2,7 +2,6 @@ package com.app.spendable.domain.subscriptionDetail
 
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.domain.BaseInteractor
-import com.app.spendable.presentation.subscriptionDetail.SubscriptionForm
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
 

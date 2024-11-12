@@ -1,6 +1,7 @@
 package com.app.spendable.presentation.transactionDetail
 
 import com.app.spendable.domain.transactionDetail.ITransactionDetailInteractor
+import com.app.spendable.domain.transactionDetail.TransactionForm
 
 interface IAddTransactionPresenter {
     fun bind(view: AddTransactionView)

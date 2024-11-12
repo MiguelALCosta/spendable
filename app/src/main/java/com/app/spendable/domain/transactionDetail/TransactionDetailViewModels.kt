@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.transactionDetail
+package com.app.spendable.domain.transactionDetail
 
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import java.time.LocalDate

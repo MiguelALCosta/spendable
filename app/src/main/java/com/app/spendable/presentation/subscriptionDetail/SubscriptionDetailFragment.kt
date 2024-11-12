@@ -9,6 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.spendable.R
 import com.app.spendable.databinding.FragmentSubscriptionDetailBinding
+import com.app.spendable.domain.subscriptionDetail.SubscriptionForm
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.components.SelectableChoiceComponent

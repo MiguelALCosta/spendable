@@ -4,7 +4,6 @@ import com.app.spendable.data.db.Transaction
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.toIcon
 import com.app.spendable.presentation.toTitleRes
-import com.app.spendable.presentation.transactionDetail.TransactionForm
 import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager

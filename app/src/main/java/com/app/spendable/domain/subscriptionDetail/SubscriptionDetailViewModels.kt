@@ -1,4 +1,4 @@
-package com.app.spendable.presentation.subscriptionDetail
+package com.app.spendable.domain.subscriptionDetail
 
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.wallet.SubscriptionIcon
@@ -36,6 +36,5 @@ data class SubscriptionForm(
                 || subcategory == SubscriptionIcon.OTHER_STREAMING
                 || subcategory == SubscriptionIcon.OTHER_MULTI_SERVICE
     }
-
 
 }

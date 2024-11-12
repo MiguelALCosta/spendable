@@ -2,7 +2,6 @@ package com.app.spendable.domain.transactionDetail
 
 import com.app.spendable.data.ITransactionsRepository
 import com.app.spendable.domain.BaseInteractor
-import com.app.spendable.presentation.transactionDetail.TransactionForm
 import com.app.spendable.utils.IStringsManager
 
 interface ITransactionDetailInteractor {
