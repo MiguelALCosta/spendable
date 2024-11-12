@@ -35,7 +35,7 @@ class WalletAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (ModelType.entries.get(viewType)) {
+        return when (ModelType.entries[viewType]) {
             ModelType.WALLET_CARD -> {
                 val component = WalletCardComponent(parent.context).setRecyclerViewLayoutParams()
                 CardComponentViewHolder(component)

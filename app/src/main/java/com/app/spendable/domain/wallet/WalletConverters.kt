@@ -9,12 +9,13 @@ import com.app.spendable.presentation.wallet.SubscriptionItemModel
 import com.app.spendable.presentation.wallet.TransactionItemModel
 import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.utils.DateUtils
+import com.app.spendable.utils.toEnum
 import java.math.BigDecimal
 
 fun Transaction.toItemModel() =
     TransactionItemModel(
         id = id,
-        type = TransactionType.entries.firstOrNull { it.name == type } ?: TransactionType.OTHER,
+        type = type.toEnum<TransactionType>() ?: TransactionType.OTHER,
         title = title,
         subtitle = description,
         cost = BigDecimal(cost)
@@ -23,18 +24,16 @@ fun Transaction.toItemModel() =
 fun Subscription.toItemModel() =
     SubscriptionItemModel(
         id = id,
-        iconType = SubscriptionIcon.entries.firstOrNull { it.name == iconType }
-            ?: SubscriptionIcon.OTHER,
+        iconType = iconType.toEnum<SubscriptionIcon>() ?: SubscriptionIcon.OTHER,
         title = title,
         cost = BigDecimal(cost),
-        frequency = SubscriptionFrequency.entries.firstOrNull { it.name == frequency }
-            ?: SubscriptionFrequency.MONTHLY,
+        frequency = frequency.toEnum<SubscriptionFrequency>() ?: SubscriptionFrequency.MONTHLY,
     )
 
 fun Transaction.toDetailModel() =
     TransactionDetailModel(
         id = id,
-        type = TransactionType.entries.firstOrNull { it.name == type } ?: TransactionType.OTHER,
+        type = type.toEnum<TransactionType>() ?: TransactionType.OTHER,
         title = title,
         description = description,
         cost = BigDecimal(cost),

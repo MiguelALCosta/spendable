@@ -1,15 +1,6 @@
 package com.app.spendable.presentation.subscriptionDetail
 
-import com.app.spendable.data.ISubscriptionsRepository
-import com.app.spendable.presentation.components.SelectableChoiceComponent
-import com.app.spendable.presentation.toStringResource
-import com.app.spendable.presentation.wallet.SubscriptionFrequency
-import com.app.spendable.utils.DateUtils
-import com.app.spendable.utils.IStringsManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.app.spendable.domain.subscriptionDetail.ISubscriptionDetailInteractor
 
 interface ISubscriptionDetailPresenter {
     fun bind(view: ISubscriptionDetailView)
@@ -20,8 +11,7 @@ interface ISubscriptionDetailPresenter {
 }
 
 class SubscriptionDetailPresenter(
-    private val stringsManager: IStringsManager,
-    private val subscriptionsRepository: ISubscriptionsRepository
+    private val interactor: ISubscriptionDetailInteractor
 ) : ISubscriptionDetailPresenter {
 
     private var view: ISubscriptionDetailView? = null
@@ -35,39 +25,7 @@ class SubscriptionDetailPresenter(
     }
 
     override fun loadView(id: Int?) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val subscription = withContext(Dispatchers.IO) {
-                id?.let { subscriptionsRepository.getById(it) }
-            }
-
-            val now = DateUtils.Provide.nowDevice()
-            val form = SubscriptionForm(
-                amount = subscription?.cost,
-                categories = SubscriptionCategory.entries.map {
-                    SelectableChoiceComponent.Choice(
-                        it.name,
-                        stringsManager.getString(it.toStringResource()),
-                        it.toIcon()
-                    )
-                },
-                subcategories = SubscriptionCategory.entries.associate {
-                    it.name to it.getSubCategoryChoices(stringsManager)
-                },
-                selectedCategory = subscription?.category,
-                selectedSubcategory = subscription?.iconType,
-                title = subscription?.title,
-                date = subscription?.date?.let { DateUtils.Parse.fromDate(it) }
-                    ?: now.toLocalDate(),
-                frequencies = SubscriptionFrequency.entries.map {
-                    SelectableChoiceComponent.Choice(
-                        it.name,
-                        stringsManager.getString(it.toStringResource()),
-                        null
-                    )
-                },
-                selectedFrequency = SubscriptionFrequency.entries.firstOrNull { it.name == subscription?.frequency }?.name
-                    ?: SubscriptionFrequency.MONTHLY.name
-            )
+        interactor.getSubscriptionForm(id) { form ->
             view?.setupView(form)
             if (id != null) {
                 view?.showCancelButton()
@@ -78,44 +36,25 @@ class SubscriptionDetailPresenter(
     override fun saveSubscription(id: Int?, form: SubscriptionForm?) {
         if (form == null) {
             view?.showGenericError()
-            return
-        }
-
-        val subscription = form.toSubscription()
-        if (subscription == null) {
-            view?.setAmountErrorState(form.amount == null)
-            view?.setTitleErrorState(form.title == null)
-            view?.setCategoryErrorState(form.selectedCategory == null)
-            view?.setSubCategoryErrorState(form.selectedSubcategory == null)
         } else {
-            CoroutineScope(Dispatchers.Main).launch {
-                val result = withContext(Dispatchers.IO) {
-                    if (id == null) {
-                        subscriptionsRepository.insert(subscription)
-                    } else {
-                        subscriptionsRepository.update(subscription.copy(id = id))
-                    }
-                    true
-                }
-                if (result) {
+            interactor.saveSubscriptionForm(id, form) { success ->
+                if (success) {
                     view?.close()
+                } else {
+                    view?.setAmountErrorState(form.amount == null)
+                    view?.setTitleErrorState(form.title == null)
+                    view?.setCategoryErrorState(form.selectedCategory == null)
+                    view?.setSubCategoryErrorState(form.selectedSubcategory == null)
                 }
             }
         }
     }
 
     override fun cancelSubscription(id: Int?) {
-        CoroutineScope(Dispatchers.Main).launch {
-            val result = withContext(Dispatchers.IO) {
-                id?.let { subscriptionsRepository.getById(it) }
-                    ?.let { subscription ->
-                        val now = DateUtils.Provide.nowDevice().toLocalDate()
-                        val nowFormatted = DateUtils.Format.toDate(now)
-                        subscriptionsRepository.update(subscription.copy(endDate = nowFormatted))
-                    }
-                true
-            }
-            if (result) {
+        if (id == null) {
+            view?.showGenericError()
+        } else {
+            interactor.cancelSubscription(id) {
                 view?.close()
             }
         }

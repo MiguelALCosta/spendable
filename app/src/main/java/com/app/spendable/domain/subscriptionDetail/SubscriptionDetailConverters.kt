@@ -1,14 +1,19 @@
-package com.app.spendable.presentation.subscriptionDetail
+package com.app.spendable.domain.subscriptionDetail
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.app.spendable.R
 import com.app.spendable.data.db.Subscription
 import com.app.spendable.presentation.components.SelectableChoiceComponent
+import com.app.spendable.presentation.subscriptionDetail.SubscriptionCategory
+import com.app.spendable.presentation.subscriptionDetail.SubscriptionForm
 import com.app.spendable.presentation.toIconResource
+import com.app.spendable.presentation.toStringResource
+import com.app.spendable.presentation.wallet.SubscriptionFrequency
 import com.app.spendable.presentation.wallet.SubscriptionIcon
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
+import com.app.spendable.utils.toEnum
 
 @StringRes
 fun SubscriptionCategory.toStringResource() =
@@ -109,16 +114,42 @@ fun SubscriptionCategory.getSubCategoryChoices(stringsManager: IStringsManager) 
         )
     }
 
-private fun SubscriptionForm.getIconTypeString(): String? {
-    val category = SubscriptionCategory.entries.firstOrNull { it.name == selectedCategory }
-    if (category == SubscriptionCategory.OTHER) {
-        return SubscriptionIcon.OTHER.name
-    } else if (category == SubscriptionCategory.SPORTS) {
-        return SubscriptionIcon.SPORTS.name
-    } else {
-        return selectedSubcategory
-    }
+fun Subscription?.toForm(stringsManager: IStringsManager): SubscriptionForm {
+    val now = DateUtils.Provide.nowDevice()
+    return SubscriptionForm(
+        amount = this?.cost,
+        categories = SubscriptionCategory.entries.map {
+            SelectableChoiceComponent.Choice(
+                it.name,
+                stringsManager.getString(it.toStringResource()),
+                it.toIcon()
+            )
+        },
+        subcategories = SubscriptionCategory.entries.associate {
+            it.name to it.getSubCategoryChoices(stringsManager)
+        },
+        selectedCategory = this?.category,
+        selectedSubcategory = this?.iconType,
+        title = this?.title,
+        date = this?.date?.let { DateUtils.Parse.fromDate(it) }
+            ?: now.toLocalDate(),
+        frequencies = SubscriptionFrequency.entries.map {
+            SelectableChoiceComponent.Choice(
+                it.name,
+                stringsManager.getString(it.toStringResource()),
+                null
+            )
+        },
+        selectedFrequency = this?.frequency ?: SubscriptionFrequency.MONTHLY.name
+    )
 }
+
+private fun SubscriptionForm.getIconTypeString() =
+    when (selectedCategory?.toEnum<SubscriptionCategory>()) {
+        SubscriptionCategory.OTHER -> SubscriptionIcon.OTHER.name
+        SubscriptionCategory.SPORTS -> SubscriptionIcon.SPORTS.name
+        else -> selectedSubcategory
+    }
 
 private fun SubscriptionForm.getFinalTitle(): String? {
     return if (needsTitle()) {

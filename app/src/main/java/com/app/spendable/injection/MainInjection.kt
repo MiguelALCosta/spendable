@@ -7,6 +7,10 @@ import com.app.spendable.data.SubscriptionsRepository
 import com.app.spendable.data.TransactionsRepository
 import com.app.spendable.data.db.AppDatabase
 import com.app.spendable.data.db.IAppDatabase
+import com.app.spendable.domain.subscriptionDetail.ISubscriptionDetailInteractor
+import com.app.spendable.domain.subscriptionDetail.SubscriptionDetailInteractor
+import com.app.spendable.domain.transactionDetail.ITransactionDetailInteractor
+import com.app.spendable.domain.transactionDetail.TransactionDetailInteractor
 import com.app.spendable.domain.wallet.IWalletInteractor
 import com.app.spendable.domain.wallet.WalletInteractor
 import com.app.spendable.presentation.main.IMainPresenter
@@ -35,11 +39,18 @@ object MainModule {
     }
 
     @Provides
-    fun provideAddTransactionPresenter(
+    fun provideTransactionDetailInteractor(
         stringsManager: IStringsManager,
         transactionsRepository: ITransactionsRepository
+    ): ITransactionDetailInteractor {
+        return TransactionDetailInteractor(stringsManager, transactionsRepository)
+    }
+
+    @Provides
+    fun provideTransactionDetailPresenter(
+        interactor: ITransactionDetailInteractor
     ): IAddTransactionPresenter {
-        return AddTransactionPresenter(stringsManager, transactionsRepository)
+        return AddTransactionPresenter(interactor)
     }
 
     @Provides
@@ -63,11 +74,18 @@ object MainModule {
     }
 
     @Provides
-    fun provideSubscriptionPresenter(
+    fun provideSubscriptionDetailInteractor(
         stringsManager: IStringsManager,
         subscriptionsRepository: ISubscriptionsRepository
+    ): ISubscriptionDetailInteractor {
+        return SubscriptionDetailInteractor(stringsManager, subscriptionsRepository)
+    }
+
+    @Provides
+    fun provideSubscriptionDetailPresenter(
+        interactor: ISubscriptionDetailInteractor
     ): ISubscriptionDetailPresenter {
-        return SubscriptionDetailPresenter(stringsManager, subscriptionsRepository)
+        return SubscriptionDetailPresenter(interactor)
     }
 
     @Provides

@@ -2,6 +2,7 @@ package com.app.spendable.presentation.subscriptionDetail
 
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.wallet.SubscriptionIcon
+import com.app.spendable.utils.toEnum
 import java.time.LocalDate
 
 enum class SubscriptionCategory {
@@ -26,8 +27,8 @@ data class SubscriptionForm(
         }
 
     fun needsTitle(): Boolean {
-        val category = SubscriptionCategory.entries.firstOrNull { it.name == selectedCategory }
-        val subcategory = SubscriptionIcon.entries.firstOrNull { it.name == selectedSubcategory }
+        val category = selectedCategory?.toEnum<SubscriptionCategory>()
+        val subcategory = selectedSubcategory?.toEnum<SubscriptionIcon>()
         return category == SubscriptionCategory.OTHER
                 || category == SubscriptionCategory.SPORTS
                 || subcategory == SubscriptionIcon.OTHER_MUSIC
