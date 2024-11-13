@@ -22,9 +22,7 @@ data class SubscriptionForm(
 ) {
 
     fun getActiveSubcategoryChoices() =
-        selectedCategory?.let {
-            subcategories.getOrDefault(it, null)
-        }
+        selectedCategory?.let { subcategories.getOrDefault(it, null) }
 
     fun needsTitle(): Boolean {
         val category = selectedCategory?.toEnum<SubscriptionCategory>()

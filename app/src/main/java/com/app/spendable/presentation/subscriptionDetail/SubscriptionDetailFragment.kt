@@ -149,11 +149,9 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
             updateSubcategoryInput(form?.selectedSubcategory)
             updateSubcategoryVisibility()
             editText?.setOnClickListener {
-                val choices =
-                    form?.selectedCategory?.let { form?.subcategories?.getOrDefault(it, null) }
                 showChoiceBottomSheet(
-                    choices ?: emptyList(),
-                    form?.selectedCategory,
+                    form?.getActiveSubcategoryChoices() ?: emptyList(),
+                    form?.selectedSubcategory,
                     onSelection = ::setSelectedSubcategory
                 )
             }

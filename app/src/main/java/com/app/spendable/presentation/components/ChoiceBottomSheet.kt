@@ -63,7 +63,9 @@ class ChoiceBottomSheet : BottomSheetDialogFragment() {
                 isSelected = choice.id == selectedChoiceId
                 setOnClickListener { _ -> selectChoice(i) }
                 layoutParams = GridLayout.LayoutParams().apply {
-                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1f)
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    width = 0
                 }
             }
             binding?.grid?.addView(choiceComponent)

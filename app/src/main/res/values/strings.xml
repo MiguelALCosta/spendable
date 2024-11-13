@@ -45,7 +45,7 @@
     <string name="generic_error">An unexpected error occurred</string>
     <string name="streaming_label">Streaming</string>
     <string name="music_label">Music</string>
-    <string name="multi_services_label">Varied Services</string>
+    <string name="multi_services_label">Mixed</string>
     <string name="gaming_label">Gaming</string>
     <string name="sports_label">Sports</string>
     <string name="utilities_label">Utilities</string>
