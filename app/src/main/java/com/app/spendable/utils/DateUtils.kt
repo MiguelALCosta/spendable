@@ -15,6 +15,7 @@ object DateUtils {
         const val DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm"
         const val WEEKDAY_DAY_MONTH_NAME = "eee, dd MMMM"
         const val FULL_MONTH_YEAR = "MMMM yyyy"
+        const val YEAR_MONTH = "yyyy-MM"
         //const val ISO_DATE_TIME = "yyyy-MM-ddZHH:mm"
         //const val ISO_DATE = "yyyy-MM-dd"
     }
@@ -39,6 +40,9 @@ object DateUtils {
         fun toFullMonthYear(yearMonth: YearMonth) =
             yearMonth.format(getFormatter(AvailableFormats.FULL_MONTH_YEAR))
 
+        fun toYearMonth(yearMonth: YearMonth) =
+            yearMonth.format(getFormatter(AvailableFormats.YEAR_MONTH))
+
     }
 
     object Parse {
@@ -47,6 +51,9 @@ object DateUtils {
 
         fun fromDate(dateTime: String) =
             LocalDate.parse(dateTime, getFormatter(AvailableFormats.DATE_FORMAT))
+
+        fun fromYearMonth(dateTime: String) =
+            LocalDate.parse(dateTime, getFormatter(AvailableFormats.YEAR_MONTH))
     }
 
     object Provide {

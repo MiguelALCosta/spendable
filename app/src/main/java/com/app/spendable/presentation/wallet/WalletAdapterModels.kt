@@ -1,6 +1,7 @@
 package com.app.spendable.presentation.wallet
 
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.time.YearMonth
 
 sealed interface WalletAdapterModel
@@ -45,6 +46,7 @@ data class SubscriptionItemModel(
     val iconType: SubscriptionIcon,
     val title: String,
     val cost: BigDecimal,
+    val date: LocalDate,
     val frequency: SubscriptionFrequency
 ) : WalletAdapterModel
 

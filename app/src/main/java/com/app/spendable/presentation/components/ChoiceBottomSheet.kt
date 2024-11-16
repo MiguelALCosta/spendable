@@ -8,6 +8,7 @@ import android.widget.GridLayout
 import com.app.spendable.databinding.BottomSheetChoiceBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.Serializable
+import kotlin.math.min
 
 class ChoiceBottomSheet : BottomSheetDialogFragment() {
 
@@ -56,6 +57,8 @@ class ChoiceBottomSheet : BottomSheetDialogFragment() {
         choices =
             arguments?.getSerializable(CHOICES_KEY) as? List<SelectableChoiceComponent.Choice>
         val selectedChoiceId = arguments?.getSerializable(SELECTED_CHOICES_KEY) as? String
+
+        binding?.grid?.columnCount = min(choices?.count() ?: 0, 3)
 
         choices?.forEachIndexed { i, choice ->
             val choiceComponent = SelectableChoiceComponent(requireContext()).apply {

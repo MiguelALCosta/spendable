@@ -1,12 +1,14 @@
 package com.app.spendable.presentation.wallet
 
 import com.app.spendable.domain.wallet.IWalletInteractor
+import java.math.BigDecimal
 
 interface IWalletPresenter {
     fun bind(view: WalletView)
     fun unbind()
     fun refreshWalletInfo()
     fun deleteTransaction(id: Int)
+    fun updateTotalBudget(newValue: BigDecimal)
 }
 
 class WalletPresenter(
@@ -31,6 +33,12 @@ class WalletPresenter(
 
     override fun deleteTransaction(id: Int) {
         interactor.deleteTransaction(id) {
+            refreshWalletInfo()
+        }
+    }
+
+    override fun updateTotalBudget(newValue: BigDecimal) {
+        interactor.updateTotalBudget(newValue) {
             refreshWalletInfo()
         }
     }

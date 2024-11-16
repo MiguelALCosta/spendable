@@ -23,5 +23,13 @@ data class Subscription(
     @ColumnInfo(name = "cost") val cost: String,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "frequency") val frequency: String,
-    @ColumnInfo(name = "endDate") val endDate: String? = null,
+    @ColumnInfo(name = "endDate") val endDate: String? = null
+)
+
+@Entity
+data class Month(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "date") val date: String,
+    @ColumnInfo(name = "totalBudget") val totalBudget: String,
+    @ColumnInfo(name = "totalSpent") val totalSpent: String? = null
 )

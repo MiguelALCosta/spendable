@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 interface IAppDatabase {
     fun transactionDao(): TransactionDao
     fun subscriptionDao(): SubscriptionDao
+    fun monthDao(): MonthDao
 }
 
 object DatabaseConstants {
@@ -16,7 +17,7 @@ object DatabaseConstants {
 }
 
 @Database(
-    entities = [Transaction::class, Subscription::class],
+    entities = [Transaction::class, Subscription::class, Month::class],
     version = DatabaseConstants.DATABASE_VERSION
 )
 abstract class AppDatabase : RoomDatabase(), IAppDatabase {
@@ -36,4 +37,5 @@ abstract class AppDatabase : RoomDatabase(), IAppDatabase {
 
     abstract override fun transactionDao(): TransactionDao
     abstract override fun subscriptionDao(): SubscriptionDao
+    abstract override fun monthDao(): MonthDao
 }

@@ -1,8 +1,10 @@
 package com.app.spendable.injection
 
 import android.content.Context
+import com.app.spendable.data.IMonthsRepository
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
+import com.app.spendable.data.MonthsRepository
 import com.app.spendable.data.SubscriptionsRepository
 import com.app.spendable.data.TransactionsRepository
 import com.app.spendable.data.db.AppDatabase
@@ -74,6 +76,11 @@ object MainModule {
     }
 
     @Provides
+    fun provideMonthsRepository(database: IAppDatabase): IMonthsRepository {
+        return MonthsRepository(database)
+    }
+
+    @Provides
     fun provideSubscriptionDetailInteractor(
         stringsManager: IStringsManager,
         subscriptionsRepository: ISubscriptionsRepository
@@ -99,8 +106,14 @@ object MainModule {
     fun provideWalletInteractor(
         stringsManager: IStringsManager,
         transactionsRepository: ITransactionsRepository,
-        subscriptionsRepository: ISubscriptionsRepository
+        subscriptionsRepository: ISubscriptionsRepository,
+        monthsRepository: IMonthsRepository
     ): IWalletInteractor {
-        return WalletInteractor(stringsManager, transactionsRepository, subscriptionsRepository)
+        return WalletInteractor(
+            stringsManager,
+            transactionsRepository,
+            subscriptionsRepository,
+            monthsRepository
+        )
     }
 }

@@ -3,6 +3,7 @@ package com.app.spendable.presentation.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import com.app.spendable.databinding.ComponentWalletCardBinding
 import com.app.spendable.presentation.wallet.WalletCardModel
@@ -21,6 +22,9 @@ class WalletCardComponent(
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = ComponentWalletCardBinding.inflate(inflater, this, true)
     }
+
+    val clickableViews: List<View>
+        get() = listOf(binding.editButton, binding.budgetTitle, binding.budget)
 
     fun setup(model: WalletCardModel) {
         binding.month.text = DateUtils.Format.toFullMonthYear(model.month)

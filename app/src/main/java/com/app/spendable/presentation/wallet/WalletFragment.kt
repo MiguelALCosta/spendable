@@ -8,23 +8,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.databinding.FragmentWalletBinding
-import com.app.spendable.presentation.components.TransactionDetailModel
-import com.app.spendable.presentation.components.TransactionDetailsDialog
 import com.app.spendable.presentation.main.IMainView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 interface WalletView {
     fun updateView(models: List<WalletAdapterModel>)
-    fun showTransactionDetail(detailModel: TransactionDetailModel)
 }
 
 @AndroidEntryPoint
 class WalletFragment : Fragment(), WalletView {
-
-    companion object {
-        private const val TRANSACTION_DETAIL_DIALOG_TAG = "TRANSACTION_DETAIL_DIALOG"
-    }
 
     private var _binding: FragmentWalletBinding? = null
 
@@ -66,19 +59,15 @@ class WalletFragment : Fragment(), WalletView {
         when (model) {
             is TransactionItemModel -> (activity as? IMainView)?.showTransactionDetail(model.id)
             is SubscriptionItemModel -> (activity as? IMainView)?.showSubscriptionDetail(model.id)
+            is WalletCardModel ->
+                (activity as? IMainView)?.showUpdateTotalBudgetDialog(
+                    model.budget,
+                    presenter::updateTotalBudget
+                )
+
             else -> {
                 // do nothing
             }
-        }
-    }
-
-    override fun showTransactionDetail(detailModel: TransactionDetailModel) {
-        activity?.let {
-            TransactionDetailsDialog.build(detailModel, onClose = { delete ->
-                if (delete) {
-                    presenter.deleteTransaction(detailModel.id)
-                }
-            }).show(it.supportFragmentManager, TRANSACTION_DETAIL_DIALOG_TAG)
         }
     }
 

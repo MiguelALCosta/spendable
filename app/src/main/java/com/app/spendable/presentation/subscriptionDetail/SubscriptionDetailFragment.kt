@@ -177,6 +177,7 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
                 )
             }
             errorIconDrawable = null
+            visibility = View.GONE
         }
 
         binding.dateInput.editText?.apply {

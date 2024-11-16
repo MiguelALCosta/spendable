@@ -62,7 +62,7 @@ class WalletAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val model = models[position]) {
-            is WalletCardModel -> (holder as CardComponentViewHolder).render(model)
+            is WalletCardModel -> (holder as CardComponentViewHolder).render(model, onClick)
             is HeaderModel -> (holder as HeaderComponentViewHolder).render(model)
             is TransactionItemModel ->
                 (holder as TransactionItemComponentViewHolder).render(model, onClick)
@@ -85,8 +85,9 @@ class WalletAdapter(
 
     private class CardComponentViewHolder(val component: WalletCardComponent) :
         RecyclerView.ViewHolder(component) {
-        fun render(model: WalletCardModel) {
+        fun render(model: WalletCardModel, onClick: (WalletAdapterModel) -> Unit) {
             component.setup(model)
+            component.clickableViews.forEach { it.setOnClickListener { onClick(model) } }
         }
     }
 

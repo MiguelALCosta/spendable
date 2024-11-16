@@ -9,20 +9,27 @@ import com.app.spendable.R
 import com.app.spendable.databinding.ActivityMainBinding
 import com.app.spendable.presentation.add.AddActivity
 import com.app.spendable.presentation.common.ExtraConstants
+import com.app.spendable.presentation.components.UpdateTotalBudgetDialog
 import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailActivity
 import com.app.spendable.presentation.transactionDetail.TransactionDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.BigDecimal
 import javax.inject.Inject
 
 interface IMainView {
     fun navigateToAdd()
     fun showTransactionDetail(id: Int)
     fun showSubscriptionDetail(id: Int)
+    fun showUpdateTotalBudgetDialog(currentValue: BigDecimal, onUpdate: (BigDecimal) -> Unit)
 }
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), IMainView {
+
+    companion object {
+        private const val UPDATE_TOTAL_BUDGET_DIALOG_TAG = "UPDATE_TOTAL_BUDGET_DIALOG"
+    }
 
     @Inject
     lateinit var presenter: IMainPresenter
@@ -66,6 +73,14 @@ class MainActivity : AppCompatActivity(), IMainView {
         val intent = Intent(this, SubscriptionDetailActivity::class.java)
         intent.putExtra(ExtraConstants.ID, id)
         startActivity(intent)
+    }
+
+    override fun showUpdateTotalBudgetDialog(
+        currentValue: BigDecimal,
+        onUpdate: (BigDecimal) -> Unit
+    ) {
+        UpdateTotalBudgetDialog.build(currentValue, onUpdate)
+            .show(supportFragmentManager, UPDATE_TOTAL_BUDGET_DIALOG_TAG)
     }
 
 }
