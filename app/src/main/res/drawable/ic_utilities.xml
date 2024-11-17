@@ -4,12 +4,12 @@
     android:viewportWidth="64"
     android:viewportHeight="64">
   <path
-      android:fillColor="#FF000000"
+      android:fillColor="?attr/colorOnSurface"
       android:pathData="M18,42h20v2H18zM18,37h7v2h-7zM18,32h5v2h-5zM18,27h5v2h-5zM18,22h5v2h-5z"/>
   <path
-      android:fillColor="#FF000000"
+      android:fillColor="?attr/colorOnSurface"
       android:pathData="M56,11L45,11L45,8a5,5 0,0 0,-5 -5L8,3a5,5 0,0 0,-5 5v10a1,1 0,0 0,1 1h7v37a5,5 0,0 0,5 5h32a5,5 0,0 0,5 -5v-6a1,1 0,0 0,-1.6 -0.8l-4.74,3.55L45,51.5L45,37h11a5,5 0,0 0,5 -5L61,16a5,5 0,0 0,-5 -5ZM59,16v3L27,19v-3a3,3 0,0 1,3 -3h26a3,3 0,0 1,3 3ZM59,24L27,24v-3h32ZM5,17L5,8a3,3 0,0 1,6 0v9ZM47.26,54.8L51,52v4a3,3 0,0 1,-3 3L20,59a5,5 0,0 0,1 -3v-4l3.73,2.8a1,1 0,0 0,1.2 0l4.73,-3.55 4.73,3.55a1,1 0,0 0,1.2 0l4.74,-3.55 4.73,3.55a1,1 0,0 0,1.2 0ZM43,50l-1.08,-0.81a1,1 0,0 0,-1.19 0L36,52.75l-4.74,-3.55a1,1 0,0 0,-1.2 0l-4.73,3.55 -4.73,-3.55a1,1 0,0 0,-1.6 0.8v6a3,3 0,0 1,-6 0L13,8a5.28,5.28 0,0 0,-1 -3h28a3,3 0,0 1,3 3v3L30,11a5,5 0,0 0,-5 5v16a5,5 0,0 0,5 5h13ZM56,35L30,35a3,3 0,0 1,-3 -3v-6h32v6a3,3 0,0 1,-3 3Z"/>
   <path
-      android:fillColor="#FF000000"
+      android:fillColor="?attr/colorOnSurface"
       android:pathData="M53,28a3,3 0,1 0,3 3,3 3,0 0,0 -3,-3ZM53,32a1,1 0,1 1,1 -1,1 1,0 0,1 -1,1Z"/>
 </vector>
