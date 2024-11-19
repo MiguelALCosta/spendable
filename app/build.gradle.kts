@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.room.ktx)
 
     implementation(libs.androidx.viewpager2)
+    implementation(libs.androidx.security.crypto)
 }
 
 // Allow references to generated code

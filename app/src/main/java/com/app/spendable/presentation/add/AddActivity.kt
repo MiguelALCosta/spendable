@@ -1,15 +1,15 @@
 package com.app.spendable.presentation.add
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityAddBinding
+import com.app.spendable.presentation.common.BaseSpendableActivity
 import com.app.spendable.presentation.common.CloseableView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AddActivity : AppCompatActivity(), CloseableView {
+class AddActivity : BaseSpendableActivity(), CloseableView {
 
     private lateinit var binding: ActivityAddBinding
 

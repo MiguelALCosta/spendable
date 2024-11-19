@@ -1,0 +1,87 @@
+package com.app.spendable.presentation.settings
+
+import com.app.spendable.R
+import com.app.spendable.domain.settings.AppLanguage
+import com.app.spendable.domain.settings.AppTheme
+import com.app.spendable.domain.settings.ISettingsInteractor
+import com.app.spendable.presentation.components.SelectableChoiceComponent
+import com.app.spendable.utils.IStringsManager
+import com.app.spendable.utils.toEnum
+import java.util.Locale
+
+interface ISettingsPresenter {
+    fun bind(view: ISettingsView)
+    fun unbind()
+    fun loadView()
+    fun handleLanguageSelection(selectedChoice: SelectableChoiceComponent.Choice)
+    fun handleThemeSelection(selectedChoice: SelectableChoiceComponent.Choice)
+    fun clearAppData()
+}
+
+class SettingsPresenter(
+    private val interactor: ISettingsInteractor,
+    private val stringsManager: IStringsManager
+) : ISettingsPresenter {
+
+    private var view: ISettingsView? = null
+
+    override fun bind(view: ISettingsView) {
+        this.view = view
+    }
+
+    override fun unbind() {
+        this.view = null
+    }
+
+    override fun loadView() {
+        val languageChoices = interactor.getAvailableLanguages().map { it.toChoice() }
+        val selectedLanguage = interactor.getSelectedLanguage().toChoice()
+        view?.setupLanguageInput(languageChoices, selectedLanguage)
+
+        val themeChoices = interactor.getAvailableThemes().map { it.toChoice() }
+        val selectedTheme = interactor.getSelectedTheme().toChoice()
+        view?.setupThemeInput(themeChoices, selectedTheme)
+    }
+
+    private fun AppLanguage.toChoice() =
+        SelectableChoiceComponent.Choice(
+            id = name,
+            label = when (this) {
+                AppLanguage.SYSTEM -> stringsManager.getString(R.string.follow_system)
+                else -> Locale(name).displayName.replaceFirstChar(Char::uppercase)
+            },
+            icon = null
+        )
+
+    private fun AppTheme.toChoice() =
+        SelectableChoiceComponent.Choice(
+            id = name,
+            label = when (this) {
+                AppTheme.SYSTEM -> stringsManager.getString(R.string.follow_system)
+                AppTheme.LIGHT -> stringsManager.getString(R.string.light_theme)
+                AppTheme.DARK -> stringsManager.getString(R.string.dark_theme)
+            },
+            icon = null
+        )
+
+    override fun handleLanguageSelection(selectedChoice: SelectableChoiceComponent.Choice) {
+        selectedChoice.id.toEnum<AppLanguage>()?.let {
+            interactor.updateAppLanguage(it)
+        }
+        view?.setSelectedLanguage(selectedChoice)
+        view?.refreshActivity()
+    }
+
+    override fun handleThemeSelection(selectedChoice: SelectableChoiceComponent.Choice) {
+        selectedChoice.id.toEnum<AppTheme>()?.let {
+            interactor.updateAppTheme(it)
+        }
+        view?.setSelectedTheme(selectedChoice)
+    }
+
+    override fun clearAppData() {
+        interactor.clearAppData {
+            view?.showMessage(stringsManager.getString(R.string.data_cleared_message))
+        }
+    }
+}

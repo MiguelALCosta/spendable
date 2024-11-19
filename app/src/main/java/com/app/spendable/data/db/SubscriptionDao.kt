@@ -22,4 +22,7 @@ interface SubscriptionDao {
 
     @Delete
     suspend fun delete(subscription: Subscription)
+
+    @Query("DELETE FROM `subscription`")
+    suspend fun deleteAll()
 }

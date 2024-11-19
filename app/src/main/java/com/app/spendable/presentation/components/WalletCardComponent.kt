@@ -27,7 +27,8 @@ class WalletCardComponent(
         get() = listOf(binding.editButton, binding.budgetTitle, binding.budget)
 
     fun setup(model: WalletCardModel) {
-        binding.month.text = DateUtils.Format.toFullMonthYear(model.month)
+        binding.month.text =
+            DateUtils.Format.toFullMonthYear(model.month).replaceFirstChar(Char::uppercase)
         binding.budget.text = model.budget.toFormatedPrice()
         binding.remaining.text = (model.budget - model.spent).toFormatedPrice()
 

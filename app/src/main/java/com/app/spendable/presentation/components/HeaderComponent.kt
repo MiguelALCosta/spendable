@@ -19,7 +19,7 @@ class HeaderComponent(
     }
 
     fun setup(text: String) {
-        binding.label.text = text
+        binding.label.text = text.replaceFirstChar(Char::uppercase)
     }
 
 }

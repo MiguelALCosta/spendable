@@ -100,6 +100,7 @@
             android:layout_margin="4dp"
             app:trackColor="?attr/colorSurfaceBright"
             app:indicatorColor="?attr/colorPrimary"
+            app:trackStopIndicatorSize="0dp"
             app:trackCornerRadius="360dp" />
 
     </androidx.cardview.widget.CardView>

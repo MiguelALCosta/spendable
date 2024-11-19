@@ -9,6 +9,7 @@ interface ITransactionsRepository {
     suspend fun insert(transaction: Transaction)
     suspend fun update(transaction: Transaction)
     suspend fun delete(id: Int)
+    suspend fun deleteAll()
 }
 
 class TransactionsRepository(private val database: IAppDatabase) : ITransactionsRepository {
@@ -31,5 +32,9 @@ class TransactionsRepository(private val database: IAppDatabase) : ITransactions
 
     override suspend fun delete(id: Int) {
         database.transactionDao().delete(id)
+    }
+
+    override suspend fun deleteAll() {
+        database.transactionDao().deleteAll()
     }
 }

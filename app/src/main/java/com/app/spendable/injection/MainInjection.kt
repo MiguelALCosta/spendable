@@ -1,6 +1,7 @@
 package com.app.spendable.injection
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.app.spendable.data.IMonthsRepository
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
@@ -9,6 +10,11 @@ import com.app.spendable.data.SubscriptionsRepository
 import com.app.spendable.data.TransactionsRepository
 import com.app.spendable.data.db.AppDatabase
 import com.app.spendable.data.db.IAppDatabase
+import com.app.spendable.data.preferences.AppPreferences
+import com.app.spendable.data.preferences.IAppPreferences
+import com.app.spendable.data.preferences.buildSharedPreferences
+import com.app.spendable.domain.settings.ISettingsInteractor
+import com.app.spendable.domain.settings.SettingsInteractor
 import com.app.spendable.domain.subscriptionDetail.ISubscriptionDetailInteractor
 import com.app.spendable.domain.subscriptionDetail.SubscriptionDetailInteractor
 import com.app.spendable.domain.transactionDetail.ITransactionDetailInteractor
@@ -17,6 +23,8 @@ import com.app.spendable.domain.wallet.IWalletInteractor
 import com.app.spendable.domain.wallet.WalletInteractor
 import com.app.spendable.presentation.main.IMainPresenter
 import com.app.spendable.presentation.main.MainPresenter
+import com.app.spendable.presentation.settings.ISettingsPresenter
+import com.app.spendable.presentation.settings.SettingsPresenter
 import com.app.spendable.presentation.subscriptionDetail.ISubscriptionDetailPresenter
 import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailPresenter
 import com.app.spendable.presentation.transactionDetail.AddTransactionPresenter
@@ -27,17 +35,20 @@ import com.app.spendable.utils.IStringsManager
 import com.app.spendable.utils.StringsManager
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityComponent::class)
 object MainModule {
 
     @Provides
-    fun provideMainPresenter(): IMainPresenter {
-        return MainPresenter()
+    fun provideMainPresenter(appPreferences: IAppPreferences): IMainPresenter {
+        return MainPresenter(appPreferences)
     }
 
     @Provides
@@ -53,11 +64,6 @@ object MainModule {
         interactor: ITransactionDetailInteractor
     ): IAddTransactionPresenter {
         return AddTransactionPresenter(interactor)
-    }
-
-    @Provides
-    fun provideStringsManager(@ApplicationContext context: Context): IStringsManager {
-        return StringsManager(context)
     }
 
     @Provides
@@ -116,4 +122,61 @@ object MainModule {
             monthsRepository
         )
     }
+
+    @Provides
+    fun provideSettingsInteractor(
+        appPreferences: IAppPreferences,
+        transactionsRepository: ITransactionsRepository,
+        subscriptionsRepository: ISubscriptionsRepository,
+        monthsRepository: IMonthsRepository
+    ): ISettingsInteractor {
+        return SettingsInteractor(
+            appPreferences,
+            transactionsRepository,
+            subscriptionsRepository,
+            monthsRepository
+        )
+    }
+
+    @Provides
+    fun provideSettingsPresenter(
+        interactor: ISettingsInteractor,
+        stringsManager: IStringsManager
+    ): ISettingsPresenter {
+        return SettingsPresenter(interactor, stringsManager)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class SingletonModule {
+    @Provides
+    @Singleton
+    fun provideStringsManager(@ApplicationContext context: Context): IStringsManager {
+        return StringsManager(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return buildSharedPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppPreferences(sharedPreferences: SharedPreferences): IAppPreferences {
+        return AppPreferences(sharedPreferences)
+    }
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface AppPreferencesProvider {
+    fun getAppPreferences(): IAppPreferences
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface StringsManagerProvider {
+    fun getStringsManager(): IStringsManager
 }

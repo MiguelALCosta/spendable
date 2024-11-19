@@ -10,6 +10,7 @@ interface IMonthsRepository {
     suspend fun getByDate(yearMonth: YearMonth): Month?
     suspend fun insert(month: Month)
     suspend fun update(month: Month)
+    suspend fun deleteAll()
 }
 
 class MonthsRepository(private val database: IAppDatabase) : IMonthsRepository {
@@ -28,5 +29,9 @@ class MonthsRepository(private val database: IAppDatabase) : IMonthsRepository {
 
     override suspend fun update(month: Month) {
         database.monthDao().update(month)
+    }
+
+    override suspend fun deleteAll() {
+        database.monthDao().deleteAll()
     }
 }

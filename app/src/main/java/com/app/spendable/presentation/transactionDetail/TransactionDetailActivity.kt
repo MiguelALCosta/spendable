@@ -1,16 +1,16 @@
 package com.app.spendable.presentation.transactionDetail
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityCommonWithFragmentBinding
+import com.app.spendable.presentation.common.BaseSpendableActivity
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.common.ExtraConstants
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TransactionDetailActivity : AppCompatActivity(), CloseableView {
+class TransactionDetailActivity : BaseSpendableActivity(), CloseableView {
 
     companion object {
         const val TRANSACTION_DETAIL_FRAGMENT_TAG = "TRANSACTION_DETAIL_FRAGMENT_TAG"

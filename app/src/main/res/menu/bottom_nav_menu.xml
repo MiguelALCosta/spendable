@@ -7,13 +7,13 @@
         android:title="@string/title_wallet" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_calendar"
         android:icon="@drawable/ic_calendar"
         android:title="@string/title_calendar" />
 
     <item
-        android:id="@+id/navigation_notifications"
-        android:icon="@drawable/ic_stats"
-        android:title="@string/title_stats" />
+        android:id="@+id/navigation_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/title_settings" />
 
 </menu>

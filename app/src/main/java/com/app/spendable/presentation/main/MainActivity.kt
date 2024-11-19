@@ -2,12 +2,12 @@ package com.app.spendable.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityMainBinding
 import com.app.spendable.presentation.add.AddActivity
+import com.app.spendable.presentation.common.BaseSpendableActivity
 import com.app.spendable.presentation.common.ExtraConstants
 import com.app.spendable.presentation.components.UpdateTotalBudgetDialog
 import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailActivity
@@ -25,7 +25,7 @@ interface IMainView {
 }
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), IMainView {
+class MainActivity : BaseSpendableActivity(), IMainView {
 
     companion object {
         private const val UPDATE_TOTAL_BUDGET_DIALOG_TAG = "UPDATE_TOTAL_BUDGET_DIALOG"
@@ -55,8 +55,22 @@ class MainActivity : AppCompatActivity(), IMainView {
         navView.setupWithNavController(navController)
         supportActionBar?.hide()
         actionBar?.hide()
-        presenter.doStuff()
+        presenter.doStartUpActions()
     }
+
+    /*override fun attachBaseContext(newBase: Context) {
+        val appPreferences = EntryPointAccessors
+            .fromApplication<AppPreferencesProvider>(newBase.applicationContext)
+            .getAppPreferences()
+        val updatedContext = LocaleUtils.getContextWithUpdatedLocale(newBase, appPreferences)
+
+        val stringsManager = EntryPointAccessors
+            .fromApplication<StringsManagerProvider>(newBase.applicationContext)
+            .getStringsManager()
+        stringsManager.updateContext(updatedContext)
+
+        super.attachBaseContext(updatedContext)
+    }*/
 
     override fun navigateToAdd() {
         val intent = Intent(this, AddActivity::class.java)

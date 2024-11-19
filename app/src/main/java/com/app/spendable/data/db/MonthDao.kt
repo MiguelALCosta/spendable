@@ -18,4 +18,7 @@ interface MonthDao {
 
     @Update
     suspend fun update(month: Month)
+
+    @Query("DELETE FROM `month`")
+    suspend fun deleteAll()
 }
