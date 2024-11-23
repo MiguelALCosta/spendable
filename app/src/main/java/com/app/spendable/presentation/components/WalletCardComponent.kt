@@ -29,8 +29,8 @@ class WalletCardComponent(
     fun setup(model: WalletCardModel) {
         binding.month.text =
             DateUtils.Format.toFullMonthYear(model.month).replaceFirstChar(Char::uppercase)
-        binding.budget.text = model.budget.toFormatedPrice()
-        binding.remaining.text = (model.budget - model.spent).toFormatedPrice()
+        binding.budget.text = model.budget.toFormatedPrice(model.currency)
+        binding.remaining.text = (model.budget - model.spent).toFormatedPrice(model.currency)
 
         binding.progress.progress =
             ((model.budget - model.spent) * BigDecimal("100") / model.budget).toInt()

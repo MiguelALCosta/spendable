@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.domain.settings.AppLanguage
 import com.app.spendable.domain.settings.AppTheme
 import com.app.spendable.utils.toEnum
@@ -15,6 +16,8 @@ interface IAppPreferences {
     fun setAppLanguage(language: AppLanguage)
     fun getAppTheme(): AppTheme
     fun setAppTheme(theme: AppTheme)
+    fun getAppCurrency(): AppCurrency
+    fun setAppCurrency(currency: AppCurrency)
 }
 
 class AppPreferences(private val sharedPreferences: SharedPreferences) : IAppPreferences {
@@ -23,6 +26,7 @@ class AppPreferences(private val sharedPreferences: SharedPreferences) : IAppPre
         private const val SYSTEM_LANGUAGE_KEY = "SYSTEM_LANGUAGE_KEY"
         private const val APP_LANGUAGE_KEY = "APP_LANGUAGE_KEY"
         private const val APP_THEME_KEY = "APP_THEME_KEY"
+        private const val APP_CURRENCY_KEY = "APP_CURRENCY_KEY"
     }
 
     override fun getSystemLanguage(): String {
@@ -49,6 +53,15 @@ class AppPreferences(private val sharedPreferences: SharedPreferences) : IAppPre
 
     override fun setAppTheme(theme: AppTheme) {
         sharedPreferences.edit().putString(APP_THEME_KEY, theme.name).apply()
+    }
+
+    override fun getAppCurrency(): AppCurrency {
+        return sharedPreferences.getString(APP_CURRENCY_KEY, "EUR")
+            ?.toEnum<AppCurrency>() ?: AppCurrency.EUR
+    }
+
+    override fun setAppCurrency(currency: AppCurrency) {
+        sharedPreferences.edit().putString(APP_CURRENCY_KEY, currency.name).apply()
     }
 }
 

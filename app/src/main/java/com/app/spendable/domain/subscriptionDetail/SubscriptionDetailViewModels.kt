@@ -1,5 +1,6 @@
 package com.app.spendable.domain.subscriptionDetail
 
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.wallet.SubscriptionIcon
 import com.app.spendable.utils.toEnum
@@ -18,7 +19,8 @@ data class SubscriptionForm(
     var selectedSubcategory: String?,
     var date: LocalDate,
     val frequencies: List<SelectableChoiceComponent.Choice>,
-    var selectedFrequency: String
+    var selectedFrequency: String,
+    val currency: AppCurrency
 ) {
 
     fun getActiveSubcategoryChoices() =

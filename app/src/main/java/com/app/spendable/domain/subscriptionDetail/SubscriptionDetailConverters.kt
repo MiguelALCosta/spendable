@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.app.spendable.R
 import com.app.spendable.data.db.Subscription
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.toIconResource
 import com.app.spendable.presentation.toStringResource
@@ -112,7 +113,7 @@ fun SubscriptionCategory.getSubCategoryChoices(stringsManager: IStringsManager) 
         )
     }
 
-fun Subscription?.toForm(stringsManager: IStringsManager): SubscriptionForm {
+fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency): SubscriptionForm {
     val now = DateUtils.Provide.nowDevice()
     return SubscriptionForm(
         amount = this?.cost,
@@ -138,7 +139,8 @@ fun Subscription?.toForm(stringsManager: IStringsManager): SubscriptionForm {
                 null
             )
         },
-        selectedFrequency = this?.frequency ?: SubscriptionFrequency.MONTHLY.name
+        selectedFrequency = this?.frequency ?: SubscriptionFrequency.MONTHLY.name,
+        currency = currency
     )
 }
 

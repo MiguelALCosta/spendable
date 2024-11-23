@@ -5,6 +5,7 @@ import com.app.spendable.data.IMonthsRepository
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
 import com.app.spendable.data.db.Month
+import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
 import com.app.spendable.presentation.wallet.HeaderModel
 import com.app.spendable.presentation.wallet.SubscriptionsListModel
@@ -24,6 +25,7 @@ interface IWalletInteractor {
 
 class WalletInteractor(
     private val stringsManager: IStringsManager,
+    private val appPreferences: IAppPreferences,
     private val transactionsRepository: ITransactionsRepository,
     private val subscriptionsRepository: ISubscriptionsRepository,
     private val monthsRepository: IMonthsRepository
@@ -57,7 +59,8 @@ class WalletInteractor(
             WalletCardModel(
                 month = currentMonth,
                 budget = BigDecimal(getCurrentMonthModel().totalBudget),
-                spent = transactionsSum + subscriptionsSum
+                spent = transactionsSum + subscriptionsSum,
+                currency = appPreferences.getAppCurrency()
             )
         )
     }
@@ -85,7 +88,7 @@ class WalletInteractor(
                 YearMonth.from(DateUtils.Parse.fromDate(it.date)) <= YearMonth.from(today)
                         && (it.endDate == null || DateUtils.Parse.fromDate(it.endDate) >= today)
             }
-            .map { it.toItemModel(today) }
+            .map { it.toItemModel(today, appPreferences.getAppCurrency()) }
             .sortedBy { it.date }
 
         val header = if (subscriptions.isEmpty()) {
@@ -106,7 +109,7 @@ class WalletInteractor(
             .sortedByDescending { it.first }
             .flatMap {
                 listOf(HeaderModel(DateUtils.Format.toWeekdayDayMonth(it.first)))
-                    .plus(it.second.map { it.second.toItemModel() })
+                    .plus(it.second.map { it.second.toItemModel(appPreferences.getAppCurrency()) })
             }
     }
 

@@ -1,6 +1,7 @@
 package com.app.spendable.domain.transactionDetail
 
 import com.app.spendable.data.db.Transaction
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.toIcon
 import com.app.spendable.presentation.toTitleRes
@@ -9,7 +10,7 @@ import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
 import java.time.LocalDateTime
 
-fun Transaction?.toForm(stringsManager: IStringsManager): TransactionForm {
+fun Transaction?.toForm(stringsManager: IStringsManager, currency: AppCurrency): TransactionForm {
     val selectedDateTime = this?.date?.let { DateUtils.Parse.fromDateTime(it) }
         ?: DateUtils.Provide.nowDevice()
 
@@ -27,6 +28,7 @@ fun Transaction?.toForm(stringsManager: IStringsManager): TransactionForm {
         date = selectedDateTime.toLocalDate(),
         time = selectedDateTime.toLocalTime(),
         notes = this?.description,
+        currency = currency
     )
 }
 

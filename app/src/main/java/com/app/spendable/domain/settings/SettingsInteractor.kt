@@ -12,8 +12,11 @@ interface ISettingsInteractor {
     fun getSelectedLanguage(): AppLanguage
     fun getAvailableThemes(): List<AppTheme>
     fun getSelectedTheme(): AppTheme
+    fun getAvailableCurrencies(): List<AppCurrency>
+    fun getSelectedCurrency(): AppCurrency
     fun updateAppLanguage(language: AppLanguage)
     fun updateAppTheme(theme: AppTheme)
+    fun updateAppCurrency(currency: AppCurrency)
     fun clearAppData(completion: (Unit) -> Unit)
 }
 
@@ -39,6 +42,14 @@ class SettingsInteractor(
         return appPreferences.getAppTheme()
     }
 
+    override fun getAvailableCurrencies(): List<AppCurrency> {
+        return AppCurrency.entries
+    }
+
+    override fun getSelectedCurrency(): AppCurrency {
+        return appPreferences.getAppCurrency()
+    }
+
     override fun clearAppData(completion: (Unit) -> Unit) {
         makeRequest(request = {
             transactionsRepository.deleteAll()
@@ -59,6 +70,10 @@ class SettingsInteractor(
             AppTheme.DARK -> AppCompatDelegate.MODE_NIGHT_YES
         }
         AppCompatDelegate.setDefaultNightMode(nightMode)
+    }
+
+    override fun updateAppCurrency(currency: AppCurrency) {
+        appPreferences.setAppCurrency(currency)
     }
 
 }

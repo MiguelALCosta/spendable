@@ -3,6 +3,7 @@ package com.app.spendable.presentation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.app.spendable.R
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.wallet.SubscriptionFrequency
 import com.app.spendable.presentation.wallet.SubscriptionIcon
 import com.app.spendable.presentation.wallet.TransactionType
@@ -72,4 +73,17 @@ fun SubscriptionFrequency.toStringResource() = when (this) {
     SubscriptionFrequency.BIWEEKLY -> R.string.biweekly_stats
     SubscriptionFrequency.WEEKLY -> R.string.weekly_stats
     SubscriptionFrequency.DAILY -> R.string.daily_stats
+}
+
+@DrawableRes
+fun AppCurrency.toIconResource() = when (this) {
+    AppCurrency.EUR -> R.drawable.ic_euro
+    AppCurrency.DOLLAR -> R.drawable.ic_dollar
+    AppCurrency.POUND -> R.drawable.ic_pound
+}
+
+fun AppCurrency.toSymbol() = when (this) {
+    AppCurrency.EUR -> "€"
+    AppCurrency.DOLLAR -> "$"
+    AppCurrency.POUND -> "£"
 }

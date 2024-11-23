@@ -1,6 +1,7 @@
 package com.app.spendable.domain.transactionDetail
 
 import com.app.spendable.data.ITransactionsRepository
+import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
 import com.app.spendable.utils.IStringsManager
 
@@ -12,13 +13,14 @@ interface ITransactionDetailInteractor {
 
 class TransactionDetailInteractor(
     private val stringsManager: IStringsManager,
+    private val appPreferences: IAppPreferences,
     private val transactionsRepository: ITransactionsRepository
 ) : BaseInteractor(), ITransactionDetailInteractor {
 
     override fun getTransactionForm(id: Int?, completion: (TransactionForm) -> Unit) {
         makeRequest(request = {
             val transaction = id?.let { transactionsRepository.getById(it) }
-            transaction.toForm(stringsManager)
+            transaction.toForm(stringsManager, appPreferences.getAppCurrency())
         }, completion)
     }
 

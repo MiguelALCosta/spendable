@@ -54,9 +54,10 @@ object MainModule {
     @Provides
     fun provideTransactionDetailInteractor(
         stringsManager: IStringsManager,
+        appPreferences: IAppPreferences,
         transactionsRepository: ITransactionsRepository
     ): ITransactionDetailInteractor {
-        return TransactionDetailInteractor(stringsManager, transactionsRepository)
+        return TransactionDetailInteractor(stringsManager, appPreferences, transactionsRepository)
     }
 
     @Provides
@@ -89,9 +90,10 @@ object MainModule {
     @Provides
     fun provideSubscriptionDetailInteractor(
         stringsManager: IStringsManager,
+        appPreferences: IAppPreferences,
         subscriptionsRepository: ISubscriptionsRepository
     ): ISubscriptionDetailInteractor {
-        return SubscriptionDetailInteractor(stringsManager, subscriptionsRepository)
+        return SubscriptionDetailInteractor(stringsManager, appPreferences, subscriptionsRepository)
     }
 
     @Provides
@@ -111,12 +113,14 @@ object MainModule {
     @Provides
     fun provideWalletInteractor(
         stringsManager: IStringsManager,
+        appPreferences: IAppPreferences,
         transactionsRepository: ITransactionsRepository,
         subscriptionsRepository: ISubscriptionsRepository,
         monthsRepository: IMonthsRepository
     ): IWalletInteractor {
         return WalletInteractor(
             stringsManager,
+            appPreferences,
             transactionsRepository,
             subscriptionsRepository,
             monthsRepository

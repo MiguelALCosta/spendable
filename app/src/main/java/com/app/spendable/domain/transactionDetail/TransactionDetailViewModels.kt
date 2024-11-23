@@ -1,5 +1,6 @@
 package com.app.spendable.domain.transactionDetail
 
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import java.time.LocalDate
 import java.time.LocalTime
@@ -11,5 +12,6 @@ data class TransactionForm(
     var selectedCategory: String?,
     var date: LocalDate,
     var time: LocalTime,
-    var notes: String?
+    var notes: String?,
+    val currency: AppCurrency
 )

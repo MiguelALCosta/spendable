@@ -12,6 +12,7 @@ import com.app.spendable.databinding.FragmentTransactionDetailBinding
 import com.app.spendable.domain.transactionDetail.TransactionForm
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
+import com.app.spendable.presentation.toIconResource
 import com.app.spendable.utils.DateUtils
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -123,11 +124,12 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
                 blockPriceDecimals(text?.toString())
                 form?.amount = text?.toString()
             })
-            editText?.setOnFocusChangeListener { v, hasFocus ->
+            editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     onPriceInputLoseFocus()
                 }
             }
+            form?.currency?.let { setEndIconDrawable(it.toIconResource()) }
             errorIconDrawable = null
         }
 

@@ -2,6 +2,7 @@ package com.app.spendable.domain.wallet
 
 import com.app.spendable.data.db.Subscription
 import com.app.spendable.data.db.Transaction
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.wallet.SubscriptionFrequency
 import com.app.spendable.presentation.wallet.SubscriptionIcon
 import com.app.spendable.presentation.wallet.SubscriptionItemModel
@@ -12,16 +13,17 @@ import com.app.spendable.utils.toEnum
 import java.math.BigDecimal
 import java.time.LocalDate
 
-fun Transaction.toItemModel() =
+fun Transaction.toItemModel(currency: AppCurrency) =
     TransactionItemModel(
         id = id,
         type = type.toEnum<TransactionType>() ?: TransactionType.OTHER,
         title = title,
         subtitle = description,
-        cost = BigDecimal(cost)
+        cost = BigDecimal(cost),
+        currency = currency
     )
 
-fun Subscription.toItemModel(today: LocalDate) =
+fun Subscription.toItemModel(today: LocalDate, currency: AppCurrency) =
     SubscriptionItemModel(
         id = id,
         iconType = iconType.toEnum<SubscriptionIcon>() ?: SubscriptionIcon.OTHER,
@@ -35,4 +37,5 @@ fun Subscription.toItemModel(today: LocalDate) =
             }
         },
         frequency = frequency.toEnum<SubscriptionFrequency>() ?: SubscriptionFrequency.MONTHLY,
+        currency = currency
     )

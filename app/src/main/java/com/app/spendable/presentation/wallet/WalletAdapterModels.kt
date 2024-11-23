@@ -1,5 +1,6 @@
 package com.app.spendable.presentation.wallet
 
+import com.app.spendable.domain.settings.AppCurrency
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.YearMonth
@@ -9,7 +10,8 @@ sealed interface WalletAdapterModel
 data class WalletCardModel(
     val month: YearMonth,
     val budget: BigDecimal,
-    val spent: BigDecimal
+    val spent: BigDecimal,
+    val currency: AppCurrency
 ) : WalletAdapterModel
 
 data class HeaderModel(val text: String) : WalletAdapterModel
@@ -24,7 +26,8 @@ data class TransactionItemModel(
     val type: TransactionType,
     val title: String,
     val subtitle: String? = null,
-    val cost: BigDecimal
+    val cost: BigDecimal,
+    val currency: AppCurrency
 ) : WalletAdapterModel
 
 enum class SubscriptionIcon {
@@ -47,7 +50,8 @@ data class SubscriptionItemModel(
     val title: String,
     val cost: BigDecimal,
     val date: LocalDate,
-    val frequency: SubscriptionFrequency
+    val frequency: SubscriptionFrequency,
+    val currency: AppCurrency
 ) : WalletAdapterModel
 
 data class SubscriptionsListModel(val items: List<SubscriptionItemModel>) : WalletAdapterModel

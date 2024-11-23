@@ -62,6 +62,7 @@ class WalletFragment : Fragment(), WalletView {
             is WalletCardModel ->
                 (activity as? IMainView)?.showUpdateTotalBudgetDialog(
                     model.budget,
+                    model.currency,
                     presenter::updateTotalBudget
                 )
 

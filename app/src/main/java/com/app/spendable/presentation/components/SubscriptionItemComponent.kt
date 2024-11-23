@@ -28,7 +28,7 @@ class SubscriptionItemComponent(
     fun setup(model: SubscriptionItemModel) {
         binding.icon.setImageResource(model.iconType.toIconResource())
         binding.title.text = model.title
-        binding.cost.text = model.cost.toFormatedPrice()
+        binding.cost.text = model.cost.toFormatedPrice(model.currency)
 
         val today = DateUtils.Provide.nowDevice().toLocalDate()
         val daysLeft = ChronoUnit.DAYS.between(today, model.date).toInt()

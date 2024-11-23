@@ -8,6 +8,8 @@ import android.view.ViewGroup.LayoutParams
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import com.app.spendable.databinding.DialogUpdateTotalBudgetBinding
+import com.app.spendable.domain.settings.AppCurrency
+import com.app.spendable.presentation.toIconResource
 import java.math.BigDecimal
 
 
@@ -17,10 +19,12 @@ class UpdateTotalBudgetDialog : DialogFragment() {
 
         fun build(
             currentValue: BigDecimal?,
+            currency: AppCurrency,
             onUpdate: (BigDecimal) -> Unit
         ): UpdateTotalBudgetDialog {
             return UpdateTotalBudgetDialog().apply {
                 this.initialValue = currentValue
+                this.currency = currency
                 this.onUpdate = onUpdate
             }
         }
@@ -28,6 +32,7 @@ class UpdateTotalBudgetDialog : DialogFragment() {
     }
 
     private var initialValue: BigDecimal? = null
+    private var currency = AppCurrency.EUR
     private var onUpdate: ((BigDecimal) -> Unit)? = null
 
     private lateinit var binding: DialogUpdateTotalBudgetBinding
@@ -68,11 +73,12 @@ class UpdateTotalBudgetDialog : DialogFragment() {
             editText?.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 blockInputDecimals(text?.toString())
             })
-            editText?.setOnFocusChangeListener { v, hasFocus ->
+            editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     onInputLoseFocus()
                 }
             }
+            setEndIconDrawable(currency.toIconResource())
             errorIconDrawable = null
         }
     }

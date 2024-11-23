@@ -7,3 +7,7 @@ enum class AppLanguage {
 enum class AppTheme {
     SYSTEM, LIGHT, DARK
 }
+
+enum class AppCurrency {
+    EUR, DOLLAR, POUND
+}

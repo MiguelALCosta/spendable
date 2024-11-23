@@ -1,6 +1,7 @@
 package com.app.spendable.domain.subscriptionDetail
 
 import com.app.spendable.data.ISubscriptionsRepository
+import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
@@ -13,13 +14,14 @@ interface ISubscriptionDetailInteractor {
 
 class SubscriptionDetailInteractor(
     private val stringsManager: IStringsManager,
+    private val appPreferences: IAppPreferences,
     private val subscriptionsRepository: ISubscriptionsRepository
 ) : BaseInteractor(), ISubscriptionDetailInteractor {
 
     override fun getSubscriptionForm(id: Int?, completion: (SubscriptionForm) -> Unit) {
         makeRequest(request = {
             val subscription = id?.let { subscriptionsRepository.getById(it) }
-            subscription.toForm(stringsManager)
+            subscription.toForm(stringsManager, appPreferences.getAppCurrency())
         }, completion)
     }
 

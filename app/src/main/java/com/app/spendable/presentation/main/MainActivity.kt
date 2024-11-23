@@ -6,6 +6,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.app.spendable.R
 import com.app.spendable.databinding.ActivityMainBinding
+import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.add.AddActivity
 import com.app.spendable.presentation.common.BaseSpendableActivity
 import com.app.spendable.presentation.common.ExtraConstants
@@ -21,7 +22,11 @@ interface IMainView {
     fun navigateToAdd()
     fun showTransactionDetail(id: Int)
     fun showSubscriptionDetail(id: Int)
-    fun showUpdateTotalBudgetDialog(currentValue: BigDecimal, onUpdate: (BigDecimal) -> Unit)
+    fun showUpdateTotalBudgetDialog(
+        currentValue: BigDecimal,
+        currency: AppCurrency,
+        onUpdate: (BigDecimal) -> Unit
+    )
 }
 
 @AndroidEntryPoint
@@ -91,9 +96,10 @@ class MainActivity : BaseSpendableActivity(), IMainView {
 
     override fun showUpdateTotalBudgetDialog(
         currentValue: BigDecimal,
+        currency: AppCurrency,
         onUpdate: (BigDecimal) -> Unit
     ) {
-        UpdateTotalBudgetDialog.build(currentValue, onUpdate)
+        UpdateTotalBudgetDialog.build(currentValue, currency, onUpdate)
             .show(supportFragmentManager, UPDATE_TOTAL_BUDGET_DIALOG_TAG)
     }
 

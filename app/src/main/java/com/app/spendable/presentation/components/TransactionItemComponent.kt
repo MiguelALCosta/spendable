@@ -33,7 +33,7 @@ class TransactionItemComponent(
             binding.subtitle.visibility = VISIBLE
         }
 
-        binding.cost.text = model.cost.toFormatedPrice()
+        binding.cost.text = model.cost.toFormatedPrice(model.currency)
     }
 
 }

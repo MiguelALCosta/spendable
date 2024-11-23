@@ -13,6 +13,7 @@ import com.app.spendable.domain.subscriptionDetail.SubscriptionForm
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.components.SelectableChoiceComponent
+import com.app.spendable.presentation.toIconResource
 import com.app.spendable.utils.DateUtils
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
@@ -125,11 +126,12 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
                 blockPriceDecimals(text?.toString())
                 form?.amount = text?.toString()
             })
-            editText?.setOnFocusChangeListener { v, hasFocus ->
+            editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     onPriceInputLoseFocus()
                 }
             }
+            form?.currency?.let { setEndIconDrawable(it.toIconResource()) }
             errorIconDrawable = null
         }
 

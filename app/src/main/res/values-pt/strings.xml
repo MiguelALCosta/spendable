@@ -72,6 +72,7 @@
     <string name="yesterday">Ontem</string>
     <string name="update">Atualizar</string>
     <string name="language">Língua</string>
+    <string name="currency">Moeda</string>
     <string name="follow_system">Seguir sistema</string>
     <string name="theme">Tema</string>
     <string name="light_theme">Claro</string>
@@ -81,4 +82,7 @@
     <string name="clear_data_confirmation_title">Apagar dados da aplicação</string>
     <string name="clear_data_confirmation_message">Esta ação vai apagar permanentemente todas despesas registadas na aplicação. De certeza que queres continuar?</string>
     <string name="yes_clear">Sim, apagar</string>
+    <string name="euro">Euro</string>
+    <string name="dollar">Dollar</string>
+    <string name="pound">Libra</string>
 </resources>

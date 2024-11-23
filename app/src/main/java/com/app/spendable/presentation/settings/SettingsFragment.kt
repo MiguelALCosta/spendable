@@ -25,8 +25,14 @@ interface ISettingsView {
         selectedChoice: SelectableChoiceComponent.Choice
     )
 
+    fun setupCurrencyInput(
+        choices: List<SelectableChoiceComponent.Choice>,
+        selectedChoice: SelectableChoiceComponent.Choice
+    )
+
     fun setSelectedLanguage(selectedChoice: SelectableChoiceComponent.Choice)
     fun setSelectedTheme(selectedChoice: SelectableChoiceComponent.Choice)
+    fun setSelectedCurrency(selectedChoice: SelectableChoiceComponent.Choice)
     fun showMessage(message: String)
     fun refreshActivity()
 }
@@ -45,6 +51,7 @@ class SettingsFragment : Fragment(), ISettingsView {
 
     private var selectedLanguage: String? = null
     private var selectedTheme: String? = null
+    private var selectedCurrency: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,6 +110,23 @@ class SettingsFragment : Fragment(), ISettingsView {
         }
     }
 
+    override fun setupCurrencyInput(
+        choices: List<SelectableChoiceComponent.Choice>,
+        selectedChoice: SelectableChoiceComponent.Choice
+    ) {
+        binding.currencyInput.apply {
+            setSelectedCurrency(selectedChoice)
+            editText?.setOnClickListener {
+                showChoiceBottomSheet(
+                    choices,
+                    selectedCurrency,
+                    onSelection = { presenter.handleCurrencySelection(it) }
+                )
+            }
+            errorIconDrawable = null
+        }
+    }
+
     private fun showChoiceBottomSheet(
         choices: List<SelectableChoiceComponent.Choice>,
         selectedChoiceId: String?,
@@ -124,6 +148,11 @@ class SettingsFragment : Fragment(), ISettingsView {
         binding.themeInput.editText?.setText(selectedChoice.label)
     }
 
+    override fun setSelectedCurrency(selectedChoice: SelectableChoiceComponent.Choice) {
+        selectedCurrency = selectedChoice.id
+        binding.currencyInput.editText?.setText(selectedChoice.label)
+    }
+
     override fun showMessage(message: String) {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
     }
@@ -143,13 +172,7 @@ class SettingsFragment : Fragment(), ISettingsView {
     }
 
     override fun refreshActivity() {
-        activity?.let {
-            it.recreate()
-            //val intent = Intent(it, MainActivity::class.java)
-            //it.finish()
-            //startActivity(intent)
-        }
-
+        activity?.recreate()
     }
 
 }
