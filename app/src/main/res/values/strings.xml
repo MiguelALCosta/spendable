@@ -84,4 +84,6 @@
     <string name="euro">Euro</string>
     <string name="dollar">Dollar</string>
     <string name="pound">Pound</string>
+    <string name="x_of_x">%s of %s</string>
+    <string name="final_balance">Final Balance</string>
 </resources>

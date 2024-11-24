@@ -30,7 +30,7 @@ class SubscriptionsListAdapter(
 
         fun render(model: SubscriptionItemModel, onClick: (WalletAdapterModel) -> Unit) {
             component.setup(model)
-            component.setOnClickListener { onClick(model) }
+            component.clickableView.setOnClickListener { onClick(model) }
         }
     }
 

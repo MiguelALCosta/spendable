@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="100dp"
     android:layout_height="145dp"
-    android:layout_margin="4dp"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="16dp"
+    app:strokeWidth="0dp"
+    app:cardElevation="4dp"
     app:cardCornerRadius="14dp"
     app:cardBackgroundColor="?attr/colorSecondaryFixed">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingVertical="8dp"
-        android:paddingHorizontal="4dp">
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="8dp">
 
         <androidx.cardview.widget.CardView
             android:theme="@style/Theme.Material3.Light.NoActionBar"
@@ -82,31 +86,8 @@
             android:gravity="center"
             android:maxLines="2"
             android:ellipsize="end"
-            tools:text="monthly" />
-
-        <!--
-
-        <TextView
-            android:id="@+id/subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginHorizontal="8dp"
-            tools:text="era uma merda" />
-
-        <TextView
-            android:id="@+id/cost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-            tools:text="50.00€"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="8dp" />-->
+            tools:text="@string/today" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

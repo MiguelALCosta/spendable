@@ -102,7 +102,7 @@ class WalletAdapter(
         RecyclerView.ViewHolder(component) {
         fun render(model: TransactionItemModel, onClick: (WalletAdapterModel) -> Unit) {
             component.setup(model)
-            component.setOnClickListener { onClick(model) }
+            component.clickableView.setOnClickListener { onClick(model) }
         }
     }
 

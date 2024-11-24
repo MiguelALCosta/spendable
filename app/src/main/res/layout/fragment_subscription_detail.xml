@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
+            app:startIconTint="@null"
             app:endIconMode="custom"
             app:endIconDrawable="@drawable/ic_dropdown_arrow"
             android:hint="@string/category">
@@ -56,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
+            app:startIconTint="@null"
             app:endIconMode="custom"
             app:endIconDrawable="@drawable/ic_dropdown_arrow"
             android:hint="@string/subcategory">

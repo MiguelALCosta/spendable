@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_calendar"
-        android:name="com.app.spendable.presentation.dashboard.DashboardFragment"
+        android:name="com.app.spendable.presentation.calendar.CalendarFragment"
         android:label="@string/title_calendar"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_calendar" />
 
     <fragment
         android:id="@+id/navigation_settings"

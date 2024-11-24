@@ -81,6 +81,7 @@ class SettingsFragment : Fragment(), ISettingsView {
         selectedChoice: SelectableChoiceComponent.Choice
     ) {
         binding.languageInput.apply {
+            isHintAnimationEnabled = false
             setSelectedLanguage(selectedChoice)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
@@ -98,6 +99,7 @@ class SettingsFragment : Fragment(), ISettingsView {
         selectedChoice: SelectableChoiceComponent.Choice
     ) {
         binding.themeInput.apply {
+            isHintAnimationEnabled = false
             setSelectedTheme(selectedChoice)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
@@ -115,6 +117,7 @@ class SettingsFragment : Fragment(), ISettingsView {
         selectedChoice: SelectableChoiceComponent.Choice
     ) {
         binding.currencyInput.apply {
+            isHintAnimationEnabled = false
             setSelectedCurrency(selectedChoice)
             editText?.setOnClickListener {
                 showChoiceBottomSheet(
@@ -141,16 +144,19 @@ class SettingsFragment : Fragment(), ISettingsView {
     override fun setSelectedLanguage(selectedChoice: SelectableChoiceComponent.Choice) {
         selectedLanguage = selectedChoice.id
         binding.languageInput.editText?.setText(selectedChoice.label)
+        binding.languageInput.setStartIconDrawable(selectedChoice.icon ?: 0)
     }
 
     override fun setSelectedTheme(selectedChoice: SelectableChoiceComponent.Choice) {
         selectedTheme = selectedChoice.id
         binding.themeInput.editText?.setText(selectedChoice.label)
+        binding.themeInput.setStartIconDrawable(selectedChoice.icon ?: 0)
     }
 
     override fun setSelectedCurrency(selectedChoice: SelectableChoiceComponent.Choice) {
         selectedCurrency = selectedChoice.id
         binding.currencyInput.editText?.setText(selectedChoice.label)
+        binding.currencyInput.setStartIconDrawable(selectedChoice.icon ?: 0)
     }
 
     override fun showMessage(message: String) {

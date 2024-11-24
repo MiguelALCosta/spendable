@@ -33,6 +33,20 @@ class WalletInteractor(
 
     override fun getModels(completion: (List<WalletAdapterModel>) -> Unit) {
         makeRequest(request = {
+
+            /*val months = monthsRepository.getAll()
+            if (months.firstOrNull {
+                    it.date == DateUtils.Format.toYearMonth(YearMonth.of(2023, 2))
+                } == null) {
+                monthsRepository.insert(
+                    Month(
+                        date = DateUtils.Format.toYearMonth(YearMonth.of(2023, 2)),
+                        totalBudget = "1000.00",
+                        totalSpent = null
+                    )
+                )
+            }*/
+
             getWalletCard()
                 .plus(getCurrentMonthSubscriptions())
                 .plus(getCurrentMonthTransactions())
@@ -83,12 +97,13 @@ class WalletInteractor(
 
     private suspend fun getCurrentMonthSubscriptions(): List<WalletAdapterModel> {
         val today = DateUtils.Provide.nowDevice().toLocalDate()
+        val currency = appPreferences.getAppCurrency()
         val subscriptions = subscriptionsRepository.getAll()
             .filter {
                 YearMonth.from(DateUtils.Parse.fromDate(it.date)) <= YearMonth.from(today)
                         && (it.endDate == null || DateUtils.Parse.fromDate(it.endDate) >= today)
             }
-            .map { it.toItemModel(today, appPreferences.getAppCurrency()) }
+            .map { it.toItemModel(today, currency) }
             .sortedBy { it.date }
 
         val header = if (subscriptions.isEmpty()) {
@@ -101,6 +116,7 @@ class WalletInteractor(
 
     private suspend fun getCurrentMonthTransactions(): List<WalletAdapterModel> {
         val currentMonth = YearMonth.from(DateUtils.Provide.nowDevice())
+        val currency = appPreferences.getAppCurrency()
         return transactionsRepository.getAll()
             .map { DateUtils.Parse.fromDateTime(it.date) to it }
             .filter { YearMonth.from(it.first) == currentMonth }
@@ -109,7 +125,7 @@ class WalletInteractor(
             .sortedByDescending { it.first }
             .flatMap {
                 listOf(HeaderModel(DateUtils.Format.toWeekdayDayMonth(it.first)))
-                    .plus(it.second.map { it.second.toItemModel(appPreferences.getAppCurrency()) })
+                    .plus(it.second.map { it.second.toItemModel(currency) })
             }
     }
 

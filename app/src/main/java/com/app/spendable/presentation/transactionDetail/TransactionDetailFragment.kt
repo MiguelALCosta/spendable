@@ -268,6 +268,7 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
             ?.let { choice ->
                 form?.selectedCategory = choice.id
                 binding.categoryInput.editText?.setText(choice.label)
+                binding.categoryInput.setStartIconDrawable(choice.icon ?: 0)
             }
     }
 

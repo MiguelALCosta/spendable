@@ -57,7 +57,10 @@ class SettingsPresenter(
                 AppLanguage.SYSTEM -> stringsManager.getString(R.string.follow_system)
                 else -> Locale(name).displayName.replaceFirstChar(Char::uppercase)
             },
-            icon = null
+            icon = when (this) {
+                AppLanguage.SYSTEM -> R.drawable.ic_system
+                else -> null
+            }
         )
 
     private fun AppTheme.toChoice() =
@@ -68,7 +71,11 @@ class SettingsPresenter(
                 AppTheme.LIGHT -> stringsManager.getString(R.string.light_theme)
                 AppTheme.DARK -> stringsManager.getString(R.string.dark_theme)
             },
-            icon = null
+            icon = when (this) {
+                AppTheme.SYSTEM -> R.drawable.ic_system
+                AppTheme.LIGHT -> R.drawable.ic_light_mode
+                AppTheme.DARK -> R.drawable.ic_dark_mode
+            }
         )
 
     private fun AppCurrency.toChoice() =

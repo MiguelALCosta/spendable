@@ -3,6 +3,7 @@ package com.app.spendable.presentation.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import com.app.spendable.databinding.ComponentTransactionItemBinding
 import com.app.spendable.presentation.toIcon
@@ -15,6 +16,9 @@ class TransactionItemComponent(
 ) : FrameLayout(context, attrs) {
 
     private var binding: ComponentTransactionItemBinding
+
+    val clickableView: View
+        get() = binding.root
 
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

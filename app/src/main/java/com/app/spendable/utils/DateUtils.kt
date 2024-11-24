@@ -53,7 +53,7 @@ object DateUtils {
             LocalDate.parse(dateTime, getFormatter(AvailableFormats.DATE_FORMAT))
 
         fun fromYearMonth(dateTime: String) =
-            LocalDate.parse(dateTime, getFormatter(AvailableFormats.YEAR_MONTH))
+            YearMonth.parse(dateTime, getFormatter(AvailableFormats.YEAR_MONTH))
     }
 
     object Provide {

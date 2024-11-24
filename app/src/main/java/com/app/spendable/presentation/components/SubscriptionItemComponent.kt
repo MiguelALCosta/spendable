@@ -3,6 +3,7 @@ package com.app.spendable.presentation.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import com.app.spendable.R
 import com.app.spendable.databinding.ComponentSubscriptionItemBinding
@@ -19,6 +20,9 @@ class SubscriptionItemComponent(
 ) : FrameLayout(context, attrs) {
 
     private var binding: ComponentSubscriptionItemBinding
+
+    val clickableView: View
+        get() = binding.root
 
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater

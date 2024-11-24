@@ -7,7 +7,6 @@ interface IWalletPresenter {
     fun bind(view: WalletView)
     fun unbind()
     fun refreshWalletInfo()
-    fun deleteTransaction(id: Int)
     fun updateTotalBudget(newValue: BigDecimal)
 }
 
@@ -28,12 +27,6 @@ class WalletPresenter(
     override fun refreshWalletInfo() {
         interactor.getModels {
             view?.updateView(it)
-        }
-    }
-
-    override fun deleteTransaction(id: Int) {
-        interactor.deleteTransaction(id) {
-            refreshWalletInfo()
         }
     }
 

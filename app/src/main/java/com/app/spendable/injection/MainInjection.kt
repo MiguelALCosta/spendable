@@ -13,6 +13,8 @@ import com.app.spendable.data.db.IAppDatabase
 import com.app.spendable.data.preferences.AppPreferences
 import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.data.preferences.buildSharedPreferences
+import com.app.spendable.domain.calendar.CalendarInteractor
+import com.app.spendable.domain.calendar.ICalendarInteractor
 import com.app.spendable.domain.settings.ISettingsInteractor
 import com.app.spendable.domain.settings.SettingsInteractor
 import com.app.spendable.domain.subscriptionDetail.ISubscriptionDetailInteractor
@@ -21,6 +23,8 @@ import com.app.spendable.domain.transactionDetail.ITransactionDetailInteractor
 import com.app.spendable.domain.transactionDetail.TransactionDetailInteractor
 import com.app.spendable.domain.wallet.IWalletInteractor
 import com.app.spendable.domain.wallet.WalletInteractor
+import com.app.spendable.presentation.calendar.CalendarPresenter
+import com.app.spendable.presentation.calendar.ICalendarPresenter
 import com.app.spendable.presentation.main.IMainPresenter
 import com.app.spendable.presentation.main.MainPresenter
 import com.app.spendable.presentation.settings.ISettingsPresenter
@@ -148,6 +152,30 @@ object MainModule {
         stringsManager: IStringsManager
     ): ISettingsPresenter {
         return SettingsPresenter(interactor, stringsManager)
+    }
+
+    @Provides
+    fun provideCalendarPresenter(
+        interactor: ICalendarInteractor
+    ): ICalendarPresenter {
+        return CalendarPresenter(interactor)
+    }
+
+    @Provides
+    fun provideCalendarInteractor(
+        stringsManager: IStringsManager,
+        appPreferences: IAppPreferences,
+        transactionsRepository: ITransactionsRepository,
+        subscriptionsRepository: ISubscriptionsRepository,
+        monthsRepository: IMonthsRepository
+    ): ICalendarInteractor {
+        return CalendarInteractor(
+            stringsManager,
+            appPreferences,
+            transactionsRepository,
+            subscriptionsRepository,
+            monthsRepository
+        )
     }
 }
 

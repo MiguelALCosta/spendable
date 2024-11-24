@@ -274,6 +274,7 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
     private fun updateCategoryInput(choiceId: String?) {
         val choice = form?.categories?.firstOrNull { it.id == choiceId }
         binding.categoryInput.editText?.setText(choice?.label ?: "")
+        binding.categoryInput.setStartIconDrawable(choice?.icon ?: 0)
     }
 
     private fun updateSubcategoryVisibility() {
@@ -305,6 +306,7 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
     private fun updateSubcategoryInput(choiceId: String?) {
         val choice = form?.getActiveSubcategoryChoices()?.firstOrNull { it.id == choiceId }
         binding.subcategoryInput.editText?.setText(choice?.label ?: "")
+        binding.subcategoryInput.setStartIconDrawable(choice?.icon ?: 0)
     }
 
     private fun setSelectedFrequency(choiceId: String) {

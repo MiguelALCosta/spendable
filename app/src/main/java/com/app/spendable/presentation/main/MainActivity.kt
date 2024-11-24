@@ -16,6 +16,7 @@ import com.app.spendable.presentation.transactionDetail.TransactionDetailActivit
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.BigDecimal
+import java.time.YearMonth
 import javax.inject.Inject
 
 interface IMainView {
@@ -27,6 +28,8 @@ interface IMainView {
         currency: AppCurrency,
         onUpdate: (BigDecimal) -> Unit
     )
+
+    fun showMonthDetail(month: YearMonth)
 }
 
 @AndroidEntryPoint
@@ -63,20 +66,6 @@ class MainActivity : BaseSpendableActivity(), IMainView {
         presenter.doStartUpActions()
     }
 
-    /*override fun attachBaseContext(newBase: Context) {
-        val appPreferences = EntryPointAccessors
-            .fromApplication<AppPreferencesProvider>(newBase.applicationContext)
-            .getAppPreferences()
-        val updatedContext = LocaleUtils.getContextWithUpdatedLocale(newBase, appPreferences)
-
-        val stringsManager = EntryPointAccessors
-            .fromApplication<StringsManagerProvider>(newBase.applicationContext)
-            .getStringsManager()
-        stringsManager.updateContext(updatedContext)
-
-        super.attachBaseContext(updatedContext)
-    }*/
-
     override fun navigateToAdd() {
         val intent = Intent(this, AddActivity::class.java)
         startActivity(intent)
@@ -101,6 +90,10 @@ class MainActivity : BaseSpendableActivity(), IMainView {
     ) {
         UpdateTotalBudgetDialog.build(currentValue, currency, onUpdate)
             .show(supportFragmentManager, UPDATE_TOTAL_BUDGET_DIALOG_TAG)
+    }
+
+    override fun showMonthDetail(month: YearMonth) {
+        //TODO("Not yet implemented")
     }
 
 }
