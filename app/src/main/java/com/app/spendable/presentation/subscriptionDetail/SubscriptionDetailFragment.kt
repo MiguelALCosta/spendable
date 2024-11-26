@@ -10,12 +10,15 @@ import androidx.fragment.app.Fragment
 import com.app.spendable.R
 import com.app.spendable.databinding.FragmentSubscriptionDetailBinding
 import com.app.spendable.domain.subscriptionDetail.SubscriptionForm
+import com.app.spendable.domain.transactionDetail.ExpenseDetailMode
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.toIconResource
 import com.app.spendable.utils.DateUtils
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +36,6 @@ interface ISubscriptionDetailView {
     fun setCategoryErrorState(hasError: Boolean)
     fun setSubCategoryErrorState(hasError: Boolean)
     fun showGenericError()
-    fun showCancelButton()
 }
 
 @SuppressLint("SetTextI18n")
@@ -79,7 +81,7 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
     override fun setupView(form: SubscriptionForm) {
         this.form = form
         setupInputs()
-        setupButton()
+        setupButtons()
     }
 
     override fun close() {
@@ -188,12 +190,53 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
                 showDatePicker()
             }
         }
+
+        setInputsEnabledState(form?.mode == ExpenseDetailMode.CREATE)
     }
 
-    private fun setupButton() {
+    private fun setInputsEnabledState(enabled: Boolean) {
+        listOf(
+            binding.priceInput,
+            binding.categoryInput,
+            binding.subcategoryInput,
+            binding.titleInput,
+            binding.frequencyInput,
+            binding.dateInput
+        ).forEach { it.isEnabled = enabled }
+    }
+
+    private fun setupButtons() {
         binding.saveButton.setOnClickListener {
             onPriceInputLoseFocus()
             presenter.saveSubscription(subscriptionId, form)
+        }
+        binding.editButton.setOnClickListener {
+            binding.saveButton.visibility = View.VISIBLE
+            binding.editButton.visibility = View.GONE
+            setInputsEnabledState(true)
+        }
+        binding.cancelButton.setOnClickListener { showCancelConfirmation() }
+        binding.deleteButton.setOnClickListener { showDeleteConfirmation() }
+
+        when (form?.mode) {
+            ExpenseDetailMode.CREATE -> {
+                binding.saveButton.visibility = View.VISIBLE
+            }
+
+            ExpenseDetailMode.EDITABLE -> {
+                binding.editButton.visibility = View.VISIBLE
+                binding.deleteButton.visibility = View.VISIBLE
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
+
+        form?.cancelState?.let {
+            binding.cancelButton.visibility = if (it.visible) View.VISIBLE else View.GONE
+            binding.cancelButton.isEnabled = it.enabled
+            binding.cancelButton.text = it.text
         }
     }
 
@@ -226,9 +269,16 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
     }
 
     private fun showDatePicker() {
+        val constraints = CalendarConstraints.Builder()
+            .also { builder ->
+                form?.minDatePickerMillis?.let { builder.setStart(it) }
+                form?.maxDatePickerMillis?.let { builder.setEnd(it) }
+            }
+            .build()
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.select_date))
+                .setCalendarConstraints(constraints)
                 .also { builder ->
                     form?.date?.atStartOfDay()?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
                         ?.let { builder.setSelection(it) }
@@ -319,8 +369,28 @@ class SubscriptionDetailFragment(private val subscriptionId: Int? = null) : Frag
         binding.frequencyInput.editText?.setText(choice?.label ?: "")
     }
 
-    override fun showCancelButton() {
-        binding.cancelButton.visibility = View.VISIBLE
-        binding.cancelButton.setOnClickListener { presenter.cancelSubscription(subscriptionId) }
+    private fun showCancelConfirmation() {
+        activity?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle(getString(R.string.cancel_subscription_confirmation_title))
+                .setMessage(getString(R.string.cancel_subscription_confirmation_message))
+                .setNegativeButton(getString(R.string.keep_active)) { _, _ -> }
+                .setPositiveButton(getString(R.string.cancel_subscription)) { _, _ ->
+                    presenter.cancelSubscription(subscriptionId)
+                }
+                .show()
+        }
+    }
+
+    private fun showDeleteConfirmation() {
+        activity?.let {
+            MaterialAlertDialogBuilder(it)
+                .setMessage(getString(R.string.delete_subscription_confirmation_message))
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+                .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                    presenter.deleteSubscription(subscriptionId)
+                }
+                .show()
+        }
     }
 }

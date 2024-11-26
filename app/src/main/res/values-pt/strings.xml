@@ -14,7 +14,7 @@
     <string name="remaining_budget">Disponível</string>
     <string name="transaction">Transação</string>
     <string name="subscription">Subscrição</string>
-    <string name="active_subscriptions">Subscrições Ativas</string>
+    <string name="subscriptions">Subscrições</string>
     <string name="title">Título</string>
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
@@ -42,6 +42,7 @@
     <string name="kids_label">Criança</string>
     <string name="other_label">Outro</string>
     <string name="save_button">Guardar</string>
+    <string name="edit_button">Editar</string>
     <string name="required_field_error">Campo obrigatório</string>
     <string name="generic_error">Ocorreu um erro inesperado</string>
     <string name="streaming_label">Streaming</string>
@@ -87,4 +88,12 @@
     <string name="pound">Libra</string>
     <string name="x_of_x">%s de %s</string>
     <string name="final_balance">Saldo Final</string>
+    <string name="delete_transaction_confirmation_message">Tens a certeza que queres apagar esta transação?</string>
+    <string name="cancel_subscription_confirmation_title">Cancelar esta subscrição?</string>
+    <string name="cancel_subscription_confirmation_message">Pagamentos anteriores serão mantidos, mas a partir de amanhã mais nenhum será registado.</string>
+    <string name="delete_subscription_confirmation_message">Tens a certeza que queres apagar esta subscrição?</string>
+    <string name="cancel_subscription">Cancelar subscrição</string>
+    <string name="cancelled_at">Cancelado a %s</string>
+    <string name="keep_active">Manter ativa</string>
+    <string name="paid">Pago</string>
 </resources>

@@ -63,9 +63,10 @@ class WalletInteractor(
 
         val subscriptionsSum = subscriptionsRepository.getAll()
             .filter {
-                val date = DateUtils.Parse.fromDate(it.date)
+                val startDate = DateUtils.Parse.fromDate(it.date)
+                val payDate = DateUtils.Provide.inCurrentMonth(startDate)
                 val endDate = it.endDate?.let { DateUtils.Parse.fromDate(it) }
-                date <= today && (endDate == null || YearMonth.from(endDate) >= currentMonth)
+                payDate <= today && (endDate == null || endDate >= today)
             }
             .sumOf { BigDecimal(it.cost) }
 
@@ -100,16 +101,19 @@ class WalletInteractor(
         val currency = appPreferences.getAppCurrency()
         val subscriptions = subscriptionsRepository.getAll()
             .filter {
-                YearMonth.from(DateUtils.Parse.fromDate(it.date)) <= YearMonth.from(today)
-                        && (it.endDate == null || DateUtils.Parse.fromDate(it.endDate) >= today)
+                val startDate = DateUtils.Parse.fromDate(it.date)
+                val payDate = DateUtils.Provide.inCurrentMonth(startDate)
+                val endDate = it.endDate?.let { DateUtils.Parse.fromDate(it) }
+                YearMonth.from(startDate) <= YearMonth.from(today)
+                        && (endDate == null || endDate >= payDate)
             }
-            .map { it.toItemModel(today, currency) }
-            .sortedBy { it.date }
+            .map { it.toItemModel(stringsManager, today, currency) }
+            .sortedBy { it.order }
 
         val header = if (subscriptions.isEmpty()) {
             emptyList()
         } else {
-            listOf(HeaderModel(stringsManager.getString(R.string.active_subscriptions)))
+            listOf(HeaderModel(stringsManager.getString(R.string.subscriptions)))
         }
         return header.plus(SubscriptionsListModel(subscriptions))
     }

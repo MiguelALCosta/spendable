@@ -9,10 +9,12 @@ import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
 import java.time.LocalDateTime
+import java.time.YearMonth
+import java.time.ZoneOffset
 
 fun Transaction?.toForm(stringsManager: IStringsManager, currency: AppCurrency): TransactionForm {
-    val selectedDateTime = this?.date?.let { DateUtils.Parse.fromDateTime(it) }
-        ?: DateUtils.Provide.nowDevice()
+    val now = DateUtils.Provide.nowDevice()
+    val selectedDateTime = this?.date?.let { DateUtils.Parse.fromDateTime(it) } ?: now
 
     return TransactionForm(
         amount = this?.cost,
@@ -28,7 +30,16 @@ fun Transaction?.toForm(stringsManager: IStringsManager, currency: AppCurrency):
         date = selectedDateTime.toLocalDate(),
         time = selectedDateTime.toLocalTime(),
         notes = this?.description,
-        currency = currency
+        currency = currency,
+        minDatePickerMillis = YearMonth.from(selectedDateTime).atDay(1).atStartOfDay()
+            .toInstant(ZoneOffset.UTC).toEpochMilli(),
+        maxDatePickerMillis = YearMonth.from(selectedDateTime).atEndOfMonth().atStartOfDay()
+            .toInstant(ZoneOffset.UTC).toEpochMilli(),
+        mode = when {
+            this == null -> ExpenseDetailMode.CREATE
+            YearMonth.from(selectedDateTime) == YearMonth.from(now) -> ExpenseDetailMode.EDITABLE
+            else -> ExpenseDetailMode.READ_ONLY
+        }
     )
 }
 

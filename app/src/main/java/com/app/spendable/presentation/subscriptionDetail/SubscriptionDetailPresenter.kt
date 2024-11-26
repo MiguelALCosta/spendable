@@ -9,6 +9,7 @@ interface ISubscriptionDetailPresenter {
     fun loadView(id: Int?)
     fun saveSubscription(id: Int?, form: SubscriptionForm?)
     fun cancelSubscription(id: Int?)
+    fun deleteSubscription(id: Int?)
 }
 
 class SubscriptionDetailPresenter(
@@ -28,9 +29,6 @@ class SubscriptionDetailPresenter(
     override fun loadView(id: Int?) {
         interactor.getSubscriptionForm(id) { form ->
             view?.setupView(form)
-            if (id != null) {
-                view?.showCancelButton()
-            }
         }
     }
 
@@ -56,6 +54,16 @@ class SubscriptionDetailPresenter(
             view?.showGenericError()
         } else {
             interactor.cancelSubscription(id) {
+                view?.close()
+            }
+        }
+    }
+
+    override fun deleteSubscription(id: Int?) {
+        if (id == null) {
+            view?.showGenericError()
+        } else {
+            interactor.deleteSubscription(id) {
                 view?.close()
             }
         }

@@ -5,6 +5,7 @@ import androidx.annotation.StringRes
 import com.app.spendable.R
 import com.app.spendable.data.db.Subscription
 import com.app.spendable.domain.settings.AppCurrency
+import com.app.spendable.domain.transactionDetail.ExpenseDetailMode
 import com.app.spendable.presentation.components.SelectableChoiceComponent
 import com.app.spendable.presentation.toIconResource
 import com.app.spendable.presentation.toStringResource
@@ -13,6 +14,8 @@ import com.app.spendable.presentation.wallet.SubscriptionIcon
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
 import com.app.spendable.utils.toEnum
+import java.time.YearMonth
+import java.time.ZoneOffset
 
 @StringRes
 fun SubscriptionCategory.toStringResource() =
@@ -114,7 +117,9 @@ fun SubscriptionCategory.getSubCategoryChoices(stringsManager: IStringsManager) 
     }
 
 fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency): SubscriptionForm {
-    val now = DateUtils.Provide.nowDevice()
+    val now = DateUtils.Provide.nowDevice().toLocalDate()
+    val selectedDate = this?.date?.let { DateUtils.Parse.fromDate(it) } ?: now
+
     return SubscriptionForm(
         amount = this?.cost,
         categories = SubscriptionCategory.entries.map {
@@ -130,8 +135,7 @@ fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency)
         selectedCategory = this?.category,
         selectedSubcategory = this?.iconType,
         title = this?.title,
-        date = this?.date?.let { DateUtils.Parse.fromDate(it) }
-            ?: now.toLocalDate(),
+        date = selectedDate,
         frequencies = SubscriptionFrequency.entries.map {
             SelectableChoiceComponent.Choice(
                 it.name,
@@ -140,7 +144,22 @@ fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency)
             )
         },
         selectedFrequency = this?.frequency ?: SubscriptionFrequency.MONTHLY.name,
-        currency = currency
+        currency = currency,
+        minDatePickerMillis = YearMonth.from(selectedDate).atDay(1).atStartOfDay()
+            .toInstant(ZoneOffset.UTC).toEpochMilli(),
+        maxDatePickerMillis = YearMonth.from(selectedDate).atEndOfMonth().atStartOfDay()
+            .toInstant(ZoneOffset.UTC).toEpochMilli(),
+        cancelState = SubscriptionCancelState(
+            visible = this != null,
+            enabled = this?.endDate == null,
+            text = this?.endDate?.let { stringsManager.getString(R.string.cancelled_at).format(it) }
+                ?: stringsManager.getString(R.string.cancel_subscription)
+        ),
+        mode = when {
+            this == null -> ExpenseDetailMode.CREATE
+            YearMonth.from(selectedDate) == YearMonth.from(now) && endDate == null -> ExpenseDetailMode.EDITABLE
+            else -> ExpenseDetailMode.READ_ONLY
+        }
     )
 }
 

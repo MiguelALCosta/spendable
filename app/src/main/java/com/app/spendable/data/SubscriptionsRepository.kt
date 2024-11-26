@@ -8,6 +8,7 @@ interface ISubscriptionsRepository {
     suspend fun getById(id: Int): Subscription
     suspend fun insert(subscription: Subscription)
     suspend fun update(subscription: Subscription)
+    suspend fun delete(id: Int)
     suspend fun deleteAll()
 }
 
@@ -27,6 +28,10 @@ class SubscriptionsRepository(private val database: IAppDatabase) : ISubscriptio
 
     override suspend fun update(subscription: Subscription) {
         database.subscriptionDao().update(subscription)
+    }
+
+    override suspend fun delete(id: Int) {
+        return database.subscriptionDao().delete(id)
     }
 
     override suspend fun deleteAll() {

@@ -1,7 +1,6 @@
 package com.app.spendable.data.db
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -20,8 +19,8 @@ interface SubscriptionDao {
     @Update
     suspend fun update(subscription: Subscription)
 
-    @Delete
-    suspend fun delete(subscription: Subscription)
+    @Query("DELETE FROM `subscription` WHERE id=:id")
+    suspend fun delete(id: Int)
 
     @Query("DELETE FROM `subscription`")
     suspend fun deleteAll()

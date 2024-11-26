@@ -46,7 +46,7 @@ class CalendarInteractor(
 
     private suspend fun getMonths(): List<Month> {
         val monthsByDate = monthsRepository.getAll()
-            .associateBy { YearMonth.from(DateUtils.Parse.fromYearMonth(it.date)) }
+            .associateBy { DateUtils.Parse.fromYearMonth(it.date) }
             .toMutableMap()
         val currentMonth = YearMonth.from(DateUtils.Provide.nowDevice())
         val firstMonth = monthsByDate.minOfOrNull { it.key } ?: currentMonth
@@ -63,14 +63,9 @@ class CalendarInteractor(
             if (month == null) {
                 transactions = transactions ?: transactionsRepository.getAll()
                 subscriptions = subscriptions ?: subscriptionsRepository.getAll()
-                val newMonth =
-                    insertNewMonth(
-                        yearMonth,
-                        currentMonth,
-                        totalBudget,
-                        transactions!!,
-                        subscriptions!!
-                    )
+                val newMonth = insertNewMonth(
+                    yearMonth, currentMonth, totalBudget, transactions!!, subscriptions!!
+                )
                 monthsByDate[yearMonth] = newMonth
             } else if (month.totalSpent == null && yearMonth != currentMonth) {
                 transactions = transactions ?: transactionsRepository.getAll()
@@ -124,9 +119,10 @@ class CalendarInteractor(
 
         val subscriptionsSum = subscriptions
             .filter {
-                val start = YearMonth.from(DateUtils.Parse.fromDate(it.date))
-                val end = it.endDate?.let { YearMonth.from(DateUtils.Parse.fromDate(it)) }
-                start <= yearMonth && (end == null || end >= yearMonth)
+                val startDate = DateUtils.Parse.fromDate(it.date)
+                val monthPayDate = DateUtils.Provide.inCurrentMonth(startDate)
+                val endDate = it.endDate?.let { DateUtils.Parse.fromDate(it) }
+                YearMonth.from(startDate) <= yearMonth && (endDate == null || endDate >= monthPayDate)
             }
             .sumOf { BigDecimal(it.cost) }
         return transactionsSum + subscriptionsSum

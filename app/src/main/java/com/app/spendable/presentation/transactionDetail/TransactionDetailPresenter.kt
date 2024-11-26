@@ -28,9 +28,6 @@ class AddTransactionPresenter(
     override fun loadView(id: Int?) {
         interactor.getTransactionForm(id) { form ->
             view?.setupView(form)
-            if (id != null) {
-                view?.showDeleteButton()
-            }
         }
     }
 

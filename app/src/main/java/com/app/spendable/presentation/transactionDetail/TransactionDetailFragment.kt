@@ -9,12 +9,15 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.app.spendable.R
 import com.app.spendable.databinding.FragmentTransactionDetailBinding
+import com.app.spendable.domain.transactionDetail.ExpenseDetailMode
 import com.app.spendable.domain.transactionDetail.TransactionForm
 import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.toIconResource
 import com.app.spendable.utils.DateUtils
+import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -34,7 +37,6 @@ interface AddTransactionView {
     fun setTitleErrorState(hasError: Boolean)
     fun setCategoryErrorState(hasError: Boolean)
     fun showGenericError()
-    fun showDeleteButton()
 }
 
 @SuppressLint("SetTextI18n")
@@ -84,7 +86,7 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
     override fun setupView(form: TransactionForm) {
         this.form = form
         setupInputs()
-        setupButton()
+        setupButtons()
     }
 
     override fun close() {
@@ -169,10 +171,46 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
                 form?.notes = text?.toString()
             })
         }
+        setInputsEnabledState(form?.mode == ExpenseDetailMode.CREATE)
     }
 
-    private fun setupButton() {
-        binding.saveButton.setOnClickListener { presenter.saveTransaction(transactionId, form) }
+    private fun setInputsEnabledState(enabled: Boolean) {
+        listOf(
+            binding.priceInput,
+            binding.titleInput,
+            binding.categoryInput,
+            binding.dateInput,
+            binding.timeInput,
+            binding.notesInput
+        ).forEach { it.isEnabled = enabled }
+    }
+
+    private fun setupButtons() {
+        binding.saveButton.setOnClickListener {
+            onPriceInputLoseFocus()
+            presenter.saveTransaction(transactionId, form)
+        }
+        binding.editButton.setOnClickListener {
+            binding.saveButton.visibility = View.VISIBLE
+            binding.editButton.visibility = View.GONE
+            setInputsEnabledState(true)
+        }
+        binding.deleteButton.setOnClickListener { showDeleteConfirmation() }
+
+        when (form?.mode) {
+            ExpenseDetailMode.CREATE -> {
+                binding.saveButton.visibility = View.VISIBLE
+            }
+
+            ExpenseDetailMode.EDITABLE -> {
+                binding.editButton.visibility = View.VISIBLE
+                binding.deleteButton.visibility = View.VISIBLE
+            }
+
+            else -> {
+                // do nothing
+            }
+        }
     }
 
     private fun blockPriceDecimals(text: String?) {
@@ -204,9 +242,16 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
     }
 
     private fun showDatePicker() {
+        val constraints = CalendarConstraints.Builder()
+            .also { builder ->
+                form?.minDatePickerMillis?.let { builder.setStart(it) }
+                form?.maxDatePickerMillis?.let { builder.setEnd(it) }
+            }
+            .build()
         val datePicker =
             MaterialDatePicker.Builder.datePicker()
                 .setTitleText(getString(R.string.select_date))
+                .setCalendarConstraints(constraints)
                 .also { builder ->
                     form?.date?.atStartOfDay()?.toInstant(ZoneOffset.UTC)?.toEpochMilli()
                         ?.let { builder.setSelection(it) }
@@ -272,8 +317,15 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
             }
     }
 
-    override fun showDeleteButton() {
-        binding.deleteButton.visibility = View.VISIBLE
-        binding.deleteButton.setOnClickListener { presenter.deleteTransaction(transactionId) }
+    private fun showDeleteConfirmation() {
+        activity?.let {
+            MaterialAlertDialogBuilder(it)
+                .setMessage(getString(R.string.delete_transaction_confirmation_message))
+                .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+                .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                    presenter.deleteTransaction(transactionId)
+                }
+                .show()
+        }
     }
 }

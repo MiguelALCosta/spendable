@@ -6,6 +6,7 @@ import java.time.LocalTime
 import java.time.YearMonth
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 object DateUtils {
 
@@ -58,6 +59,12 @@ object DateUtils {
 
     object Provide {
         fun nowDevice() = ZonedDateTime.now().toLocalDateTime()
+
+        fun inCurrentMonth(date: LocalDate): LocalDate {
+            val currentMonth = YearMonth.from(nowDevice())
+            val monthDiff = ChronoUnit.MONTHS.between(YearMonth.from(date), currentMonth)
+            return date.plusMonths(monthDiff)
+        }
     }
 
 }

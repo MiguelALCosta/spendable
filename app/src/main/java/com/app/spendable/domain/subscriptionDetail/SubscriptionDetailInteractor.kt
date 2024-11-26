@@ -10,6 +10,7 @@ interface ISubscriptionDetailInteractor {
     fun getSubscriptionForm(id: Int?, completion: (SubscriptionForm) -> Unit)
     fun saveSubscriptionForm(id: Int?, form: SubscriptionForm, completion: (Boolean) -> Unit)
     fun cancelSubscription(id: Int, completion: (Unit) -> Unit)
+    fun deleteSubscription(id: Int, completion: (Unit) -> Unit)
 }
 
 class SubscriptionDetailInteractor(
@@ -51,6 +52,12 @@ class SubscriptionDetailInteractor(
             val now = DateUtils.Provide.nowDevice().toLocalDate()
             val nowFormatted = DateUtils.Format.toDate(now)
             subscriptionsRepository.update(subscription.copy(endDate = nowFormatted))
+        }, completion)
+    }
+
+    override fun deleteSubscription(id: Int, completion: (Unit) -> Unit) {
+        makeRequest(request = {
+            subscriptionsRepository.delete(id)
         }, completion)
     }
 

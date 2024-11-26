@@ -2,7 +2,6 @@ package com.app.spendable.presentation.wallet
 
 import com.app.spendable.domain.settings.AppCurrency
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.time.YearMonth
 
 sealed interface WalletAdapterModel
@@ -49,7 +48,8 @@ data class SubscriptionItemModel(
     val iconType: SubscriptionIcon,
     val title: String,
     val cost: BigDecimal,
-    val date: LocalDate,
+    val dateText: String,
+    val order: Int,
     val frequency: SubscriptionFrequency,
     val currency: AppCurrency
 ) : WalletAdapterModel
