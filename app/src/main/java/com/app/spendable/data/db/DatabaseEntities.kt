@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class Transaction(
+@Entity(tableName = "transactions")
+data class TransactionDBModel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "type") val type: String,
     @ColumnInfo(name = "title") val title: String,
@@ -14,8 +14,8 @@ data class Transaction(
     @ColumnInfo(name = "date") val date: String
 )
 
-@Entity
-data class Subscription(
+@Entity(tableName = "subscriptions")
+data class SubscriptionDBModel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "category") val category: String,
     @ColumnInfo(name = "iconType") val iconType: String,
@@ -26,8 +26,8 @@ data class Subscription(
     @ColumnInfo(name = "endDate") val endDate: String? = null
 )
 
-@Entity
-data class Month(
+@Entity(tableName = "months")
+data class MonthDBModel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "totalBudget") val totalBudget: String,

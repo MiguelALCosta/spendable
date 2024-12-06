@@ -5,10 +5,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.DrawableRes
 import com.app.spendable.databinding.ComponentSubscriptionItemBinding
-import com.app.spendable.presentation.toIconResource
-import com.app.spendable.presentation.wallet.SubscriptionItemModel
-import com.app.spendable.utils.toFormatedPrice
 
 class SubscriptionItemComponent(
     context: Context,
@@ -25,11 +23,18 @@ class SubscriptionItemComponent(
         binding = ComponentSubscriptionItemBinding.inflate(inflater, this, true)
     }
 
-    fun setup(model: SubscriptionItemModel) {
-        binding.icon.setImageResource(model.iconType.toIconResource())
-        binding.title.text = model.title
-        binding.cost.text = model.cost.toFormatedPrice(model.currency)
-        binding.date.text = model.dateText
+    data class SetupConfig(
+        @DrawableRes val icon: Int,
+        val title: String,
+        val cost: String,
+        val footer: String
+    )
+
+    fun setup(setupConfig: SetupConfig) {
+        binding.icon.setImageResource(setupConfig.icon)
+        binding.title.text = setupConfig.title
+        binding.cost.text = setupConfig.cost
+        binding.date.text = setupConfig.footer
     }
 
 }

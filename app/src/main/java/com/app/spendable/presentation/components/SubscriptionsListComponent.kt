@@ -7,7 +7,6 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.databinding.ComponentSubscriptionsListBinding
-import com.app.spendable.presentation.wallet.SubscriptionItemModel
 import com.app.spendable.presentation.wallet.WalletAdapterModel
 
 class SubscriptionsListComponent(
@@ -22,7 +21,7 @@ class SubscriptionsListComponent(
         binding = ComponentSubscriptionsListBinding.inflate(inflater, this)
     }
 
-    fun setup(items: List<SubscriptionItemModel>, onClick: (WalletAdapterModel) -> Unit) {
+    fun setup(items: List<WalletAdapterModel.Subscription>, onClick: (WalletAdapterModel) -> Unit) {
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)

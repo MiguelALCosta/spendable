@@ -15,6 +15,7 @@ import com.app.spendable.presentation.common.CloseableView
 import com.app.spendable.presentation.components.ChoiceBottomSheet
 import com.app.spendable.presentation.toIconResource
 import com.app.spendable.utils.DateUtils
+import com.app.spendable.utils.PriceUtils
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -214,31 +215,19 @@ class AddTransactionFragment(private val transactionId: Int? = null) : Fragment(
     }
 
     private fun blockPriceDecimals(text: String?) {
-        val segments = text?.split(".") ?: emptyList()
-        if ((segments.getOrNull(1)?.count() ?: 0) > 2) {
-            val correctedDecimal = segments.get(1).substring(0..1)
-            binding.priceInput.editText?.setText("${segments.get(0)}.$correctedDecimal")
-            binding.priceInput.editText?.setSelection(
-                binding.priceInput.editText?.text?.length ?: 0
-            )
+        val correctedAmount = text?.let { PriceUtils.Format.toCorrectedPartialAmount(it) }
+        if (correctedAmount != text) {
+            binding.priceInput.editText?.setText(correctedAmount)
+            binding.priceInput.editText?.setSelection(correctedAmount?.length ?: 0)
         }
     }
 
     private fun onPriceInputLoseFocus() {
-        val priceText = binding.priceInput.editText?.text?.toString()
-        val segments = priceText?.split(".") ?: emptyList()
-
-        val left = segments.getOrNull(0) ?: ""
-        val right = if (segments.getOrNull(1) == null) {
-            "00"
-        } else {
-            segments.get(1).substring(0..1)
+        val text = binding.priceInput.editText?.text?.toString()
+        if (!text.isNullOrEmpty()) {
+            val a = PriceUtils.Format.toCorrectedAmount(text)
+            binding.priceInput.editText?.setText(a)
         }
-
-        if (!priceText.isNullOrEmpty()) {
-            binding.priceInput.editText?.setText("$left.$right")
-        }
-
     }
 
     private fun showDatePicker() {

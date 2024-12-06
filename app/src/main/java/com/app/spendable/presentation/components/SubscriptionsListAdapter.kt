@@ -3,12 +3,11 @@ package com.app.spendable.presentation.components
 import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.app.spendable.presentation.wallet.SubscriptionItemModel
 import com.app.spendable.presentation.wallet.WalletAdapterModel
 
 class SubscriptionsListAdapter(
     val context: Context,
-    val models: List<SubscriptionItemModel>,
+    val models: List<WalletAdapterModel.Subscription>,
     val onClick: (WalletAdapterModel) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -28,8 +27,8 @@ class SubscriptionsListAdapter(
     private class ViewHolder(val component: SubscriptionItemComponent) :
         RecyclerView.ViewHolder(component) {
 
-        fun render(model: SubscriptionItemModel, onClick: (WalletAdapterModel) -> Unit) {
-            component.setup(model)
+        fun render(model: WalletAdapterModel.Subscription, onClick: (WalletAdapterModel) -> Unit) {
+            component.setup(model.config)
             component.clickableView.setOnClickListener { onClick(model) }
         }
     }

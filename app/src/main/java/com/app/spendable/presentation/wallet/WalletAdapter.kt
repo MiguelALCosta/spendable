@@ -26,10 +26,10 @@ class WalletAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (models[position]) {
-            is WalletCardModel -> ModelType.WALLET_CARD.ordinal
-            is HeaderModel -> ModelType.HEADER.ordinal
-            is TransactionItemModel -> ModelType.TRANSACTION_ITEM.ordinal
-            is SubscriptionsListModel -> ModelType.SUBSCRIPTION_LIST.ordinal
+            is WalletAdapterModel.WalletCard -> ModelType.WALLET_CARD.ordinal
+            is WalletAdapterModel.Header -> ModelType.HEADER.ordinal
+            is WalletAdapterModel.Transaction -> ModelType.TRANSACTION_ITEM.ordinal
+            is WalletAdapterModel.SubscriptionsList -> ModelType.SUBSCRIPTION_LIST.ordinal
             else -> -1
         }
     }
@@ -62,12 +62,16 @@ class WalletAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val model = models[position]) {
-            is WalletCardModel -> (holder as CardComponentViewHolder).render(model, onClick)
-            is HeaderModel -> (holder as HeaderComponentViewHolder).render(model)
-            is TransactionItemModel ->
+            is WalletAdapterModel.WalletCard -> (holder as CardComponentViewHolder).render(
+                model,
+                onClick
+            )
+
+            is WalletAdapterModel.Header -> (holder as HeaderComponentViewHolder).render(model)
+            is WalletAdapterModel.Transaction ->
                 (holder as TransactionItemComponentViewHolder).render(model, onClick)
 
-            is SubscriptionsListModel ->
+            is WalletAdapterModel.SubscriptionsList ->
                 (holder as SubscriptionsListComponentViewHolder).render(model, onClick)
 
             else -> {
@@ -85,30 +89,33 @@ class WalletAdapter(
 
     private class CardComponentViewHolder(val component: WalletCardComponent) :
         RecyclerView.ViewHolder(component) {
-        fun render(model: WalletCardModel, onClick: (WalletAdapterModel) -> Unit) {
-            component.setup(model)
+        fun render(model: WalletAdapterModel.WalletCard, onClick: (WalletAdapterModel) -> Unit) {
+            component.setup(model.config)
             component.clickableViews.forEach { it.setOnClickListener { onClick(model) } }
         }
     }
 
     private class HeaderComponentViewHolder(val component: HeaderComponent) :
         RecyclerView.ViewHolder(component) {
-        fun render(model: HeaderModel) {
+        fun render(model: WalletAdapterModel.Header) {
             component.setup(model.text)
         }
     }
 
     private class TransactionItemComponentViewHolder(val component: TransactionItemComponent) :
         RecyclerView.ViewHolder(component) {
-        fun render(model: TransactionItemModel, onClick: (WalletAdapterModel) -> Unit) {
-            component.setup(model)
+        fun render(model: WalletAdapterModel.Transaction, onClick: (WalletAdapterModel) -> Unit) {
+            component.setup(model.config)
             component.clickableView.setOnClickListener { onClick(model) }
         }
     }
 
     private class SubscriptionsListComponentViewHolder(val component: SubscriptionsListComponent) :
         RecyclerView.ViewHolder(component) {
-        fun render(model: SubscriptionsListModel, onClick: (WalletAdapterModel) -> Unit) {
+        fun render(
+            model: WalletAdapterModel.SubscriptionsList,
+            onClick: (WalletAdapterModel) -> Unit
+        ) {
             component.setup(model.items, onClick)
         }
     }

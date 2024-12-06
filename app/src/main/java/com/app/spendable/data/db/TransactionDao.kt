@@ -7,21 +7,21 @@ import androidx.room.Update
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM `transaction`")
-    suspend fun getAll(): List<Transaction>
+    @Query("SELECT * FROM `transactions`")
+    suspend fun getAll(): List<TransactionDBModel>
 
-    @Query("SELECT * FROM `transaction` WHERE id=:id")
-    suspend fun getById(id: Int): Transaction
+    @Query("SELECT * FROM `transactions` WHERE id=:id")
+    suspend fun getById(id: Int): TransactionDBModel
 
     @Insert
-    suspend fun insert(transaction: Transaction)
+    suspend fun insert(transaction: TransactionDBModel)
 
     @Update
-    suspend fun update(transaction: Transaction)
+    suspend fun update(transaction: TransactionDBModel)
 
-    @Query("DELETE FROM `transaction` WHERE id=:id")
+    @Query("DELETE FROM `transactions` WHERE id=:id")
     suspend fun delete(id: Int)
 
-    @Query("DELETE FROM `transaction`")
+    @Query("DELETE FROM `transactions`")
     suspend fun deleteAll()
 }

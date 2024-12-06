@@ -57,11 +57,15 @@ class WalletFragment : Fragment(), WalletView {
 
     private fun onItemClick(model: WalletAdapterModel) {
         when (model) {
-            is TransactionItemModel -> (activity as? IMainView)?.showTransactionDetail(model.id)
-            is SubscriptionItemModel -> (activity as? IMainView)?.showSubscriptionDetail(model.id)
-            is WalletCardModel ->
+            is WalletAdapterModel.Transaction ->
+                (activity as? IMainView)?.showTransactionDetail(model.id)
+
+            is WalletAdapterModel.Subscription ->
+                (activity as? IMainView)?.showSubscriptionDetail(model.id)
+
+            is WalletAdapterModel.WalletCard ->
                 (activity as? IMainView)?.showUpdateTotalBudgetDialog(
-                    model.budget,
+                    model.totalBudget,
                     model.currency,
                     presenter::updateTotalBudget
                 )

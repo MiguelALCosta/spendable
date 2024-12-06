@@ -4,17 +4,17 @@ import com.app.spendable.R
 import com.app.spendable.data.IMonthsRepository
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
-import com.app.spendable.data.db.Month
 import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
-import com.app.spendable.presentation.wallet.HeaderModel
-import com.app.spendable.presentation.wallet.SubscriptionsListModel
+import com.app.spendable.domain.Month
+import com.app.spendable.domain.MonthCreationRequest
+import com.app.spendable.presentation.components.WalletCardComponent
 import com.app.spendable.presentation.wallet.WalletAdapterModel
-import com.app.spendable.presentation.wallet.WalletCardModel
+import com.app.spendable.utils.AppConstants
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
+import com.app.spendable.utils.PriceUtils
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.time.YearMonth
 
 interface IWalletInteractor {
@@ -35,13 +35,11 @@ class WalletInteractor(
         makeRequest(request = {
 
             /*val months = monthsRepository.getAll()
-            if (months.firstOrNull {
-                    it.date == DateUtils.Format.toYearMonth(YearMonth.of(2023, 2))
-                } == null) {
-                monthsRepository.insert(
-                    Month(
-                        date = DateUtils.Format.toYearMonth(YearMonth.of(2023, 2)),
-                        totalBudget = "1000.00",
+            if (months.firstOrNull { it.date == YearMonth.of(2023, 2) } == null) {
+                monthsRepository.create(
+                    MonthCreationRequest(
+                        date = YearMonth.of(2023, 2),
+                        totalBudget = BigDecimal("1000.00"),
                         totalSpent = null
                     )
                 )
@@ -58,41 +56,41 @@ class WalletInteractor(
         val currentMonth = YearMonth.from(today)
 
         val transactionsSum = transactionsRepository.getAll()
-            .filter { YearMonth.from(DateUtils.Parse.fromDateTime(it.date)) == currentMonth }
-            .sumOf { BigDecimal(it.cost) }
+            .filter { YearMonth.from(it.date) == currentMonth }
+            .sumOf { it.cost }
 
         val subscriptionsSum = subscriptionsRepository.getAll()
             .filter {
-                val startDate = DateUtils.Parse.fromDate(it.date)
-                val payDate = DateUtils.Provide.inCurrentMonth(startDate)
-                val endDate = it.endDate?.let { DateUtils.Parse.fromDate(it) }
-                payDate <= today && (endDate == null || endDate >= today)
+                val payDate = DateUtils.Provide.inCurrentMonth(it.date)
+                payDate <= today && (it.endDate == null || it.endDate >= today)
             }
-            .sumOf { BigDecimal(it.cost) }
+            .sumOf { it.cost }
 
-        return listOf(
-            WalletCardModel(
-                month = currentMonth,
-                budget = BigDecimal(getCurrentMonthModel().totalBudget),
-                spent = transactionsSum + subscriptionsSum,
-                currency = appPreferences.getAppCurrency()
-            )
+        val appCurrency = appPreferences.getAppCurrency()
+        val totalBudget = getCurrentMonthModel()?.totalBudget ?: BigDecimal("0.00")
+        val availableBudget = totalBudget - transactionsSum - subscriptionsSum
+        val config = WalletCardComponent.SetupConfig(
+            title = DateUtils.Format.toFullMonthYear(currentMonth),
+            totalBudget = PriceUtils.Format.toPrice(totalBudget, appCurrency),
+            availableBudget = PriceUtils.Format.toPrice(availableBudget, appCurrency),
+            percentage = (availableBudget * BigDecimal("100") / totalBudget).toInt(),
+            isEditable = true
         )
+
+        return listOf(WalletAdapterModel.WalletCard(totalBudget, appCurrency, config))
     }
 
-    private suspend fun getCurrentMonthModel(): Month {
+    private suspend fun getCurrentMonthModel(): Month? {
         val currentMonth = YearMonth.from(DateUtils.Provide.nowDevice())
         return monthsRepository.getByDate(currentMonth) ?: run {
-            val lastKnownTotalBudget = monthsRepository.getAll()
-                .sortedByDescending { DateUtils.Parse.fromYearMonth(it.date) }
-                .firstOrNull()
-                ?.totalBudget
-            val newModel = Month(
-                date = DateUtils.Format.toYearMonth(currentMonth),
-                totalBudget = lastKnownTotalBudget ?: "1000.00"
+            val lastKnownTotalBudget =
+                monthsRepository.getAll().maxByOrNull { it.date }?.totalBudget
+            val request = MonthCreationRequest(
+                date = currentMonth,
+                totalBudget = lastKnownTotalBudget ?: AppConstants.DEFAULT_MONTHLY_BUDGET
             )
-            monthsRepository.insert(newModel)
-            newModel
+            monthsRepository.create(request)
+            monthsRepository.getByDate(currentMonth)
         }
     }
 
@@ -101,35 +99,32 @@ class WalletInteractor(
         val currency = appPreferences.getAppCurrency()
         val subscriptions = subscriptionsRepository.getAll()
             .filter {
-                val startDate = DateUtils.Parse.fromDate(it.date)
-                val payDate = DateUtils.Provide.inCurrentMonth(startDate)
-                val endDate = it.endDate?.let { DateUtils.Parse.fromDate(it) }
-                YearMonth.from(startDate) <= YearMonth.from(today)
-                        && (endDate == null || endDate >= payDate)
+                val payDate = DateUtils.Provide.inCurrentMonth(it.date)
+                YearMonth.from(it.date) <= YearMonth.from(today)
+                        && (it.endDate == null || it.endDate >= payDate)
             }
-            .map { it.toItemModel(stringsManager, today, currency) }
+            .map { it.toWalletAdapterModel(stringsManager, today, currency) }
             .sortedBy { it.order }
 
         val header = if (subscriptions.isEmpty()) {
             emptyList()
         } else {
-            listOf(HeaderModel(stringsManager.getString(R.string.subscriptions)))
+            listOf(WalletAdapterModel.Header(stringsManager.getString(R.string.subscriptions)))
         }
-        return header.plus(SubscriptionsListModel(subscriptions))
+        return header.plus(WalletAdapterModel.SubscriptionsList(subscriptions))
     }
 
     private suspend fun getCurrentMonthTransactions(): List<WalletAdapterModel> {
         val currentMonth = YearMonth.from(DateUtils.Provide.nowDevice())
         val currency = appPreferences.getAppCurrency()
         return transactionsRepository.getAll()
-            .map { DateUtils.Parse.fromDateTime(it.date) to it }
-            .filter { YearMonth.from(it.first) == currentMonth }
-            .groupBy { LocalDate.from(it.first) }
+            .filter { YearMonth.from(it.date) == currentMonth }
+            .groupBy { it.date.toLocalDate() }
             .toList()
             .sortedByDescending { it.first }
-            .flatMap {
-                listOf(HeaderModel(DateUtils.Format.toWeekdayDayMonth(it.first)))
-                    .plus(it.second.map { it.second.toItemModel(currency) })
+            .flatMap { (date, transactions) ->
+                listOf(WalletAdapterModel.Header(DateUtils.Format.toWeekdayDayMonth(date)))
+                    .plus(transactions.map { it.toWalletAdapterModel(currency) })
             }
     }
 
@@ -141,8 +136,9 @@ class WalletInteractor(
 
     override fun updateTotalBudget(newValue: BigDecimal, completion: () -> Unit) {
         makeRequest(request = {
-            val monthModel = getCurrentMonthModel()
-            monthsRepository.update(monthModel.copy(totalBudget = newValue.toString()))
+            getCurrentMonthModel()?.let {
+                monthsRepository.update(it.copy(totalBudget = newValue))
+            }
         }, { completion() })
     }
 

@@ -6,10 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.app.spendable.databinding.ComponentWalletCardBinding
-import com.app.spendable.presentation.wallet.WalletCardModel
-import com.app.spendable.utils.DateUtils
-import com.app.spendable.utils.toFormatedPrice
-import java.math.BigDecimal
 
 class WalletCardComponent(
     context: Context,
@@ -26,15 +22,21 @@ class WalletCardComponent(
     val clickableViews: List<View>
         get() = listOf(binding.editButton, binding.budgetTitle, binding.budget)
 
-    fun setup(model: WalletCardModel) {
-        binding.month.text =
-            DateUtils.Format.toFullMonthYear(model.month).replaceFirstChar(Char::uppercase)
-        binding.budget.text = model.budget.toFormatedPrice(model.currency)
-        binding.remaining.text = (model.budget - model.spent).toFormatedPrice(model.currency)
+    data class SetupConfig(
+        val title: String,
+        val totalBudget: String,
+        val availableBudget: String,
+        val percentage: Int,
+        val isEditable: Boolean
+    )
 
-        binding.progress.progress =
-            ((model.budget - model.spent) * BigDecimal("100") / model.budget).toInt()
+    fun setup(setupConfig: SetupConfig) {
+        binding.month.text = setupConfig.title.replaceFirstChar(Char::uppercase)
+        binding.budget.text = setupConfig.totalBudget
+        binding.remaining.text = setupConfig.availableBudget
+        binding.progress.progress = setupConfig.percentage
 
+        binding.editButton.visibility = if (setupConfig.isEditable) VISIBLE else GONE
     }
 
 }

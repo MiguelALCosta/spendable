@@ -30,16 +30,16 @@ class TransactionDetailInteractor(
         completion: (Boolean) -> Unit
     ) {
         makeRequest(request = {
-            val transaction = form.toTransaction()
-            if (transaction == null) {
-                false
+            if (id == null) {
+                form.toCreationRequest()?.let { request ->
+                    transactionsRepository.create(request)
+                    true
+                } ?: false
             } else {
-                if (id == null) {
-                    transactionsRepository.insert(transaction)
-                } else {
-                    transactionsRepository.update(transaction.copy(id = id))
-                }
-                true
+                form.toTransaction(id)?.let { updatedTransaction ->
+                    transactionsRepository.update(updatedTransaction)
+                    true
+                } ?: false
             }
         }, completion)
     }

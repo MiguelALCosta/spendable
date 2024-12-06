@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.app.spendable.databinding.DialogUpdateTotalBudgetBinding
 import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.toIconResource
+import com.app.spendable.utils.PriceUtils
 import java.math.BigDecimal
 
 
@@ -64,14 +65,17 @@ class UpdateTotalBudgetDialog : DialogFragment() {
         binding.updateButton.setOnClickListener {
             onInputLoseFocus()
             binding.amountInput.editText?.text?.toString()?.let { amountText ->
-                onUpdate?.invoke(BigDecimal(amountText))
+                onUpdate?.invoke(PriceUtils.Parse.fromAmount(amountText))
             }
             dismiss()
         }
         binding.amountInput.apply {
-            initialValue?.let { editText?.setText(it.toString()) }
+            val amountText = initialValue?.let { PriceUtils.Format.toAmount(it) }
+            amountText?.let { editText?.setText(it) }
+            updateButtonState(amountText)
             editText?.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 blockInputDecimals(text?.toString())
+                updateButtonState(text?.toString())
             })
             editText?.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
@@ -84,31 +88,24 @@ class UpdateTotalBudgetDialog : DialogFragment() {
     }
 
     private fun blockInputDecimals(text: String?) {
-        val segments = text?.split(".") ?: emptyList()
-        if ((segments.getOrNull(1)?.count() ?: 0) > 2) {
-            val correctedDecimal = segments.get(1).substring(0..1)
-            binding.amountInput.editText?.setText("${segments.get(0)}.$correctedDecimal")
-            binding.amountInput.editText?.setSelection(
-                binding.amountInput.editText?.text?.length ?: 0
-            )
+        val correctedAmount = text?.let { PriceUtils.Format.toCorrectedPartialAmount(it) }
+        if (correctedAmount != text) {
+            binding.amountInput.editText?.setText(correctedAmount)
+            binding.amountInput.editText?.setSelection(correctedAmount?.length ?: 0)
         }
     }
 
     private fun onInputLoseFocus() {
-        val priceText = binding.amountInput.editText?.text?.toString()
-        val segments = priceText?.split(".") ?: emptyList()
-
-        val left = segments.getOrNull(0) ?: ""
-        val right = if (segments.getOrNull(1) == null) {
-            "00"
-        } else {
-            segments.get(1).substring(0..1)
+        val text = binding.amountInput.editText?.text?.toString()
+        if (!text.isNullOrEmpty()) {
+            val a = PriceUtils.Format.toCorrectedAmount(text)
+            binding.amountInput.editText?.setText(a)
         }
+    }
 
-        if (!priceText.isNullOrEmpty()) {
-            binding.amountInput.editText?.setText("$left.$right")
-        }
-
+    private fun updateButtonState(inputText: String?) {
+        val amount = inputText?.let { PriceUtils.Parse.fromAmount(it) } ?: BigDecimal("0")
+        binding.updateButton.isEnabled = amount > BigDecimal(0)
     }
 
 }

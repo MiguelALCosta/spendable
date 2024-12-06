@@ -13,12 +13,12 @@ interface IAppDatabase {
 
 object DatabaseConstants {
     const val DATABASE_NAME = "spendable.db"
-    const val DATABASE_VERSION = 1
+    const val DATABASE_VERSION = 2
 }
 
 @Database(
-    entities = [Transaction::class, Subscription::class, Month::class],
-    version = DatabaseConstants.DATABASE_VERSION
+    entities = [TransactionDBModel::class, SubscriptionDBModel::class, MonthDBModel::class],
+    version = DatabaseConstants.DATABASE_VERSION,
 )
 abstract class AppDatabase : RoomDatabase(), IAppDatabase {
 
@@ -31,7 +31,8 @@ abstract class AppDatabase : RoomDatabase(), IAppDatabase {
                 context,
                 AppDatabase::class.java,
                 DatabaseConstants.DATABASE_NAME
-            ).build().also { instance = it }
+            ).fallbackToDestructiveMigration()
+                .build().also { instance = it }
         }
     }
 

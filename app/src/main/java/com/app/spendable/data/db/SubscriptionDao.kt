@@ -7,21 +7,21 @@ import androidx.room.Update
 
 @Dao
 interface SubscriptionDao {
-    @Query("SELECT * FROM `subscription`")
-    suspend fun getAll(): List<Subscription>
+    @Query("SELECT * FROM `subscriptions`")
+    suspend fun getAll(): List<SubscriptionDBModel>
 
-    @Query("SELECT * FROM `subscription` WHERE id=:id")
-    suspend fun getById(id: Int): Subscription
+    @Query("SELECT * FROM `subscriptions` WHERE id=:id")
+    suspend fun getById(id: Int): SubscriptionDBModel
 
     @Insert
-    suspend fun insert(subscription: Subscription)
+    suspend fun insert(subscription: SubscriptionDBModel)
 
     @Update
-    suspend fun update(subscription: Subscription)
+    suspend fun update(subscription: SubscriptionDBModel)
 
-    @Query("DELETE FROM `subscription` WHERE id=:id")
+    @Query("DELETE FROM `subscriptions` WHERE id=:id")
     suspend fun delete(id: Int)
 
-    @Query("DELETE FROM `subscription`")
+    @Query("DELETE FROM `subscriptions`")
     suspend fun deleteAll()
 }

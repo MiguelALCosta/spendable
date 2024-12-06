@@ -3,7 +3,8 @@ package com.app.spendable.domain.subscriptionDetail
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.app.spendable.R
-import com.app.spendable.data.db.Subscription
+import com.app.spendable.domain.Subscription
+import com.app.spendable.domain.SubscriptionCreationRequest
 import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.domain.transactionDetail.ExpenseDetailMode
 import com.app.spendable.presentation.components.SelectableChoiceComponent
@@ -13,7 +14,9 @@ import com.app.spendable.presentation.wallet.SubscriptionFrequency
 import com.app.spendable.presentation.wallet.SubscriptionIcon
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
+import com.app.spendable.utils.PriceUtils
 import com.app.spendable.utils.toEnum
+import java.math.BigDecimal
 import java.time.YearMonth
 import java.time.ZoneOffset
 
@@ -116,12 +119,15 @@ fun SubscriptionCategory.getSubCategoryChoices(stringsManager: IStringsManager) 
         )
     }
 
-fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency): SubscriptionForm {
+fun Subscription?.toForm(
+    stringsManager: IStringsManager,
+    currency: AppCurrency
+): SubscriptionForm {
     val now = DateUtils.Provide.nowDevice().toLocalDate()
-    val selectedDate = this?.date?.let { DateUtils.Parse.fromDate(it) } ?: now
+    val selectedDate = this?.date ?: now
 
     return SubscriptionForm(
-        amount = this?.cost,
+        amount = this?.cost?.let { PriceUtils.Format.toAmount(it) },
         categories = SubscriptionCategory.entries.map {
             SelectableChoiceComponent.Choice(
                 it.name,
@@ -132,8 +138,8 @@ fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency)
         subcategories = SubscriptionCategory.entries.associate {
             it.name to it.getSubCategoryChoices(stringsManager)
         },
-        selectedCategory = this?.category,
-        selectedSubcategory = this?.iconType,
+        selectedCategory = this?.category?.name,
+        selectedSubcategory = this?.iconType?.name,
         title = this?.title,
         date = selectedDate,
         frequencies = SubscriptionFrequency.entries.map {
@@ -143,7 +149,7 @@ fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency)
                 null
             )
         },
-        selectedFrequency = this?.frequency ?: SubscriptionFrequency.MONTHLY.name,
+        selectedFrequency = this?.frequency?.name ?: SubscriptionFrequency.MONTHLY.name,
         currency = currency,
         minDatePickerMillis = YearMonth.from(selectedDate).atDay(1).atStartOfDay()
             .toInstant(ZoneOffset.UTC).toEpochMilli(),
@@ -163,11 +169,11 @@ fun Subscription?.toForm(stringsManager: IStringsManager, currency: AppCurrency)
     )
 }
 
-private fun SubscriptionForm.getIconTypeString() =
+private fun SubscriptionForm.getIconType() =
     when (selectedCategory?.toEnum<SubscriptionCategory>()) {
-        SubscriptionCategory.OTHER -> SubscriptionIcon.OTHER.name
-        SubscriptionCategory.SPORTS -> SubscriptionIcon.SPORTS.name
-        else -> selectedSubcategory
+        SubscriptionCategory.OTHER -> SubscriptionIcon.OTHER
+        SubscriptionCategory.SPORTS -> SubscriptionIcon.SPORTS
+        else -> selectedSubcategory?.toEnum<SubscriptionIcon>()
     }
 
 private fun SubscriptionForm.getFinalTitle(): String? {
@@ -180,13 +186,26 @@ private fun SubscriptionForm.getFinalTitle(): String? {
     }
 }
 
-fun SubscriptionForm.toSubscription(): Subscription? {
+fun SubscriptionForm.toSubscription(id: Int): Subscription? {
     return Subscription(
-        category = selectedCategory ?: return null,
-        iconType = getIconTypeString() ?: return null,
+        id = id,
+        category = selectedCategory?.toEnum<SubscriptionCategory>() ?: return null,
+        iconType = getIconType() ?: return null,
         title = getFinalTitle()?.ifBlank { null } ?: return null,
-        cost = amount?.ifBlank { null } ?: return null,
-        date = DateUtils.Format.toDate(date),
-        frequency = selectedFrequency
+        cost = amount?.ifBlank { null }?.let { BigDecimal(it) } ?: return null,
+        date = date,
+        frequency = selectedFrequency.toEnum<SubscriptionFrequency>() ?: return null,
+        endDate = null
+    )
+}
+
+fun SubscriptionForm.toCreationRequest(): SubscriptionCreationRequest? {
+    return SubscriptionCreationRequest(
+        category = selectedCategory?.toEnum<SubscriptionCategory>() ?: return null,
+        iconType = getIconType() ?: return null,
+        title = getFinalTitle()?.ifBlank { null } ?: return null,
+        cost = amount?.ifBlank { null }?.let { BigDecimal(it) } ?: return null,
+        date = date,
+        frequency = selectedFrequency.toEnum<SubscriptionFrequency>() ?: return null
     )
 }

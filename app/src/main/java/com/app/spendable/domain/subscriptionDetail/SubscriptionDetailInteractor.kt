@@ -32,16 +32,16 @@ class SubscriptionDetailInteractor(
         completion: (Boolean) -> Unit
     ) {
         makeRequest(request = {
-            val subscription = form.toSubscription()
-            if (subscription == null) {
-                false
+            if (id == null) {
+                form.toCreationRequest()?.let { request ->
+                    subscriptionsRepository.create(request)
+                    true
+                } ?: false
             } else {
-                if (id == null) {
-                    subscriptionsRepository.insert(subscription)
-                } else {
-                    subscriptionsRepository.update(subscription.copy(id = id))
-                }
-                true
+                form.toSubscription(id)?.let { updatedSubscription ->
+                    subscriptionsRepository.update(updatedSubscription)
+                    true
+                } ?: false
             }
         }, completion)
     }
@@ -50,8 +50,7 @@ class SubscriptionDetailInteractor(
         makeRequest(request = {
             val subscription = subscriptionsRepository.getById(id)
             val now = DateUtils.Provide.nowDevice().toLocalDate()
-            val nowFormatted = DateUtils.Format.toDate(now)
-            subscriptionsRepository.update(subscription.copy(endDate = nowFormatted))
+            subscriptionsRepository.update(subscription.copy(endDate = now))
         }, completion)
     }
 

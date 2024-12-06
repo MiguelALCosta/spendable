@@ -1,13 +1,14 @@
 package com.app.spendable.data
 
 import com.app.spendable.data.db.IAppDatabase
-import com.app.spendable.data.db.Transaction
+import com.app.spendable.domain.Transaction
+import com.app.spendable.domain.TransactionCreationRequest
 
 interface ITransactionsRepository {
     suspend fun getAll(): List<Transaction>
     suspend fun getById(id: Int): Transaction
-    suspend fun insert(transaction: Transaction)
-    suspend fun update(transaction: Transaction)
+    suspend fun create(request: TransactionCreationRequest)
+    suspend fun update(updatedTransaction: Transaction)
     suspend fun delete(id: Int)
     suspend fun deleteAll()
 }
@@ -16,18 +17,19 @@ class TransactionsRepository(private val database: IAppDatabase) : ITransactions
 
     override suspend fun getAll(): List<Transaction> {
         return database.transactionDao().getAll()
+            .map { it.toDomainModel() }
     }
 
     override suspend fun getById(id: Int): Transaction {
-        return database.transactionDao().getById(id)
+        return database.transactionDao().getById(id).toDomainModel()
     }
 
-    override suspend fun insert(transaction: Transaction) {
-        database.transactionDao().insert(transaction)
+    override suspend fun create(request: TransactionCreationRequest) {
+        database.transactionDao().insert(request.toDBModel())
     }
 
-    override suspend fun update(transaction: Transaction) {
-        database.transactionDao().update(transaction)
+    override suspend fun update(updatedTransaction: Transaction) {
+        database.transactionDao().update(updatedTransaction.toDBModel())
     }
 
     override suspend fun delete(id: Int) {

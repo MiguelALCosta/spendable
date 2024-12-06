@@ -1,33 +1,40 @@
 package com.app.spendable.presentation.wallet
 
 import com.app.spendable.domain.settings.AppCurrency
+import com.app.spendable.presentation.components.SubscriptionItemComponent
+import com.app.spendable.presentation.components.TransactionItemComponent
+import com.app.spendable.presentation.components.WalletCardComponent
 import java.math.BigDecimal
-import java.time.YearMonth
 
-sealed interface WalletAdapterModel
+sealed interface WalletAdapterModel {
 
-data class WalletCardModel(
-    val month: YearMonth,
-    val budget: BigDecimal,
-    val spent: BigDecimal,
-    val currency: AppCurrency
-) : WalletAdapterModel
+    data class WalletCard(
+        val totalBudget: BigDecimal,
+        val currency: AppCurrency,
+        val config: WalletCardComponent.SetupConfig
+    ) : WalletAdapterModel
 
-data class HeaderModel(val text: String) : WalletAdapterModel
+    data class Header(val text: String) : WalletAdapterModel
+
+    data class Transaction(
+        val id: Int,
+        val config: TransactionItemComponent.SetupConfig
+    ) : WalletAdapterModel
+
+    data class Subscription(
+        val id: Int,
+        val order: Int,
+        val config: SubscriptionItemComponent.SetupConfig
+    ) : WalletAdapterModel
+
+    data class SubscriptionsList(val items: List<Subscription>) : WalletAdapterModel
+
+}
 
 enum class TransactionType {
     EAT_OUT, MARKET, SHOPPING, TRANSPORTS, ENTERTAINMENT, BILLS, HOLIDAYS, HEALTH, EDUCATION, PET,
     KIDS, OTHER
 }
-
-data class TransactionItemModel(
-    val id: Int,
-    val type: TransactionType,
-    val title: String,
-    val subtitle: String? = null,
-    val cost: BigDecimal,
-    val currency: AppCurrency
-) : WalletAdapterModel
 
 enum class SubscriptionIcon {
     NETFLIX, HBO_MAX, DISNEY_PLUS, APPLE_TV, CRUNCHYROLL, DAZN, OTHER_STREAMING,
@@ -42,16 +49,3 @@ enum class SubscriptionIcon {
 enum class SubscriptionFrequency {
     Yearly, MONTHLY, BIWEEKLY, WEEKLY, DAILY
 }
-
-data class SubscriptionItemModel(
-    val id: Int,
-    val iconType: SubscriptionIcon,
-    val title: String,
-    val cost: BigDecimal,
-    val dateText: String,
-    val order: Int,
-    val frequency: SubscriptionFrequency,
-    val currency: AppCurrency
-) : WalletAdapterModel
-
-data class SubscriptionsListModel(val items: List<SubscriptionItemModel>) : WalletAdapterModel

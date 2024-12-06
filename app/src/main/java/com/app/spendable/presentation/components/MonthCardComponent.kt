@@ -9,7 +9,7 @@ import com.app.spendable.R
 import com.app.spendable.databinding.ComponentMonthCardBinding
 import com.app.spendable.presentation.calendar.MonthCardModel
 import com.app.spendable.utils.DateUtils
-import com.app.spendable.utils.toFormatedPrice
+import com.app.spendable.utils.PriceUtils
 
 class MonthCardComponent(
     context: Context,
@@ -30,8 +30,8 @@ class MonthCardComponent(
         binding.title.text =
             DateUtils.Format.toFullMonthYear(model.month).replaceFirstChar(Char::uppercase)
 
-        val remainingText = (model.budget - model.spent).toFormatedPrice(model.currency)
-        val totalText = model.budget.toFormatedPrice(model.currency)
+        val remainingText = PriceUtils.Format.toPrice(model.budget - model.spent, model.currency)
+        val totalText = PriceUtils.Format.toPrice(model.budget, model.currency)
         binding.balance.text = context.getString(R.string.x_of_x).format(remainingText, totalText)
     }
 

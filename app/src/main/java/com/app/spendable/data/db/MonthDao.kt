@@ -7,18 +7,18 @@ import androidx.room.Update
 
 @Dao
 interface MonthDao {
-    @Query("SELECT * FROM `month`")
-    suspend fun getAll(): List<Month>
+    @Query("SELECT * FROM `months`")
+    suspend fun getAll(): List<MonthDBModel>
 
-    @Query("SELECT * FROM `month` WHERE date=:date")
-    suspend fun getByDate(date: String): Month?
+    @Query("SELECT * FROM `months` WHERE date=:date")
+    suspend fun getByDate(date: String): MonthDBModel?
 
     @Insert
-    suspend fun insert(month: Month)
+    suspend fun insert(month: MonthDBModel)
 
     @Update
-    suspend fun update(month: Month)
+    suspend fun update(month: MonthDBModel)
 
-    @Query("DELETE FROM `month`")
+    @Query("DELETE FROM `months`")
     suspend fun deleteAll()
 }

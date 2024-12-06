@@ -5,10 +5,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.DrawableRes
 import com.app.spendable.databinding.ComponentTransactionItemBinding
-import com.app.spendable.presentation.toIcon
-import com.app.spendable.presentation.wallet.TransactionItemModel
-import com.app.spendable.utils.toFormatedPrice
 
 class TransactionItemComponent(
     context: Context,
@@ -25,19 +23,25 @@ class TransactionItemComponent(
         binding = ComponentTransactionItemBinding.inflate(inflater, this, true)
     }
 
+    data class SetupConfig(
+        @DrawableRes val icon: Int,
+        val title: String,
+        val subtitle: String?,
+        val cost: String
+    )
 
-    fun setup(model: TransactionItemModel) {
-        binding.icon.setImageResource(model.type.toIcon())
-        binding.title.text = model.title
+    fun setup(setupConfig: SetupConfig) {
+        binding.icon.setImageResource(setupConfig.icon)
+        binding.title.text = setupConfig.title
 
-        if (model.subtitle.isNullOrBlank()) {
+        if (setupConfig.subtitle.isNullOrBlank()) {
             binding.subtitle.visibility = GONE
         } else {
-            binding.subtitle.text = model.subtitle
+            binding.subtitle.text = setupConfig.subtitle
             binding.subtitle.visibility = VISIBLE
         }
 
-        binding.cost.text = model.cost.toFormatedPrice(model.currency)
+        binding.cost.text = setupConfig.cost
     }
 
 }
