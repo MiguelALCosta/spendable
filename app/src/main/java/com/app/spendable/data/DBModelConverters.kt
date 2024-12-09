@@ -24,7 +24,7 @@ fun TransactionDBModel.toDomainModel() =
         title = title,
         description = description,
         cost = BigDecimal(cost),
-        date = DateUtils.Parse.fromDateTime(date)
+        date = DateUtils.Parse.fromMillisToDateTime(date)
     )
 
 fun TransactionCreationRequest.toDBModel() =
@@ -33,7 +33,7 @@ fun TransactionCreationRequest.toDBModel() =
         title = title,
         description = description,
         cost = cost.toString(),
-        date = DateUtils.Format.toDateTime(date)
+        date = DateUtils.Format.toMillis(date)
     )
 
 fun Transaction.toDBModel() =
@@ -43,7 +43,7 @@ fun Transaction.toDBModel() =
         title = title,
         description = description,
         cost = cost.toString(),
-        date = DateUtils.Format.toDateTime(date)
+        date = DateUtils.Format.toMillis(date)
     )
 
 fun SubscriptionDBModel.toDomainModel() =
@@ -53,9 +53,9 @@ fun SubscriptionDBModel.toDomainModel() =
         iconType = iconType.toEnum<SubscriptionIcon>() ?: SubscriptionIcon.OTHER,
         title = title,
         cost = BigDecimal(cost),
-        date = DateUtils.Parse.fromDate(date),
+        date = DateUtils.Parse.fromMillisToDate(date),
         frequency = frequency.toEnum<SubscriptionFrequency>() ?: SubscriptionFrequency.MONTHLY,
-        endDate = endDate?.let { DateUtils.Parse.fromDate(it) },
+        endDate = endDate?.let { DateUtils.Parse.fromMillisToDate(it) },
     )
 
 fun Subscription.toDBModel() =
@@ -65,9 +65,9 @@ fun Subscription.toDBModel() =
         iconType = iconType.name,
         title = title,
         cost = cost.toString(),
-        date = DateUtils.Format.toDate(date),
+        date = DateUtils.Format.toMillis(date),
         frequency = frequency.name,
-        endDate = endDate?.let { DateUtils.Format.toDate(it) },
+        endDate = endDate?.let { DateUtils.Format.toMillis(it) },
     )
 
 fun SubscriptionCreationRequest.toDBModel() =
@@ -76,7 +76,7 @@ fun SubscriptionCreationRequest.toDBModel() =
         iconType = iconType.name,
         title = title,
         cost = cost.toString(),
-        date = DateUtils.Format.toDate(date),
+        date = DateUtils.Format.toMillis(date),
         frequency = frequency.name,
         endDate = null,
     )
@@ -84,7 +84,7 @@ fun SubscriptionCreationRequest.toDBModel() =
 fun MonthDBModel.toDomainModel() =
     Month(
         id = id,
-        date = DateUtils.Parse.fromYearMonth(date),
+        date = DateUtils.Parse.fromMillisToYearMonth(date),
         totalBudget = BigDecimal(totalBudget),
         totalSpent = totalSpent?.let { BigDecimal(it) }
     )
@@ -92,14 +92,14 @@ fun MonthDBModel.toDomainModel() =
 fun Month.toDBModel() =
     MonthDBModel(
         id = id,
-        date = DateUtils.Format.toYearMonth(date),
+        date = DateUtils.Format.toMillis(date),
         totalBudget = totalBudget.toString(),
         totalSpent = totalSpent?.toString()
     )
 
 fun MonthCreationRequest.toDBModel() =
     MonthDBModel(
-        date = DateUtils.Format.toYearMonth(date),
+        date = DateUtils.Format.toMillis(date),
         totalBudget = totalBudget.toString(),
         totalSpent = totalSpent?.toString()
     )

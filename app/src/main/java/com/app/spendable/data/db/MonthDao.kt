@@ -11,7 +11,7 @@ interface MonthDao {
     suspend fun getAll(): List<MonthDBModel>
 
     @Query("SELECT * FROM `months` WHERE date=:date")
-    suspend fun getByDate(date: String): MonthDBModel?
+    suspend fun getByDate(date: Long): MonthDBModel?
 
     @Insert
     suspend fun insert(month: MonthDBModel)

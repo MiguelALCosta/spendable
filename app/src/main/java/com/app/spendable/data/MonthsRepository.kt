@@ -22,8 +22,8 @@ class MonthsRepository(private val database: IAppDatabase) : IMonthsRepository {
     }
 
     override suspend fun getByDate(yearMonth: YearMonth): Month? {
-        val formattedYearMonth = DateUtils.Format.toYearMonth(yearMonth)
-        return database.monthDao().getByDate(formattedYearMonth)?.toDomainModel()
+        val millis = DateUtils.Format.toMillis(yearMonth)
+        return database.monthDao().getByDate(millis)?.toDomainModel()
     }
 
     override suspend fun create(request: MonthCreationRequest) {

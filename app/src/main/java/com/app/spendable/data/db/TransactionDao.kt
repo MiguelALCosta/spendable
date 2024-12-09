@@ -10,6 +10,9 @@ interface TransactionDao {
     @Query("SELECT * FROM `transactions`")
     suspend fun getAll(): List<TransactionDBModel>
 
+    @Query("SELECT * FROM `transactions` WHERE date>=:start AND date<:endExclusive")
+    suspend fun getByDateRange(start: Long, endExclusive: Long): List<TransactionDBModel>
+
     @Query("SELECT * FROM `transactions` WHERE id=:id")
     suspend fun getById(id: Int): TransactionDBModel
 

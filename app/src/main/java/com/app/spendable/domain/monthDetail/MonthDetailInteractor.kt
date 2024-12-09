@@ -97,8 +97,7 @@ class MonthDetailInteractor(
 
     private suspend fun getTransactions(yearMonth: YearMonth): List<MonthDetailAdapterModel> {
         val currency = appPreferences.getAppCurrency()
-        return transactionsRepository.getAll()
-            .filter { YearMonth.from(it.date) == yearMonth }
+        return transactionsRepository.getByMonth(yearMonth)
             .groupBy { it.date.toLocalDate() }
             .toList()
             .sortedByDescending { it.first }

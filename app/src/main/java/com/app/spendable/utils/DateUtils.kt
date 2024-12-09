@@ -1,9 +1,11 @@
 package com.app.spendable.utils
 
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.YearMonth
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -44,6 +46,15 @@ object DateUtils {
         fun toYearMonth(yearMonth: YearMonth) =
             yearMonth.format(getFormatter(AvailableFormats.YEAR_MONTH))
 
+        fun toMillis(dateTime: LocalDateTime) =
+            dateTime.toInstant(ZoneOffset.UTC).toEpochMilli()
+
+        fun toMillis(date: LocalDate) =
+            toMillis(date.atStartOfDay())
+
+        fun toMillis(yearMonth: YearMonth) =
+            toMillis(yearMonth.atDay(1))
+
     }
 
     object Parse {
@@ -55,6 +66,15 @@ object DateUtils {
 
         fun fromYearMonth(dateTime: String) =
             YearMonth.parse(dateTime, getFormatter(AvailableFormats.YEAR_MONTH))
+
+        fun fromMillisToDateTime(millis: Long) =
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(millis), ZoneOffset.UTC)
+
+        fun fromMillisToDate(millis: Long) =
+            fromMillisToDateTime(millis).toLocalDate()
+
+        fun fromMillisToYearMonth(millis: Long) =
+            YearMonth.from(fromMillisToDateTime(millis))
     }
 
     object Provide {

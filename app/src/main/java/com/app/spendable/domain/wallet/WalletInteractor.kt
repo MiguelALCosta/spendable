@@ -68,9 +68,7 @@ class WalletInteractor(
         val today = DateUtils.Provide.nowDevice().toLocalDate()
         val currentMonth = YearMonth.from(today)
 
-        val transactionsSum = transactionsRepository.getAll()
-            .filter { YearMonth.from(it.date) == currentMonth }
-            .sumOf { it.cost }
+        val transactionsSum = transactionsRepository.getByMonth(currentMonth).sumOf { it.cost }
 
         val subscriptionsSum = subscriptionsRepository.getAll()
             .filter {
@@ -130,8 +128,7 @@ class WalletInteractor(
     private suspend fun getCurrentMonthTransactions(): List<WalletAdapterModel> {
         val currentMonth = YearMonth.from(DateUtils.Provide.nowDevice())
         val currency = appPreferences.getAppCurrency()
-        return transactionsRepository.getAll()
-            .filter { YearMonth.from(it.date) == currentMonth }
+        return transactionsRepository.getByMonth(currentMonth)
             .groupBy { it.date.toLocalDate() }
             .toList()
             .sortedByDescending { it.first }

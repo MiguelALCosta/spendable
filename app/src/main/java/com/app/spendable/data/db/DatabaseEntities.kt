@@ -11,7 +11,7 @@ data class TransactionDBModel(
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "description") val description: String? = null,
     @ColumnInfo(name = "cost") val cost: String,
-    @ColumnInfo(name = "date") val date: String
+    @ColumnInfo(name = "date") val date: Long
 )
 
 @Entity(tableName = "subscriptions")
@@ -21,15 +21,15 @@ data class SubscriptionDBModel(
     @ColumnInfo(name = "iconType") val iconType: String,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "cost") val cost: String,
-    @ColumnInfo(name = "date") val date: String,
+    @ColumnInfo(name = "date") val date: Long,
     @ColumnInfo(name = "frequency") val frequency: String,
-    @ColumnInfo(name = "endDate") val endDate: String? = null
+    @ColumnInfo(name = "endDate") val endDate: Long? = null
 )
 
 @Entity(tableName = "months")
 data class MonthDBModel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    @ColumnInfo(name = "date") val date: String,
+    @ColumnInfo(name = "date") val date: Long,
     @ColumnInfo(name = "totalBudget") val totalBudget: String,
     @ColumnInfo(name = "totalSpent") val totalSpent: String? = null
 )
