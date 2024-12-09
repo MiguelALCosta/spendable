@@ -15,6 +15,8 @@ import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.data.preferences.buildSharedPreferences
 import com.app.spendable.domain.calendar.CalendarInteractor
 import com.app.spendable.domain.calendar.ICalendarInteractor
+import com.app.spendable.domain.monthDetail.IMonthDetailInteractor
+import com.app.spendable.domain.monthDetail.MonthDetailInteractor
 import com.app.spendable.domain.settings.ISettingsInteractor
 import com.app.spendable.domain.settings.SettingsInteractor
 import com.app.spendable.domain.subscriptionDetail.ISubscriptionDetailInteractor
@@ -27,6 +29,8 @@ import com.app.spendable.presentation.calendar.CalendarPresenter
 import com.app.spendable.presentation.calendar.ICalendarPresenter
 import com.app.spendable.presentation.main.IMainPresenter
 import com.app.spendable.presentation.main.MainPresenter
+import com.app.spendable.presentation.monthDetail.IMonthDetailPresenter
+import com.app.spendable.presentation.monthDetail.MonthDetailPresenter
 import com.app.spendable.presentation.settings.ISettingsPresenter
 import com.app.spendable.presentation.settings.SettingsPresenter
 import com.app.spendable.presentation.subscriptionDetail.ISubscriptionDetailPresenter
@@ -170,6 +174,30 @@ object MainModule {
         monthsRepository: IMonthsRepository
     ): ICalendarInteractor {
         return CalendarInteractor(
+            stringsManager,
+            appPreferences,
+            transactionsRepository,
+            subscriptionsRepository,
+            monthsRepository
+        )
+    }
+
+    @Provides
+    fun provideMonthDetailPresenter(
+        interactor: IMonthDetailInteractor
+    ): IMonthDetailPresenter {
+        return MonthDetailPresenter(interactor)
+    }
+
+    @Provides
+    fun provideMonthDetailInteractor(
+        stringsManager: IStringsManager,
+        appPreferences: IAppPreferences,
+        transactionsRepository: ITransactionsRepository,
+        subscriptionsRepository: ISubscriptionsRepository,
+        monthsRepository: IMonthsRepository
+    ): IMonthDetailInteractor {
+        return MonthDetailInteractor(
             stringsManager,
             appPreferences,
             transactionsRepository,

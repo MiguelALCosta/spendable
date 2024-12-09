@@ -21,15 +21,17 @@ sealed interface WalletAdapterModel {
         val config: TransactionItemComponent.SetupConfig
     ) : WalletAdapterModel
 
-    data class Subscription(
-        val id: Int,
-        val order: Int,
-        val config: SubscriptionItemComponent.SetupConfig
-    ) : WalletAdapterModel
+    data class SubscriptionsList(val items: List<SubscriptionListItemModel>) : WalletAdapterModel
 
-    data class SubscriptionsList(val items: List<Subscription>) : WalletAdapterModel
+    data class Message(val text: String) : WalletAdapterModel
 
 }
+
+data class SubscriptionListItemModel(
+    val id: Int,
+    val order: Int,
+    val config: SubscriptionItemComponent.SetupConfig
+)
 
 enum class TransactionType {
     EAT_OUT, MARKET, SHOPPING, TRANSPORTS, ENTERTAINMENT, BILLS, HOLIDAYS, HEALTH, EDUCATION, PET,

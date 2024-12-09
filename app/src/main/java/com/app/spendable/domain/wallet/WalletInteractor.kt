@@ -8,18 +8,22 @@ import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
 import com.app.spendable.domain.Month
 import com.app.spendable.domain.MonthCreationRequest
+import com.app.spendable.domain.TransactionCreationRequest
 import com.app.spendable.presentation.components.WalletCardComponent
+import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.presentation.wallet.WalletAdapterModel
 import com.app.spendable.utils.AppConstants
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
 import com.app.spendable.utils.PriceUtils
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.YearMonth
 
 interface IWalletInteractor {
     fun getModels(completion: (List<WalletAdapterModel>) -> Unit)
-    fun deleteTransaction(id: Int, completion: () -> Unit)
     fun updateTotalBudget(newValue: BigDecimal, completion: () -> Unit)
 }
 
@@ -34,7 +38,7 @@ class WalletInteractor(
     override fun getModels(completion: (List<WalletAdapterModel>) -> Unit) {
         makeRequest(request = {
 
-            /*val months = monthsRepository.getAll()
+            val months = monthsRepository.getAll()
             if (months.firstOrNull { it.date == YearMonth.of(2023, 2) } == null) {
                 monthsRepository.create(
                     MonthCreationRequest(
@@ -43,7 +47,16 @@ class WalletInteractor(
                         totalSpent = null
                     )
                 )
-            }*/
+                transactionsRepository.create(
+                    TransactionCreationRequest(
+                        type = TransactionType.EAT_OUT,
+                        title = "Mackie D",
+                        description = "Ganda mac chavalo",
+                        cost = BigDecimal("12.30"),
+                        date = LocalDateTime.of(LocalDate.of(2024, 10, 12), LocalTime.NOON)
+                    )
+                )
+            }
 
             getWalletCard()
                 .plus(getCurrentMonthSubscriptions())
@@ -103,7 +116,7 @@ class WalletInteractor(
                 YearMonth.from(it.date) <= YearMonth.from(today)
                         && (it.endDate == null || it.endDate >= payDate)
             }
-            .map { it.toWalletAdapterModel(stringsManager, today, currency) }
+            .map { it.toWalletItemModel(stringsManager, today, currency) }
             .sortedBy { it.order }
 
         val header = if (subscriptions.isEmpty()) {
@@ -126,12 +139,7 @@ class WalletInteractor(
                 listOf(WalletAdapterModel.Header(DateUtils.Format.toWeekdayDayMonth(date)))
                     .plus(transactions.map { it.toWalletAdapterModel(currency) })
             }
-    }
-
-    override fun deleteTransaction(id: Int, completion: () -> Unit) {
-        makeRequest(request = {
-            transactionsRepository.delete(id)
-        }, { completion() })
+            .ifEmpty { listOf(WalletAdapterModel.Message(stringsManager.getString(R.string.no_transactions_message))) }
     }
 
     override fun updateTotalBudget(newValue: BigDecimal, completion: () -> Unit) {

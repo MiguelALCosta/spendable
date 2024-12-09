@@ -55,12 +55,12 @@ class WalletFragment : Fragment(), WalletView {
         }
     }
 
-    private fun onItemClick(model: WalletAdapterModel) {
+    private fun onItemClick(model: Any) {
         when (model) {
             is WalletAdapterModel.Transaction ->
                 (activity as? IMainView)?.showTransactionDetail(model.id)
 
-            is WalletAdapterModel.Subscription ->
+            is SubscriptionListItemModel ->
                 (activity as? IMainView)?.showSubscriptionDetail(model.id)
 
             is WalletAdapterModel.WalletCard ->

@@ -8,6 +8,7 @@ import com.app.spendable.presentation.components.SubscriptionItemComponent
 import com.app.spendable.presentation.components.TransactionItemComponent
 import com.app.spendable.presentation.toIcon
 import com.app.spendable.presentation.toIconResource
+import com.app.spendable.presentation.wallet.SubscriptionListItemModel
 import com.app.spendable.presentation.wallet.WalletAdapterModel
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
@@ -26,11 +27,11 @@ fun Transaction.toItemConfig(currency: AppCurrency) =
         cost = PriceUtils.Format.toPrice(cost, currency),
     )
 
-fun Subscription.toWalletAdapterModel(
+fun Subscription.toWalletItemModel(
     stringsManager: IStringsManager,
     today: LocalDate,
     currency: AppCurrency
-): WalletAdapterModel.Subscription {
+): SubscriptionListItemModel {
     val payDate = DateUtils.Provide.inCurrentMonth(date)
     val isPaid = today >= payDate
     val daysLeft = ChronoUnit.DAYS.between(today, payDate).toInt()
@@ -41,7 +42,7 @@ fun Subscription.toWalletAdapterModel(
         else -> stringsManager.getString(R.string.in_x_days).format(daysLeft)
     }
 
-    return WalletAdapterModel.Subscription(
+    return SubscriptionListItemModel(
         id = id,
         order = if (isPaid) payDate.dayOfMonth + 31 else daysLeft,
         config = toItemConfig(currency, footer)

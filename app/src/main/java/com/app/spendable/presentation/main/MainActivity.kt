@@ -11,6 +11,7 @@ import com.app.spendable.presentation.add.AddActivity
 import com.app.spendable.presentation.common.BaseSpendableActivity
 import com.app.spendable.presentation.common.ExtraConstants
 import com.app.spendable.presentation.components.UpdateTotalBudgetDialog
+import com.app.spendable.presentation.monthDetail.MonthDetailActivity
 import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailActivity
 import com.app.spendable.presentation.transactionDetail.TransactionDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -93,7 +94,9 @@ class MainActivity : BaseSpendableActivity(), IMainView {
     }
 
     override fun showMonthDetail(month: YearMonth) {
-        //TODO("Not yet implemented")
+        val intent = Intent(this, MonthDetailActivity::class.java)
+        intent.putExtra(ExtraConstants.MONTH, month)
+        startActivity(intent)
     }
 
 }

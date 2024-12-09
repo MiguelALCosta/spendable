@@ -62,7 +62,11 @@ object DateUtils {
 
         fun inCurrentMonth(date: LocalDate): LocalDate {
             val currentMonth = YearMonth.from(nowDevice())
-            val monthDiff = ChronoUnit.MONTHS.between(YearMonth.from(date), currentMonth)
+            return inMonth(currentMonth, date)
+        }
+
+        fun inMonth(yearMonth: YearMonth, date: LocalDate): LocalDate {
+            val monthDiff = ChronoUnit.MONTHS.between(YearMonth.from(date), yearMonth)
             return date.plusMonths(monthDiff)
         }
     }
