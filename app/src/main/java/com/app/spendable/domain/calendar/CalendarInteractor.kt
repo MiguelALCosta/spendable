@@ -118,7 +118,7 @@ class CalendarInteractor(
         val subscriptionsSum = subscriptions
             .filter {
                 val payDate = DateUtils.Provide.inCurrentMonth(it.date)
-                YearMonth.from(it.date) <= yearMonth && (it.endDate == null || it.endDate >= payDate)
+                YearMonth.from(it.date) <= yearMonth && (it.cancellationDate == null || it.cancellationDate >= payDate)
             }
             .sumOf { it.cost }
         return transactionsSum + subscriptionsSum

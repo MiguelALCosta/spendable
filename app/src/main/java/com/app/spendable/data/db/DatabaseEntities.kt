@@ -23,7 +23,8 @@ data class SubscriptionDBModel(
     @ColumnInfo(name = "cost") val cost: String,
     @ColumnInfo(name = "date") val date: Long,
     @ColumnInfo(name = "frequency") val frequency: String,
-    @ColumnInfo(name = "endDate") val endDate: Long? = null
+    @ColumnInfo(name = "cancellationDate") val cancellationDate: Long? = null,
+    @ColumnInfo(name = "finalPaymentDate") val finalPaymentDate: Long? = null
 )
 
 @Entity(tableName = "months")

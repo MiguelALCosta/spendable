@@ -55,7 +55,8 @@ fun SubscriptionDBModel.toDomainModel() =
         cost = BigDecimal(cost),
         date = DateUtils.Parse.fromMillisToDate(date),
         frequency = frequency.toEnum<SubscriptionFrequency>() ?: SubscriptionFrequency.MONTHLY,
-        endDate = endDate?.let { DateUtils.Parse.fromMillisToDate(it) },
+        cancellationDate = cancellationDate?.let { DateUtils.Parse.fromMillisToDate(it) },
+        finalPaymentDate = finalPaymentDate?.let { DateUtils.Parse.fromMillisToDate(it) }
     )
 
 fun Subscription.toDBModel() =
@@ -67,7 +68,8 @@ fun Subscription.toDBModel() =
         cost = cost.toString(),
         date = DateUtils.Format.toMillis(date),
         frequency = frequency.name,
-        endDate = endDate?.let { DateUtils.Format.toMillis(it) },
+        cancellationDate = cancellationDate?.let { DateUtils.Format.toMillis(it) },
+        finalPaymentDate = finalPaymentDate?.let { DateUtils.Format.toMillis(it) }
     )
 
 fun SubscriptionCreationRequest.toDBModel() =
@@ -78,7 +80,8 @@ fun SubscriptionCreationRequest.toDBModel() =
         cost = cost.toString(),
         date = DateUtils.Format.toMillis(date),
         frequency = frequency.name,
-        endDate = null,
+        cancellationDate = null,
+        finalPaymentDate = null
     )
 
 fun MonthDBModel.toDomainModel() =

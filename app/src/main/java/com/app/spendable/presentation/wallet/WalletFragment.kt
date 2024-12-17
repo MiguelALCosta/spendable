@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.app.spendable.R
 import com.app.spendable.databinding.FragmentWalletBinding
+import com.app.spendable.presentation.components.RewardPopupComponent
 import com.app.spendable.presentation.main.IMainView
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -79,6 +81,13 @@ class WalletFragment : Fragment(), WalletView {
     override fun onResume() {
         super.onResume()
         presenter.refreshWalletInfo()
+        binding.rewardPopup.show(
+            RewardPopupComponent.SetupConfig(
+                initialPoints = 0,
+                gainedPoints = 10,
+                title = getString(R.string.daily_reward)
+            )
+        )
     }
 
     override fun updateView(models: List<WalletAdapterModel>) {

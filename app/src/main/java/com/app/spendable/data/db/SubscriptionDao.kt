@@ -10,6 +10,15 @@ interface SubscriptionDao {
     @Query("SELECT * FROM `subscriptions`")
     suspend fun getAll(): List<SubscriptionDBModel>
 
+    @Query(
+        "SELECT * FROM `subscriptions` WHERE date<:startedBeforeDate AND " +
+                "(cancellationDate IS NULL OR (finalPaymentDate IS NOT NULL AND finalPaymentDate>=:finalPaymentFromDate))"
+    )
+    suspend fun getAllActiveInPeriod(
+        startedBeforeDate: Long,
+        finalPaymentFromDate: Long
+    ): List<SubscriptionDBModel>
+
     @Query("SELECT * FROM `subscriptions` WHERE id=:id")
     suspend fun getById(id: Int): SubscriptionDBModel
 

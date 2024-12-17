@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?><!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="160dp"
+    android:layout_height="160dp"
+    android:layout_gravity="center_horizontal">
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:progress="70"
+        app:trackThickness="4dp"
+        app:indicatorColor="?attr/colorPrimary"
+        app:trackStopIndicatorSize="0dp"
+        app:trackCornerRadius="360dp"
+        app:indicatorDirectionCircular="counterclockwise" />
+
+    <TextView
+        android:id="@+id/balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnSurface"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textStyle="bold"
+        tools:text="1000€\nof\n1000€"
+        android:gravity="center"
+        android:maxLines="3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="14dp"
+    app:cardBackgroundColor="?attr/colorSecondaryContainer"
+    app:cardElevation="4dp"
+    app:strokeWidth="0dp"
+    android:layout_marginHorizontal="40dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/balance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+            android:text="@string/final_balance" />
+
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textStyle="bold"
+            tools:text="1000€ of 1000€" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/progress_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="360dp"
+            app:cardBackgroundColor="?attr/colorSurface">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                tools:progress="70"
+                app:trackThickness="12dp"
+                app:trackColor="?attr/colorSurface"
+                app:indicatorColor="?attr/colorPrimary"
+                app:trackStopIndicatorSize="0dp"
+                app:trackCornerRadius="360dp" />
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

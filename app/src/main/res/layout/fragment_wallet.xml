@@ -23,4 +23,12 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_add" />
 
+    <com.app.spendable.presentation.components.RewardPopupComponent
+        android:id="@+id/reward_popup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_button" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,7 +26,8 @@ data class Subscription(
     val cost: BigDecimal,
     val date: LocalDate,
     val frequency: SubscriptionFrequency,
-    val endDate: LocalDate?
+    val cancellationDate: LocalDate?,
+    val finalPaymentDate: LocalDate?
 )
 
 data class Month(

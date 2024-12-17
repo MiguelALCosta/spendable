@@ -8,8 +8,12 @@ import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
 import com.app.spendable.domain.Month
 import com.app.spendable.domain.MonthCreationRequest
+import com.app.spendable.domain.SubscriptionCreationRequest
 import com.app.spendable.domain.TransactionCreationRequest
+import com.app.spendable.domain.subscriptionDetail.SubscriptionCategory
 import com.app.spendable.presentation.components.WalletCardComponent
+import com.app.spendable.presentation.wallet.SubscriptionFrequency
+import com.app.spendable.presentation.wallet.SubscriptionIcon
 import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.presentation.wallet.WalletAdapterModel
 import com.app.spendable.utils.AppConstants
@@ -52,8 +56,18 @@ class WalletInteractor(
                         type = TransactionType.EAT_OUT,
                         title = "Mackie D",
                         description = "Ganda mac chavalo",
-                        cost = BigDecimal("12.30"),
+                        cost = BigDecimal("502.30"),
                         date = LocalDateTime.of(LocalDate.of(2024, 10, 12), LocalTime.NOON)
+                    )
+                )
+                subscriptionsRepository.create(
+                    SubscriptionCreationRequest(
+                        category = SubscriptionCategory.MUSIC,
+                        iconType = SubscriptionIcon.AUDIBLE,
+                        title = "Audible",
+                        cost = BigDecimal("33.00"),
+                        date = LocalDate.of(2024, 8, 12),
+                        frequency = SubscriptionFrequency.MONTHLY
                     )
                 )
             }
@@ -70,11 +84,8 @@ class WalletInteractor(
 
         val transactionsSum = transactionsRepository.getByMonth(currentMonth).sumOf { it.cost }
 
-        val subscriptionsSum = subscriptionsRepository.getAll()
-            .filter {
-                val payDate = DateUtils.Provide.inCurrentMonth(it.date)
-                payDate <= today && (it.endDate == null || it.endDate >= today)
-            }
+        val subscriptionsSum = subscriptionsRepository.getAllActiveInMonth(currentMonth)
+            .filter { DateUtils.Provide.inCurrentMonth(it.date) <= today }
             .sumOf { it.cost }
 
         val appCurrency = appPreferences.getAppCurrency()
@@ -108,12 +119,7 @@ class WalletInteractor(
     private suspend fun getCurrentMonthSubscriptions(): List<WalletAdapterModel> {
         val today = DateUtils.Provide.nowDevice().toLocalDate()
         val currency = appPreferences.getAppCurrency()
-        val subscriptions = subscriptionsRepository.getAll()
-            .filter {
-                val payDate = DateUtils.Provide.inCurrentMonth(it.date)
-                YearMonth.from(it.date) <= YearMonth.from(today)
-                        && (it.endDate == null || it.endDate >= payDate)
-            }
+        val subscriptions = subscriptionsRepository.getAllActiveInMonth(YearMonth.from(today))
             .map { it.toWalletItemModel(stringsManager, today, currency) }
             .sortedBy { it.order }
 

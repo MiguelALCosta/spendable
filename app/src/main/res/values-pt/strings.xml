@@ -87,6 +87,7 @@
     <string name="dollar">Dollar</string>
     <string name="pound">Libra</string>
     <string name="x_of_x">%s de %s</string>
+    <string name="x_of_x_vertical">%s\nde\n%s</string>
     <string name="final_balance">Saldo Final</string>
     <string name="delete_transaction_confirmation_message">Tens a certeza que queres apagar esta transação?</string>
     <string name="cancel_subscription_confirmation_title">Cancelar esta subscrição?</string>
@@ -97,4 +98,7 @@
     <string name="keep_active">Manter ativa</string>
     <string name="paid">Pago</string>
     <string name="no_transactions_message">Ainda não adicionaste nenhuma transação este mês. Clica no botão abaixo para adicionar uma nova despesa.</string>
+    <string name="daily_reward">Recompensa Diária</string>
+    <string name="x_points">%s Pontos</string>
+    <string name="next_prize">Próximo:</string>
 </resources>

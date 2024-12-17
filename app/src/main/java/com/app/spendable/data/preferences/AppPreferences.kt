@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import com.app.spendable.domain.Avatar
 import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.domain.settings.AppLanguage
 import com.app.spendable.domain.settings.AppTheme
@@ -18,6 +19,10 @@ interface IAppPreferences {
     fun setAppTheme(theme: AppTheme)
     fun getAppCurrency(): AppCurrency
     fun setAppCurrency(currency: AppCurrency)
+    fun getUserPoints(): Int
+    fun setUserPoints(points: Int)
+    fun getUserAvatar(): Avatar
+    fun setUserAvatar(avatar: Avatar)
 }
 
 class AppPreferences(private val sharedPreferences: SharedPreferences) : IAppPreferences {
@@ -27,6 +32,8 @@ class AppPreferences(private val sharedPreferences: SharedPreferences) : IAppPre
         private const val APP_LANGUAGE_KEY = "APP_LANGUAGE_KEY"
         private const val APP_THEME_KEY = "APP_THEME_KEY"
         private const val APP_CURRENCY_KEY = "APP_CURRENCY_KEY"
+        private const val USER_POINTS_KEY = "USER_POINTS_KEY"
+        private const val USER_AVATAR_KEY = "USER_AVATAR_KEY"
     }
 
     override fun getSystemLanguage(): String {
@@ -56,12 +63,29 @@ class AppPreferences(private val sharedPreferences: SharedPreferences) : IAppPre
     }
 
     override fun getAppCurrency(): AppCurrency {
-        return sharedPreferences.getString(APP_CURRENCY_KEY, "EUR")
+        return sharedPreferences.getString(APP_CURRENCY_KEY, AppCurrency.EUR.name)
             ?.toEnum<AppCurrency>() ?: AppCurrency.EUR
     }
 
     override fun setAppCurrency(currency: AppCurrency) {
         sharedPreferences.edit().putString(APP_CURRENCY_KEY, currency.name).apply()
+    }
+
+    override fun getUserPoints(): Int {
+        return sharedPreferences.getInt(USER_POINTS_KEY, 0)
+    }
+
+    override fun setUserPoints(points: Int) {
+        sharedPreferences.edit().putInt(USER_POINTS_KEY, points).apply()
+    }
+
+    override fun getUserAvatar(): Avatar {
+        return sharedPreferences.getString(USER_AVATAR_KEY, Avatar.BASE.name)
+            ?.toEnum<Avatar>() ?: Avatar.BASE
+    }
+
+    override fun setUserAvatar(avatar: Avatar) {
+        sharedPreferences.edit().putString(USER_AVATAR_KEY, avatar.name).apply()
     }
 }
 

@@ -3,9 +3,12 @@ package com.app.spendable.data
 import com.app.spendable.data.db.IAppDatabase
 import com.app.spendable.domain.Subscription
 import com.app.spendable.domain.SubscriptionCreationRequest
+import com.app.spendable.utils.DateUtils
+import java.time.YearMonth
 
 interface ISubscriptionsRepository {
     suspend fun getAll(): List<Subscription>
+    suspend fun getAllActiveInMonth(yearMonth: YearMonth): List<Subscription>
     suspend fun getById(id: Int): Subscription
     suspend fun create(request: SubscriptionCreationRequest)
     suspend fun update(updatedSubscription: Subscription)
@@ -17,6 +20,14 @@ class SubscriptionsRepository(private val database: IAppDatabase) : ISubscriptio
 
     override suspend fun getAll(): List<Subscription> {
         return database.subscriptionDao().getAll()
+            .map { it.toDomainModel() }
+    }
+
+    override suspend fun getAllActiveInMonth(yearMonth: YearMonth): List<Subscription> {
+        val startedBeforeDate = DateUtils.Format.toMillis(yearMonth.plusMonths(1))
+        val finalPaymentFromDate = DateUtils.Format.toMillis(yearMonth)
+        return database.subscriptionDao()
+            .getAllActiveInPeriod(startedBeforeDate, finalPaymentFromDate)
             .map { it.toDomainModel() }
     }
 

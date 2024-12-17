@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.presentation.components.HeaderComponent
+import com.app.spendable.presentation.components.MonthBalanceComponent
 import com.app.spendable.presentation.components.SubscriptionsListComponent
 import com.app.spendable.presentation.components.TransactionItemComponent
 import com.app.spendable.presentation.wallet.SubscriptionListItemModel
@@ -16,7 +17,7 @@ class MonthDetailAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private enum class ModelType {
-        HEADER, TRANSACTION_ITEM, SUBSCRIPTION_LIST
+        BALANCE, HEADER, TRANSACTION_ITEM, SUBSCRIPTION_LIST
     }
 
     override fun getItemCount(): Int {
@@ -25,6 +26,7 @@ class MonthDetailAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (models[position]) {
+            is MonthDetailAdapterModel.Balance -> ModelType.BALANCE.ordinal
             is MonthDetailAdapterModel.Header -> ModelType.HEADER.ordinal
             is MonthDetailAdapterModel.Transaction -> ModelType.TRANSACTION_ITEM.ordinal
             is MonthDetailAdapterModel.SubscriptionsList -> ModelType.SUBSCRIPTION_LIST.ordinal
@@ -33,6 +35,11 @@ class MonthDetailAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (ModelType.entries[viewType]) {
+            ModelType.BALANCE -> {
+                val component = MonthBalanceComponent(parent.context).setRecyclerViewLayoutParams()
+                BalanceComponentViewHolder(component)
+            }
+
             ModelType.HEADER -> {
                 val component = HeaderComponent(parent.context).setRecyclerViewLayoutParams()
                 HeaderComponentViewHolder(component)
@@ -54,6 +61,9 @@ class MonthDetailAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val model = models[position]) {
+            is MonthDetailAdapterModel.Balance ->
+                (holder as BalanceComponentViewHolder).render(model)
+
             is MonthDetailAdapterModel.Header ->
                 (holder as HeaderComponentViewHolder).render(model)
 
@@ -71,6 +81,13 @@ class MonthDetailAdapter(
     }
 
     /** View Holder **/
+
+    private class BalanceComponentViewHolder(val component: MonthBalanceComponent) :
+        RecyclerView.ViewHolder(component) {
+        fun render(model: MonthDetailAdapterModel.Balance) {
+            component.setup(model.config)
+        }
+    }
 
     private class HeaderComponentViewHolder(val component: HeaderComponent) :
         RecyclerView.ViewHolder(component) {

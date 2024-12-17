@@ -157,13 +157,14 @@ fun Subscription?.toForm(
             .toInstant(ZoneOffset.UTC).toEpochMilli(),
         cancelState = SubscriptionCancelState(
             visible = this != null,
-            enabled = this?.endDate == null,
-            text = this?.endDate?.let { stringsManager.getString(R.string.cancelled_at).format(it) }
-                ?: stringsManager.getString(R.string.cancel_subscription)
+            enabled = this?.cancellationDate == null,
+            text = this?.cancellationDate?.let {
+                stringsManager.getString(R.string.cancelled_at).format(it)
+            } ?: stringsManager.getString(R.string.cancel_subscription)
         ),
         mode = when {
             this == null -> ExpenseDetailMode.CREATE
-            YearMonth.from(selectedDate) == YearMonth.from(now) && endDate == null -> ExpenseDetailMode.EDITABLE
+            YearMonth.from(selectedDate) == YearMonth.from(now) && cancellationDate == null -> ExpenseDetailMode.EDITABLE
             else -> ExpenseDetailMode.READ_ONLY
         }
     )
@@ -195,7 +196,8 @@ fun SubscriptionForm.toSubscription(id: Int): Subscription? {
         cost = amount?.ifBlank { null }?.let { BigDecimal(it) } ?: return null,
         date = date,
         frequency = selectedFrequency.toEnum<SubscriptionFrequency>() ?: return null,
-        endDate = null
+        cancellationDate = null,
+        finalPaymentDate = null
     )
 }
 

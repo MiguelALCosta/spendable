@@ -5,6 +5,7 @@ import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
+import java.time.YearMonth
 
 interface ISubscriptionDetailInteractor {
     fun getSubscriptionForm(id: Int?, completion: (SubscriptionForm) -> Unit)
@@ -50,7 +51,17 @@ class SubscriptionDetailInteractor(
         makeRequest(request = {
             val subscription = subscriptionsRepository.getById(id)
             val now = DateUtils.Provide.nowDevice().toLocalDate()
-            subscriptionsRepository.update(subscription.copy(endDate = now))
+            val payDate = DateUtils.Provide.inCurrentMonth(subscription.date)
+            val finalPaymentDate = when {
+                payDate <= now -> payDate // already paid this month
+                YearMonth.from(subscription.date) == YearMonth.from(now) -> null // never paid
+                else -> payDate.minusMonths(1) // paid last month
+            }
+            val cancelledSubscription = subscription.copy(
+                cancellationDate = now,
+                finalPaymentDate = finalPaymentDate
+            )
+            subscriptionsRepository.update(cancelledSubscription)
         }, completion)
     }
 
