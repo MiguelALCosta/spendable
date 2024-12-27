@@ -9,23 +9,14 @@ import com.app.spendable.domain.BaseInteractor
 import com.app.spendable.domain.DailyReward
 import com.app.spendable.domain.Month
 import com.app.spendable.domain.MonthCreationRequest
-import com.app.spendable.domain.SubscriptionCreationRequest
-import com.app.spendable.domain.TransactionCreationRequest
-import com.app.spendable.domain.subscriptionDetail.SubscriptionCategory
 import com.app.spendable.presentation.components.UpdateProfileDialog
 import com.app.spendable.presentation.components.WalletCardComponent
-import com.app.spendable.presentation.wallet.SubscriptionFrequency
-import com.app.spendable.presentation.wallet.SubscriptionIcon
-import com.app.spendable.presentation.wallet.TransactionType
 import com.app.spendable.presentation.wallet.WalletAdapterModel
 import com.app.spendable.utils.AppConstants
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
 import com.app.spendable.utils.PriceUtils
 import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.YearMonth
 
 interface IWalletInteractor {
@@ -45,10 +36,9 @@ class WalletInteractor(
     override fun getModels(completion: (List<WalletAdapterModel>) -> Unit) {
         makeRequest(request = {
 
-            if (appPreferences.getUserPoints() < 100) {
+            /*if (appPreferences.getUserPoints() < 100) {
                 appPreferences.setUserPoints(100)
             }
-            appPreferences.setUserPoints(10)
 
             val months = monthsRepository.getAll()
             if (months.firstOrNull { it.date == YearMonth.of(2023, 2) } == null) {
@@ -78,7 +68,7 @@ class WalletInteractor(
                         frequency = SubscriptionFrequency.MONTHLY
                     )
                 )
-            }
+            }*/
 
             getWalletCard()
                 .plus(getCurrentMonthSubscriptions())

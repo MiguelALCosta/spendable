@@ -84,7 +84,6 @@ class WalletFragment : Fragment(), WalletView {
         super.onResume()
         presenter.refreshWalletInfo()
         presenter.requestDailyReward()
-        showDailyRewardPopup(DailyReward(40, 10))
     }
 
     override fun updateView(models: List<WalletAdapterModel>) {
