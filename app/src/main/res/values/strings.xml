@@ -100,4 +100,11 @@
     <string name="daily_reward">Daily Reward</string>
     <string name="x_points">%s Points</string>
     <string name="next_prize">Next:</string>
+    <string name="default_username">User</string>
+    <string name="profile">Profile</string>
+    <string name="name">Name</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="unlocked_avatar">Unlocked</string>
+    <string name="current_avatar">Current</string>
+    <string name="x_pts">%spts</string>
 </resources>

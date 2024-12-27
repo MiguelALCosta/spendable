@@ -54,14 +54,14 @@ class RewardPopupComponent(
     private fun updateProgress(floatPoints: Float, finalPoints: Int) {
         val points = floatPoints.roundToInt()
         getNextAvatar(points, finalPoints)?.let {
-            binding.avatar.visibility = View.VISIBLE
+            binding.avatarWrapper.visibility = View.VISIBLE
             binding.next.visibility = View.VISIBLE
             binding.avatar.setImageResource(it.drawableRes)
             binding.points.text = stringsManager.getString(R.string.x_points)
                 .format("${points}/${it.requiredPoints}")
             binding.progress.progress = (floatPoints * 100 / it.requiredPoints).toInt()
         } ?: run {
-            binding.avatar.visibility = View.GONE
+            binding.avatarWrapper.visibility = View.GONE
             binding.next.visibility = View.GONE
             binding.points.text = stringsManager.getString(R.string.x_points).format(points)
             binding.progress.progress = 100
@@ -70,6 +70,7 @@ class RewardPopupComponent(
 
     private fun showEnterAnimation(onStart: () -> Unit, onEnd: () -> Unit) {
         val anim = AnimationUtils.loadAnimation(context, R.anim.reward_popup_enter_animation)
+        anim.startOffset = 1000
         anim.setAnimationListener(object : AnimationListener {
             override fun onAnimationStart(animation: Animation?) = onStart()
             override fun onAnimationRepeat(animation: Animation?) {}
@@ -84,7 +85,7 @@ class RewardPopupComponent(
             setupConfig.initialPoints.toFloat(),
             finalPoints.toFloat()
         ).apply {
-            duration = 1000
+            duration = 700
             startDelay = 200
             addUpdateListener { updateProgress(it.animatedValue as Float, finalPoints) }
             addListener(object : AnimatorListener {

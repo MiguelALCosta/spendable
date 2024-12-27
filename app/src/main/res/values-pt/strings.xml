@@ -10,7 +10,7 @@
     <string name="biweekly_stats">Quinzenal</string>
     <string name="weekly_stats">Semanal</string>
     <string name="daily_stats">Diária</string>
-    <string name="total_budget">Orçamento Total</string>
+    <string name="total_budget">Orçamento</string>
     <string name="remaining_budget">Disponível</string>
     <string name="transaction">Transação</string>
     <string name="subscription">Subscrição</string>
@@ -101,4 +101,11 @@
     <string name="daily_reward">Recompensa Diária</string>
     <string name="x_points">%s Pontos</string>
     <string name="next_prize">Próximo:</string>
+    <string name="default_username">Utilizador</string>
+    <string name="profile">Perfil</string>
+    <string name="name">Nome</string>
+    <string name="profile_image">Imagem de Perfil</string>
+    <string name="unlocked_avatar">Disponível</string>
+    <string name="current_avatar">Atual</string>
+    <string name="x_pts">%spts</string>
 </resources>

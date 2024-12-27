@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.spendable.R
 import com.app.spendable.databinding.FragmentWalletBinding
+import com.app.spendable.domain.DailyReward
 import com.app.spendable.presentation.components.RewardPopupComponent
 import com.app.spendable.presentation.main.IMainView
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 interface WalletView {
     fun updateView(models: List<WalletAdapterModel>)
+    fun showDailyRewardPopup(dailyReward: DailyReward)
 }
 
 @AndroidEntryPoint
@@ -66,10 +68,10 @@ class WalletFragment : Fragment(), WalletView {
                 (activity as? IMainView)?.showSubscriptionDetail(model.id)
 
             is WalletAdapterModel.WalletCard ->
-                (activity as? IMainView)?.showUpdateTotalBudgetDialog(
-                    model.totalBudget,
+                (activity as? IMainView)?.showUpdateProfileDialog(
+                    model.profileState,
                     model.currency,
-                    presenter::updateTotalBudget
+                    presenter::updateProfile
                 )
 
             else -> {
@@ -81,17 +83,21 @@ class WalletFragment : Fragment(), WalletView {
     override fun onResume() {
         super.onResume()
         presenter.refreshWalletInfo()
-        binding.rewardPopup.show(
-            RewardPopupComponent.SetupConfig(
-                initialPoints = 0,
-                gainedPoints = 10,
-                title = getString(R.string.daily_reward)
-            )
-        )
+        presenter.requestDailyReward()
     }
 
     override fun updateView(models: List<WalletAdapterModel>) {
         adapter?.updateModels(models)
+    }
+
+    override fun showDailyRewardPopup(dailyReward: DailyReward) {
+        binding.rewardPopup.show(
+            RewardPopupComponent.SetupConfig(
+                initialPoints = dailyReward.initialPoints,
+                gainedPoints = dailyReward.gainedPoints,
+                title = getString(R.string.daily_reward)
+            )
+        )
     }
 
     override fun onDestroyView() {

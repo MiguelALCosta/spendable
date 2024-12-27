@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.DrawableRes
 import com.app.spendable.databinding.ComponentWalletCardBinding
 
 class WalletCardComponent(
@@ -19,24 +20,25 @@ class WalletCardComponent(
         binding = ComponentWalletCardBinding.inflate(inflater, this, true)
     }
 
-    val clickableViews: List<View>
-        get() = listOf(binding.editButton, binding.budgetTitle, binding.budget)
+    val clickableView: View
+        get() = binding.root
 
     data class SetupConfig(
+        val username: String,
+        @DrawableRes val avatar: Int,
         val title: String,
         val totalBudget: String,
         val availableBudget: String,
-        val percentage: Int,
-        val isEditable: Boolean
+        val percentage: Int
     )
 
     fun setup(setupConfig: SetupConfig) {
+        binding.name.text = setupConfig.username
+        binding.avatar.setImageResource(setupConfig.avatar)
         binding.month.text = setupConfig.title.replaceFirstChar(Char::uppercase)
         binding.budget.text = setupConfig.totalBudget
         binding.remaining.text = setupConfig.availableBudget
         binding.progress.progress = setupConfig.percentage
-
-        binding.editButton.visibility = if (setupConfig.isEditable) VISIBLE else GONE
     }
 
 }

@@ -1,13 +1,14 @@
 package com.app.spendable.presentation.wallet
 
 import com.app.spendable.domain.wallet.IWalletInteractor
-import java.math.BigDecimal
+import com.app.spendable.presentation.components.UpdateProfileDialog
 
 interface IWalletPresenter {
     fun bind(view: WalletView)
     fun unbind()
     fun refreshWalletInfo()
-    fun updateTotalBudget(newValue: BigDecimal)
+    fun requestDailyReward()
+    fun updateProfile(profileStateUpdate: UpdateProfileDialog.StateUpdate)
 }
 
 class WalletPresenter(
@@ -30,8 +31,15 @@ class WalletPresenter(
         }
     }
 
-    override fun updateTotalBudget(newValue: BigDecimal) {
-        interactor.updateTotalBudget(newValue) {
+    override fun requestDailyReward() {
+        interactor.requestDailyReward()?.let { dailyReward ->
+            // reward was given if not null
+            view?.showDailyRewardPopup(dailyReward)
+        }
+    }
+
+    override fun updateProfile(profileStateUpdate: UpdateProfileDialog.StateUpdate) {
+        interactor.updateProfile(profileStateUpdate) {
             refreshWalletInfo()
         }
     }

@@ -80,6 +80,10 @@ object DateUtils {
     object Provide {
         fun nowDevice() = ZonedDateTime.now().toLocalDateTime()
 
+        fun nowUTC() = ZonedDateTime.now(ZoneOffset.UTC).toLocalDateTime()
+
+        fun deviceTimeZone() = ZoneOffset.systemDefault()
+
         fun inCurrentMonth(date: LocalDate): LocalDate {
             val currentMonth = YearMonth.from(nowDevice())
             return inMonth(currentMonth, date)

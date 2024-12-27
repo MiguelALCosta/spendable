@@ -3,13 +3,13 @@ package com.app.spendable.presentation.wallet
 import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.components.SubscriptionItemComponent
 import com.app.spendable.presentation.components.TransactionItemComponent
+import com.app.spendable.presentation.components.UpdateProfileDialog
 import com.app.spendable.presentation.components.WalletCardComponent
-import java.math.BigDecimal
 
 sealed interface WalletAdapterModel {
 
     data class WalletCard(
-        val totalBudget: BigDecimal,
+        val profileState: UpdateProfileDialog.State,
         val currency: AppCurrency,
         val config: WalletCardComponent.SetupConfig
     ) : WalletAdapterModel

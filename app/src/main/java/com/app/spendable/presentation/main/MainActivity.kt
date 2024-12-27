@@ -10,13 +10,12 @@ import com.app.spendable.domain.settings.AppCurrency
 import com.app.spendable.presentation.add.AddActivity
 import com.app.spendable.presentation.common.BaseSpendableActivity
 import com.app.spendable.presentation.common.ExtraConstants
-import com.app.spendable.presentation.components.UpdateTotalBudgetDialog
+import com.app.spendable.presentation.components.UpdateProfileDialog
 import com.app.spendable.presentation.monthDetail.MonthDetailActivity
 import com.app.spendable.presentation.subscriptionDetail.SubscriptionDetailActivity
 import com.app.spendable.presentation.transactionDetail.TransactionDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import java.math.BigDecimal
 import java.time.YearMonth
 import javax.inject.Inject
 
@@ -24,10 +23,10 @@ interface IMainView {
     fun navigateToAdd()
     fun showTransactionDetail(id: Int)
     fun showSubscriptionDetail(id: Int)
-    fun showUpdateTotalBudgetDialog(
-        currentValue: BigDecimal,
+    fun showUpdateProfileDialog(
+        state: UpdateProfileDialog.State,
         currency: AppCurrency,
-        onUpdate: (BigDecimal) -> Unit
+        onUpdate: (UpdateProfileDialog.StateUpdate) -> Unit
     )
 
     fun showMonthDetail(month: YearMonth)
@@ -45,6 +44,8 @@ class MainActivity : BaseSpendableActivity(), IMainView {
 
     private lateinit var binding: ActivityMainBinding
 
+    private var profileDialog: UpdateProfileDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,17 +55,19 @@ class MainActivity : BaseSpendableActivity(), IMainView {
         val navView: BottomNavigationView = binding.navView
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        /*val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )*/
         navView.setupWithNavController(navController)
         supportActionBar?.hide()
         actionBar?.hide()
         presenter.doStartUpActions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (profileDialog?.dialog?.isShowing == true) {
+            // close profile popup on resume to not overlap daily reward popup
+            profileDialog?.dismiss()
+        }
     }
 
     override fun navigateToAdd() {
@@ -84,13 +87,15 @@ class MainActivity : BaseSpendableActivity(), IMainView {
         startActivity(intent)
     }
 
-    override fun showUpdateTotalBudgetDialog(
-        currentValue: BigDecimal,
+    override fun showUpdateProfileDialog(
+        state: UpdateProfileDialog.State,
         currency: AppCurrency,
-        onUpdate: (BigDecimal) -> Unit
+        onUpdate: (UpdateProfileDialog.StateUpdate) -> Unit
     ) {
-        UpdateTotalBudgetDialog.build(currentValue, currency, onUpdate)
-            .show(supportFragmentManager, UPDATE_TOTAL_BUDGET_DIALOG_TAG)
+        profileDialog = UpdateProfileDialog.build(state, currency, onUpdate) {
+            profileDialog = null
+        }
+        profileDialog?.show(supportFragmentManager, UPDATE_TOTAL_BUDGET_DIALOG_TAG)
     }
 
     override fun showMonthDetail(month: YearMonth) {

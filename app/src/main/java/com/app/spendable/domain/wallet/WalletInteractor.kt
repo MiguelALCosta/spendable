@@ -6,11 +6,13 @@ import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
 import com.app.spendable.data.preferences.IAppPreferences
 import com.app.spendable.domain.BaseInteractor
+import com.app.spendable.domain.DailyReward
 import com.app.spendable.domain.Month
 import com.app.spendable.domain.MonthCreationRequest
 import com.app.spendable.domain.SubscriptionCreationRequest
 import com.app.spendable.domain.TransactionCreationRequest
 import com.app.spendable.domain.subscriptionDetail.SubscriptionCategory
+import com.app.spendable.presentation.components.UpdateProfileDialog
 import com.app.spendable.presentation.components.WalletCardComponent
 import com.app.spendable.presentation.wallet.SubscriptionFrequency
 import com.app.spendable.presentation.wallet.SubscriptionIcon
@@ -28,7 +30,8 @@ import java.time.YearMonth
 
 interface IWalletInteractor {
     fun getModels(completion: (List<WalletAdapterModel>) -> Unit)
-    fun updateTotalBudget(newValue: BigDecimal, completion: () -> Unit)
+    fun requestDailyReward(): DailyReward?
+    fun updateProfile(profileStateUpdate: UpdateProfileDialog.StateUpdate, completion: () -> Unit)
 }
 
 class WalletInteractor(
@@ -41,6 +44,10 @@ class WalletInteractor(
 
     override fun getModels(completion: (List<WalletAdapterModel>) -> Unit) {
         makeRequest(request = {
+
+            if (appPreferences.getUserPoints() < 100) {
+                appPreferences.setUserPoints(100)
+            }
 
             val months = monthsRepository.getAll()
             if (months.firstOrNull { it.date == YearMonth.of(2023, 2) } == null) {
@@ -88,18 +95,28 @@ class WalletInteractor(
             .filter { DateUtils.Provide.inCurrentMonth(it.date) <= today }
             .sumOf { it.cost }
 
+        val username = appPreferences.getUsername()
+            .ifEmpty { stringsManager.getString(R.string.default_username) }
+        val avatar = appPreferences.getUserAvatar()
         val appCurrency = appPreferences.getAppCurrency()
         val totalBudget = getCurrentMonthModel()?.totalBudget ?: BigDecimal("0.00")
         val availableBudget = totalBudget - transactionsSum - subscriptionsSum
+        val profileState = UpdateProfileDialog.State(
+            totalBudget = totalBudget,
+            username = username,
+            avatar = avatar,
+            points = appPreferences.getUserPoints()
+        )
         val config = WalletCardComponent.SetupConfig(
+            username = username,
+            avatar = avatar.drawableRes,
             title = DateUtils.Format.toFullMonthYear(currentMonth),
             totalBudget = PriceUtils.Format.toPrice(totalBudget, appCurrency),
             availableBudget = PriceUtils.Format.toPrice(availableBudget, appCurrency),
-            percentage = (availableBudget * BigDecimal("100") / totalBudget).toInt(),
-            isEditable = true
+            percentage = (availableBudget * BigDecimal("100") / totalBudget).toInt()
         )
 
-        return listOf(WalletAdapterModel.WalletCard(totalBudget, appCurrency, config))
+        return listOf(WalletAdapterModel.WalletCard(profileState, appCurrency, config))
     }
 
     private suspend fun getCurrentMonthModel(): Month? {
@@ -145,11 +162,28 @@ class WalletInteractor(
             .ifEmpty { listOf(WalletAdapterModel.Message(stringsManager.getString(R.string.no_transactions_message))) }
     }
 
-    override fun updateTotalBudget(newValue: BigDecimal, completion: () -> Unit) {
+    override fun requestDailyReward(): DailyReward? {
+        return if (appPreferences.shouldGiveDailyReward()) {
+            val currentPoints = appPreferences.getUserPoints()
+            val gainedPoints = AppConstants.DAILY_REWARD_POINTS
+            appPreferences.setUserPoints(currentPoints + gainedPoints)
+            appPreferences.setDailyRewardGiven()
+            DailyReward(currentPoints, gainedPoints)
+        } else {
+            null
+        }
+    }
+
+    override fun updateProfile(
+        profileStateUpdate: UpdateProfileDialog.StateUpdate,
+        completion: () -> Unit
+    ) {
         makeRequest(request = {
             getCurrentMonthModel()?.let {
-                monthsRepository.update(it.copy(totalBudget = newValue))
+                monthsRepository.update(it.copy(totalBudget = profileStateUpdate.totalBudget))
             }
+            appPreferences.setUsername(profileStateUpdate.username)
+            appPreferences.setUserAvatar(profileStateUpdate.avatar)
         }, { completion() })
     }
 

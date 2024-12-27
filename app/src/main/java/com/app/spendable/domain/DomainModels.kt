@@ -59,3 +59,8 @@ data class MonthCreationRequest(
     val totalBudget: BigDecimal,
     val totalSpent: BigDecimal? = null
 )
+
+data class DailyReward(
+    val initialPoints: Int,
+    val gainedPoints: Int
+)
