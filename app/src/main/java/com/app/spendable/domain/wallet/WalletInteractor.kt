@@ -48,6 +48,7 @@ class WalletInteractor(
             if (appPreferences.getUserPoints() < 100) {
                 appPreferences.setUserPoints(100)
             }
+            appPreferences.setUserPoints(10)
 
             val months = monthsRepository.getAll()
             if (months.firstOrNull { it.date == YearMonth.of(2023, 2) } == null) {

@@ -4,6 +4,10 @@ import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +15,7 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat.getSystemService
 import com.app.spendable.R
 import com.app.spendable.databinding.ComponentRewardPopupBinding
 import com.app.spendable.domain.Avatar
@@ -18,6 +23,7 @@ import com.app.spendable.utils.IStringsManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
+
 
 @AndroidEntryPoint
 class RewardPopupComponent(
@@ -109,16 +115,35 @@ class RewardPopupComponent(
         startAnimation(anim)
     }
 
+    private fun announceAvatarUnlocked(initialPoints: Int, gainedPoints: Int) {
+        val finalPoints = initialPoints + gainedPoints
+        if (Avatar.progressList.any { it.requiredPoints == finalPoints }) {
+            // make avatar have color
+            binding.avatar.colorFilter = ColorMatrixColorFilter(
+                ColorMatrix().apply { setSaturation(1f) }
+            )
+            val vibration = VibrationEffect.createOneShot(200L, 200)
+            getSystemService(context, Vibrator::class.java)?.vibrate(vibration)
+        }
+
+    }
+
     fun show(setupConfig: SetupConfig) {
         binding.title.text = setupConfig.title
         binding.gainedPoints.text = stringsManager.getString(R.string.x_points)
             .format("+${setupConfig.gainedPoints}")
+
+        // make avatar black and white
+        binding.avatar.colorFilter = ColorMatrixColorFilter(
+            ColorMatrix().apply { setSaturation(0f) }
+        )
 
         val finalPoints = setupConfig.initialPoints + setupConfig.gainedPoints
         updateProgress(setupConfig.initialPoints.toFloat(), finalPoints)
 
         showEnterAnimation(onStart = { alpha = 1.0f }) {
             showPointIncreaseAnimation(setupConfig) {
+                announceAvatarUnlocked(setupConfig.initialPoints, setupConfig.gainedPoints)
                 showExitAnimation { alpha = 0.0f }
             }
         }

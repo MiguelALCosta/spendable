@@ -1,6 +1,8 @@
 package com.app.spendable.presentation.components
 
 import android.content.Context
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
@@ -35,13 +37,20 @@ class AvatarChoiceComponent(
 
     fun setup(setupConfig: SetupConfig) {
         val unlocked = setupConfig.avatar.requiredPoints <= setupConfig.userPoints
+
+        val avatarSaturation = if (unlocked) 1f else 0f
         binding.avatar.setImageResource(setupConfig.avatar.drawableRes)
+        binding.avatar.colorFilter = ColorMatrixColorFilter(
+            ColorMatrix().apply { setSaturation(avatarSaturation) }
+        )
+
         binding.label.text = when {
             setupConfig.selected -> stringsManager.getString(R.string.current_avatar)
             unlocked -> stringsManager.getString(R.string.unlocked_avatar)
             else -> stringsManager.getString(R.string.x_pts)
                 .format(setupConfig.avatar.requiredPoints)
         }
+
         isSelected = setupConfig.selected
         isEnabled = unlocked
     }
@@ -50,6 +59,11 @@ class AvatarChoiceComponent(
         super.setSelected(selected)
         binding.wrapper.isSelected = selected
         binding.label.isSelected = selected
+    }
+
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        binding.label.isEnabled = enabled
     }
 
 }
