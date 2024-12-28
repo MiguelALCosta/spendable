@@ -25,7 +25,7 @@
                 android:id="@+id/avatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:src="@drawable/dummy_avatar_1" />
+                tools:src="@drawable/duck" />
 
         </androidx.cardview.widget.CardView>
 

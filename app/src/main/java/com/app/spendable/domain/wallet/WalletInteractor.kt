@@ -36,11 +36,7 @@ class WalletInteractor(
     override fun getModels(completion: (List<WalletAdapterModel>) -> Unit) {
         makeRequest(request = {
 
-            /*if (appPreferences.getUserPoints() < 100) {
-                appPreferences.setUserPoints(100)
-            }
-
-            val months = monthsRepository.getAll()
+            /*val months = monthsRepository.getAll()
             if (months.firstOrNull { it.date == YearMonth.of(2023, 2) } == null) {
                 monthsRepository.create(
                     MonthCreationRequest(

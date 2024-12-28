@@ -13,7 +13,7 @@ interface IAppDatabase {
 
 object DatabaseConstants {
     const val DATABASE_NAME = "spendable.db"
-    const val DATABASE_VERSION = 2
+    const val DATABASE_VERSION = 3
 }
 
 @Database(
