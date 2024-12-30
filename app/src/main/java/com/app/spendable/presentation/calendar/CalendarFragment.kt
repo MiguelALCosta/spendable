@@ -63,7 +63,7 @@ class CalendarFragment : Fragment(), ICalendarView {
 
     private fun onItemClick(model: CalendarAdapterModel) {
         when (model) {
-            is MonthCardModel -> (activity as? MainActivity)?.showMonthDetail(model.month)
+            is CalendarAdapterModel.MonthCard -> (activity as? MainActivity)?.showMonthDetail(model.month)
             else -> {
                 // nothing
             }

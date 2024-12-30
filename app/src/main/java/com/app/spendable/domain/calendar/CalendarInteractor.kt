@@ -1,5 +1,6 @@
 package com.app.spendable.domain.calendar
 
+import com.app.spendable.R
 import com.app.spendable.data.IMonthsRepository
 import com.app.spendable.data.ISubscriptionsRepository
 import com.app.spendable.data.ITransactionsRepository
@@ -10,7 +11,6 @@ import com.app.spendable.domain.MonthCreationRequest
 import com.app.spendable.domain.Subscription
 import com.app.spendable.domain.Transaction
 import com.app.spendable.presentation.calendar.CalendarAdapterModel
-import com.app.spendable.presentation.calendar.HeaderModel
 import com.app.spendable.utils.AppConstants
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.IStringsManager
@@ -42,7 +42,8 @@ class CalendarInteractor(
                 .sortedByDescending { it.month }
                 .groupBy { it.month.year }
                 .toList()
-                .flatMap { listOf(HeaderModel(it.first.toString())).plus(it.second) }
+                .flatMap { listOf(CalendarAdapterModel.Header(it.first.toString())).plus(it.second) }
+                .ifEmpty { listOf(CalendarAdapterModel.Message(stringsManager.getString(R.string.no_prev_months))) }
         }, completion)
     }
 

@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.app.spendable.R
 import com.app.spendable.databinding.ComponentMonthCardBinding
-import com.app.spendable.presentation.calendar.MonthCardModel
+import com.app.spendable.presentation.calendar.CalendarAdapterModel
 import com.app.spendable.utils.DateUtils
 import com.app.spendable.utils.PriceUtils
 
@@ -26,7 +26,7 @@ class MonthCardComponent(
         binding = ComponentMonthCardBinding.inflate(inflater, this, true)
     }
 
-    fun setup(model: MonthCardModel) {
+    fun setup(model: CalendarAdapterModel.MonthCard) {
         binding.title.text =
             DateUtils.Format.toFullMonthYear(model.month).replaceFirstChar(Char::uppercase)
 

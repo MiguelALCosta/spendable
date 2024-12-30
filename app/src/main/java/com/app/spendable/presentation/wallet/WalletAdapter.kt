@@ -32,7 +32,6 @@ class WalletAdapter(
             is WalletAdapterModel.Transaction -> ModelType.TRANSACTION_ITEM.ordinal
             is WalletAdapterModel.SubscriptionsList -> ModelType.SUBSCRIPTION_LIST.ordinal
             is WalletAdapterModel.Message -> ModelType.MESSAGE.ordinal
-            else -> -1
         }
     }
 
@@ -85,9 +84,6 @@ class WalletAdapter(
             is WalletAdapterModel.Message ->
                 (holder as MessageComponentViewHolder).render(model)
 
-            else -> {
-                // do nothing
-            }
         }
     }
 

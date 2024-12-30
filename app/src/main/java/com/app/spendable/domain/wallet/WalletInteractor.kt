@@ -47,11 +47,38 @@ class WalletInteractor(
                 )
                 transactionsRepository.create(
                     TransactionCreationRequest(
-                        type = TransactionType.EAT_OUT,
-                        title = "Mackie D",
-                        description = "Ganda mac chavalo",
-                        cost = BigDecimal("502.30"),
-                        date = LocalDateTime.of(LocalDate.of(2024, 10, 12), LocalTime.NOON)
+                        type = TransactionType.TRANSPORTS,
+                        title = "Bilhete de metro",
+                        description = null,
+                        cost = BigDecimal("1.80"),
+                        date = LocalDateTime.of(LocalDate.of(2024, 10, 29), LocalTime.of(9, 30))
+                    )
+                )
+                transactionsRepository.create(
+                    TransactionCreationRequest(
+                        type = TransactionType.PET,
+                        title = "Consutla de veterinário",
+                        description = "Vacinas Bobi",
+                        cost = BigDecimal("40.00"),
+                        date = LocalDateTime.of(LocalDate.of(2024, 10, 30), LocalTime.of(16, 15))
+                    )
+                )
+                transactionsRepository.create(
+                    TransactionCreationRequest(
+                        type = TransactionType.HEALTH,
+                        title = "Farmácia",
+                        description = "Brufen",
+                        cost = BigDecimal("10.40"),
+                        date = LocalDateTime.of(LocalDate.of(2024, 10, 29), LocalTime.of(18, 23))
+                    )
+                )
+                transactionsRepository.create(
+                    TransactionCreationRequest(
+                        type = TransactionType.TRANSPORTS,
+                        title = "Bilhete de metro",
+                        description = null,
+                        cost = BigDecimal("1.80"),
+                        date = LocalDateTime.of(LocalDate.of(2024, 10, 28), LocalTime.of(9, 30))
                     )
                 )
                 subscriptionsRepository.create(

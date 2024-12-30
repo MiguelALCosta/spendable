@@ -107,4 +107,5 @@
     <string name="unlocked_avatar">Unlocked</string>
     <string name="current_avatar">Current</string>
     <string name="x_pts">%spts</string>
+    <string name="no_prev_months">Nothing registered in previous months. Continue using the app to see your expenses from past months listed in this tab.</string>
 </resources>

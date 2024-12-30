@@ -64,7 +64,6 @@ dependencies {
 
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.security.crypto)
-    implementation(libs.mp.android.chart)
 }
 
 // Allow references to generated code
