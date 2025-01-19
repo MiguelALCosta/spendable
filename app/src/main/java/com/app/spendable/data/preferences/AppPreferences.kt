@@ -132,7 +132,7 @@ class AppPreferences(private val sharedPreferences: SharedPreferences) : IAppPre
 
 fun buildSharedPreferences(context: Context): SharedPreferences {
     return EncryptedSharedPreferences.create(
-        "com.app.spendable_encrypted_prefs",
+        "com.app.spendable_encrypted_shared_prefs",
         MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
         context,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
