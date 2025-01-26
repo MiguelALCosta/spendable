@@ -93,10 +93,17 @@ class WalletInteractor(
                 )
             }*/
 
-            getWalletCard()
+            //appPreferences.setUserPoints(300)
+
+            copyrightMessage()
+                .plus(getWalletCard())
                 .plus(getCurrentMonthSubscriptions())
                 .plus(getCurrentMonthTransactions())
         }, completion)
+    }
+
+    private fun copyrightMessage(): List<WalletAdapterModel> {
+        return listOf(WalletAdapterModel.Message("© Miguel Alexandre Andrade Costa nº30154 ISTEC Lisboa - 2024"))
     }
 
     private suspend fun getWalletCard(): List<WalletAdapterModel> {
