@@ -59,9 +59,9 @@ fun SubscriptionIcon.toIconResource() = when (this) {
     SubscriptionIcon.DISCORD_NITRO -> R.drawable.ic_discord
     SubscriptionIcon.OTHER_GAMING -> R.drawable.ic_gaming
     SubscriptionIcon.SPORTS -> R.drawable.ic_sports
-    SubscriptionIcon.RENT -> R.drawable.ic_other_subscription
-    SubscriptionIcon.PHONE -> R.drawable.ic_other_subscription
-    SubscriptionIcon.CABLE -> R.drawable.ic_other_subscription
+    SubscriptionIcon.RENT -> R.drawable.ic_home
+    SubscriptionIcon.PHONE -> R.drawable.ic_phone
+    SubscriptionIcon.CABLE -> R.drawable.ic_tv
     SubscriptionIcon.OTHER_UTILITIES -> R.drawable.ic_utilities
     SubscriptionIcon.OTHER -> R.drawable.ic_other_subscription
 }
